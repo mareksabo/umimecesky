@@ -7,10 +7,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import cz.muni.fi.umimecesky.roboti.db.WordDatabaseHandler;
-import cz.muni.fi.umimecesky.roboti.task.ImportAsyncTask;
+import cz.muni.fi.umimecesky.roboti.task.WordImportAsyncTask;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,11 +26,6 @@ public class MainActivity extends AppCompatActivity {
         sharedPref = this.getPreferences(Context.MODE_PRIVATE);
 
         WordDatabaseHandler dbHelper = new WordDatabaseHandler(getApplicationContext());
-//        Log.d("getAllFilledWords()", String.valueOf(dbHelper.getAllFilledWords().size()));
-//        Log.d("random word:  ", dbHelper.getRandomFilledWord().getWordFilled());
-//        Log.d("random word:  ", dbHelper.getRandomFilledWord().getWordFilled());
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
-//        getSupportActionBar().setIcon(R.mipmap.ic_launcher);
         trainingButton = (Button) findViewById(R.id.trainingButton);
         trainingButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,11 +48,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        Toast.makeText(getApplicationContext(), Boolean.toString(sharedPref.getBoolean(IS_FILLED, false)),
-                Toast.LENGTH_LONG).show();
         if (!sharedPref.getBoolean(IS_FILLED, false)) {
-            new ImportAsyncTask(MainActivity.this).execute();
+            new WordImportAsyncTask(MainActivity.this).execute();
         }
 
     }

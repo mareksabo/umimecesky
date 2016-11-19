@@ -16,12 +16,12 @@ import java.io.InputStreamReader;
 import cz.muni.fi.umimecesky.roboti.MainActivity;
 import cz.muni.fi.umimecesky.roboti.db.WordDatabaseHandler;
 
-public class ImportAsyncTask extends AsyncTask<Void, Void, Void> {
+public class WordImportAsyncTask extends AsyncTask<Void, Void, Void> {
 
     private Activity activity;
     private int importedSize;
 
-    public ImportAsyncTask(Activity activity) {
+    public WordImportAsyncTask(Activity activity) {
         this.activity = activity;
     }
 

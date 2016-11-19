@@ -2,13 +2,12 @@ package cz.muni.fi.umimecesky.roboti;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -29,6 +28,8 @@ public class TrainingActivity extends AppCompatActivity {
 
     private List<FillWord> incorrectWords = new ArrayList<>();
 
+    private static final int DEFAULT_COLOR = Color.BLACK;
+
     private SharedPreferences sharedPref;
     private static final String LAST_FILLED_WORD = "lastWord";
 
@@ -44,34 +45,33 @@ public class TrainingActivity extends AppCompatActivity {
         variant2  = (Button) findViewById(R.id.secondButton);
 
         setFirstWord();
-        Log.d("current", currentWord.toString());
-        Toast.makeText(this, currentWord.toString(), Toast.LENGTH_LONG).show();
 
         variant1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (currentWord.getCorrectVariant() == 0) {
-                    setNewRandomWord();
-                } else {
-                    if (!incorrectWords.contains(currentWord)) {
-                        incorrectWords.add(currentWord);
-                    }
-                }
+                evaluateTask(0);
             }
         });
         variant2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (currentWord.getCorrectVariant() == 1) {
-                    setNewRandomWord();
-                } else {
-                    if (!incorrectWords.contains(currentWord)) {
-                        incorrectWords.add(currentWord);
-                    }
-                }
+                evaluateTask(1);
             }
         });
 
+    }
+
+    private void evaluateTask(int buttonNumber) {
+        Button button = buttonNumber == 0 ? variant1 : variant2;
+
+        if (currentWord.getCorrectVariant() == buttonNumber) {
+            setNewRandomWord();
+        } else {
+            button.setTextColor(Color.RED);
+            if (!incorrectWords.contains(currentWord)) {
+                incorrectWords.add(currentWord);
+            }
+        }
     }
 
     private void setFirstWord() {
@@ -92,6 +92,8 @@ public class TrainingActivity extends AppCompatActivity {
         textWord.setText(word.getWordMissing());
         variant1.setText(word.getVariant1());
         variant2.setText(word.getVariant2());
+        variant1.setTextColor(DEFAULT_COLOR);
+        variant2.setTextColor(DEFAULT_COLOR);
     }
 
     @Override
