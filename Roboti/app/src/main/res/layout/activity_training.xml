@@ -12,10 +12,10 @@
 
     <TextView
         android:id="@+id/word"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_centerInParent="true"
+        android:gravity="center"
         android:padding="@dimen/text_padding"
         android:text=""
         android:textSize="@dimen/text_size"
@@ -33,8 +33,6 @@
             android:id="@+id/firstButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:scaleType="centerInside"
             android:layout_weight="1"
             android:textSize="@dimen/button_text_size"
             android:textAllCaps="false"
@@ -44,8 +42,8 @@
         <Button
             android:background="?android:attr/selectableItemBackground"
             android:id="@+id/secondButton"
-            android:layout_width="@dimen/box_size"
-            android:layout_height="@dimen/box_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="@dimen/button_text_size"
             android:textAllCaps="false"

@@ -56,8 +56,14 @@ public class WordDatabaseHandler extends SQLiteOpenHelper {
                 fillWord.getVariant1(), fillWord.getVariant2(), Integer.toString(fillWord.getCorrectVariant()));
     }
 
-    public boolean addFilledWord(long id, String missingWord, String filledWord, String variant1, String variant2, String correctVariant) {
+    private boolean addFilledWord(long id, String missingWord, String filledWord, String variant1, String variant2, String correctVariant) {
         SQLiteDatabase db = this.getWritableDatabase();
+        boolean result = addFilledWord(db, id, missingWord, filledWord, variant1, variant2, correctVariant);
+        db.close();
+        return result;
+    }
+
+    public boolean addFilledWord(SQLiteDatabase db, long id, String missingWord, String filledWord, String variant1, String variant2, String correctVariant) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(WordEntry._ID, id);
         contentValues.put(WordEntry.WORD_MISSING, missingWord);
@@ -66,7 +72,6 @@ public class WordDatabaseHandler extends SQLiteOpenHelper {
         contentValues.put(WordEntry.VARIANT2, variant2);
         contentValues.put(WordEntry.CORRECT_VARIANT, correctVariant);
         long wordId = db.insert(WordEntry.TABLE_NAME, null, contentValues);
-        db.close();
         return wordId != -1;
     }
 

@@ -1,31 +1,30 @@
 package cz.muni.fi.umimecesky.roboti;
 
+import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
-import android.database.sqlite.SQLiteDatabase;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 import cz.muni.fi.umimecesky.roboti.db.WordDatabaseHandler;
+import cz.muni.fi.umimecesky.roboti.task.ImportAsyncTask;
 
 public class MainActivity extends AppCompatActivity {
 
     private Button trainingButton;
     private Button importButton;
 
+    private SharedPreferences sharedPref;
+    public static final String IS_FILLED = "isFilled";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_menu);
+        sharedPref = this.getPreferences(Context.MODE_PRIVATE);
 
         WordDatabaseHandler dbHelper = new WordDatabaseHandler(getApplicationContext());
 //        Log.d("getAllFilledWords()", String.valueOf(dbHelper.getAllFilledWords().size()));
@@ -52,64 +51,18 @@ public class MainActivity extends AppCompatActivity {
 //                transaction.addToBackStack(null);
 //
 //                transaction.commit();
-                MainActivity.this.importWords();
             }
         });
 
-    }
 
-    public void importWords() {
-
-        WordDatabaseHandler dbHelper = new WordDatabaseHandler(MainActivity.this.getBaseContext());
-
-        // Gets the data repository in write mode
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        dbHelper.onUpgrade(db, 1,2);
-
-        String fillInCSV = "doplnovacka_word.csv";
-        AssetManager manager = getApplicationContext().getAssets();
-
-        //id;word;solved;variant1;variant2;correct;explanation;grade;visible
-
-        try {
-            InputStream inStream = manager.open(fillInCSV);
-            BufferedReader buffer = new BufferedReader(new InputStreamReader(inStream));
-            String line;
-            String[] columnNames = buffer.readLine().split(";");
-
-//            db.beginTransaction();
-
-            int i = 0;
-            final int MAX_INSERT = 100;
-
-            while ((line = buffer.readLine()) != null && i < MAX_INSERT) {
-                i++;
-                String[] columns = line.split(";");
-
-                Log.d("Word: ", columns[1]);
-
-                boolean isInserted = dbHelper.addFilledWord(Long.parseLong(columns[0].trim() ),
-                        columns[1].trim(),
-                        columns[2].trim(),
-                        columns[3].trim(),
-                        columns[4].trim(),
-                        columns[5].trim());
-
-            }
-
-
-            Log.d("getAllFilledWords()", String.valueOf(dbHelper.getAllFilledWords().size()));
-
-            Toast.makeText(MainActivity.this.getApplicationContext(), "Words inserted " + i +
-                    ", total number is " + dbHelper.getAllFilledWords().size(), Toast.LENGTH_LONG).show();
-//            db.setTransactionSuccessful();
-//            db.endTransaction();
-        } catch (IOException e) {
-            e.printStackTrace();
+        Toast.makeText(getApplicationContext(), Boolean.toString(sharedPref.getBoolean(IS_FILLED, false)),
+                Toast.LENGTH_LONG).show();
+        if (!sharedPref.getBoolean(IS_FILLED, false)) {
+            new ImportAsyncTask(MainActivity.this).execute();
         }
 
-
     }
+
 
 
 }

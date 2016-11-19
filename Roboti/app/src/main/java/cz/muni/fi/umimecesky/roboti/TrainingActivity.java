@@ -1,11 +1,16 @@
 package cz.muni.fi.umimecesky.roboti;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,21 +29,23 @@ public class TrainingActivity extends AppCompatActivity {
 
     private List<FillWord> incorrectWords = new ArrayList<>();
 
-//    private SharedPreferences sharedPref;
+    private SharedPreferences sharedPref;
     private static final String LAST_FILLED_WORD = "lastWord";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_training);
+        sharedPref = this.getPreferences(Context.MODE_PRIVATE);
 
         handler = new WordDatabaseHandler(this);
         textWord = (TextView) findViewById(R.id.word);
         variant1  = (Button) findViewById(R.id.firstButton);
         variant2  = (Button) findViewById(R.id.secondButton);
 
-        setNewRandomWord();
+        setFirstWord();
         Log.d("current", currentWord.toString());
+        Toast.makeText(this, currentWord.toString(), Toast.LENGTH_LONG).show();
 
         variant1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,36 +72,33 @@ public class TrainingActivity extends AppCompatActivity {
             }
         });
 
-//        setNewRandomWord();
+    }
 
-//        sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-//        String lastFilled = sharedPref.getString(LAST_FILLED_WORD, null);
-//        if (lastFilled != null) {
-//            Log.d("lastFilled ", lastFilled );
-//            currentWord = null;//handler.findWord(lastFilled);
-//            Log.d("word is ", currentWord == null ? "null" : "not null");
-//            if (currentWord != null) {
-//                Log.d("word suc. found", currentWord.toString());
-//                setWord();
-//            } else {
-//                setNewRandomWord();
-//            }
-//        } else {
-//            setNewRandomWord();
-//        }
-
+    private void setFirstWord() {
+        String json = sharedPref.getString(LAST_FILLED_WORD, null);
+        FillWord lastWord = new Gson().fromJson(json, FillWord.class);
+        setWord(lastWord);
+        if (currentWord == null) {
+            setNewRandomWord();
+        }
     }
 
     private void setNewRandomWord() {
-        currentWord = handler.getRandomFilledWord();
-        textWord.setText(currentWord.getWordMissing());
-        variant1.setText(currentWord.getVariant1());
-        variant2.setText(currentWord.getVariant2());
-//        sharedPref.edit().putString(LAST_FILLED_WORD, currentWord.getWordFilled()).apply();
+        setWord(handler.getRandomFilledWord());
     }
 
-    private void setWord() {
-        Log.i("Text set", "");
+    private void setWord(FillWord word) {
+        this.currentWord = word;
+        textWord.setText(word.getWordMissing());
+        variant1.setText(word.getVariant1());
+        variant2.setText(word.getVariant2());
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        String json = new Gson().toJson(currentWord);
+        sharedPref.edit().putString(LAST_FILLED_WORD, json).apply();
+    }
 }

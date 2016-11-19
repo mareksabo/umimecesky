@@ -10,7 +10,7 @@
         android:layout_height="match_parent">
 
         <Button
-            android:text="Procvičovat"
+            android:text="@string/train_button_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -18,7 +18,7 @@
             android:id="@+id/trainingButton" />
 
         <Button
-            android:text="Importovat data"
+            android:text="@string/race_button_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/trainingButton"
