@@ -14,10 +14,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import cz.muni.fi.umimecesky.roboti.activity.MainActivity;
 import cz.muni.fi.umimecesky.roboti.db.CategoryDbHelper;
 import cz.muni.fi.umimecesky.roboti.db.WordCategoryDbHelper;
 import cz.muni.fi.umimecesky.roboti.db.WordDbHelper;
+
+import static cz.muni.fi.umimecesky.roboti.utils.Utils.IS_FILLED;
 
 public class WordImportAsyncTask extends AsyncTask<Void, Void, Void> {
 
@@ -168,7 +169,7 @@ public class WordImportAsyncTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
-        prefs.edit().putBoolean(MainActivity.IS_FILLED, true).apply();
+        prefs.edit().putBoolean(IS_FILLED, true).apply();
 
         Toast.makeText(activity.getApplicationContext(), "Words inserted: " + importedSize,
                 Toast.LENGTH_LONG).show();

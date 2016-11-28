@@ -1,6 +1,5 @@
 package cz.muni.fi.umimecesky.roboti.activity;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -20,6 +19,12 @@ import cz.muni.fi.umimecesky.roboti.db.WordCategoryDbHelper;
 import cz.muni.fi.umimecesky.roboti.db.WordDbHelper;
 import cz.muni.fi.umimecesky.roboti.pojo.Category;
 import cz.muni.fi.umimecesky.roboti.pojo.FillWord;
+import cz.muni.fi.umimecesky.roboti.utils.Utils;
+
+import static cz.muni.fi.umimecesky.roboti.utils.Utils.DARK_GREEN;
+import static cz.muni.fi.umimecesky.roboti.utils.Utils.DEFAULT_COLOR;
+import static cz.muni.fi.umimecesky.roboti.utils.Utils.LAST_FILLED_WORD;
+import static cz.muni.fi.umimecesky.roboti.utils.Utils.TICKED_CATEGORIES;
 
 public class TrainingActivity extends AppCompatActivity {
 
@@ -34,18 +39,17 @@ public class TrainingActivity extends AppCompatActivity {
     private Button variant2;
 
     private List<FillWord> incorrectWords = new ArrayList<>();
+    private List<String> checkedCategories;
 
-    private static final int DEFAULT_COLOR = Color.BLACK;
-    private static final int DARK_GREEN = Color.parseColor("#4C924C");
 
     private SharedPreferences sharedPref;
-    private static final String LAST_FILLED_WORD = "lastWord";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_training);
-        sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        sharedPref = Utils.getSharedPreferences(getBaseContext());
+        checkedCategories = getIntent().getStringArrayListExtra(TICKED_CATEGORIES);
 
         wordHelper = new WordDbHelper(this);
         categoryHelper = new CategoryDbHelper(this);
@@ -103,7 +107,18 @@ public class TrainingActivity extends AppCompatActivity {
     }
 
     private void setNewRandomWord() {
-        setWord(wordHelper.getRandomFilledWord());
+        FillWord word = wordHelper.getRandomFilledWord();
+        if (checkedCategories != null) {
+            String categoryName = null;
+            do {
+                word = wordHelper.getRandomFilledWord();
+                int categoryId = wordCategoryHelper.getCategoryId(word.getId());
+                Category category = categoryHelper.findCategory(categoryId);
+                if (category == null) continue;
+                categoryName = category.getName();
+            } while (!checkedCategories.contains(categoryName));
+        }
+        setWord(word);
     }
 
     private void setWord(FillWord word) {
