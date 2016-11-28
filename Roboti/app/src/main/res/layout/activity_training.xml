@@ -8,7 +8,19 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="cz.muni.fi.umimecesky.roboti.TrainingActivity">
+    tools:context="cz.muni.fi.umimecesky.roboti.activity.TrainingActivity">
+
+
+    <TextView
+        android:id="@+id/category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/word"
+        android:gravity="center"
+        android:padding="@dimen/text_padding"
+        android:text=""
+        android:textSize="@dimen/category_text_size"
+        />
 
     <TextView
         android:id="@+id/word"
@@ -22,8 +34,9 @@
         />
 
     <LinearLayout
+        android:id="@+id/buttonLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/word"
         android:layout_centerHorizontal="true"
         >
@@ -50,4 +63,5 @@
             />
 
     </LinearLayout>
+
 </RelativeLayout>

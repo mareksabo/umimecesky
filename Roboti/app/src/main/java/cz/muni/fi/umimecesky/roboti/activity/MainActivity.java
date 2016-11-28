@@ -1,4 +1,4 @@
-package cz.muni.fi.umimecesky.roboti;
+package cz.muni.fi.umimecesky.roboti.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import cz.muni.fi.umimecesky.roboti.db.WordDatabaseHandler;
+import cz.muni.fi.umimecesky.roboti.R;
+import cz.muni.fi.umimecesky.roboti.db.WordDbHelper;
 import cz.muni.fi.umimecesky.roboti.task.WordImportAsyncTask;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.fragment_menu);
         sharedPref = this.getPreferences(Context.MODE_PRIVATE);
 
-        WordDatabaseHandler dbHelper = new WordDatabaseHandler(getApplicationContext());
+        WordDbHelper dbHelper = new WordDbHelper(getApplicationContext());
         trainingButton = (Button) findViewById(R.id.trainingButton);
         trainingButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
         importButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ListCategoriesActivity.class);
+                startActivity(intent);
 //                Fragment secondFragment = new CategoryFragment();
 //                FragmentTransaction transaction = getFragmentManager().beginTransaction();
 //
@@ -53,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
 
 
 

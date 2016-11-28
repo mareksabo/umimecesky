@@ -13,7 +13,7 @@ import cz.muni.fi.umimecesky.roboti.pojo.FillWord;
 
 import static cz.muni.fi.umimecesky.roboti.FillWordContract.WordEntry;
 
-public class WordDatabaseHandler extends SQLiteOpenHelper {
+public class WordDbHelper extends SQLiteOpenHelper {
 
 
     private static final String COMMA_SEP = ",";
@@ -34,7 +34,7 @@ public class WordDatabaseHandler extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "FillWords.db";
 
 
-    public WordDatabaseHandler(Context context) {
+    public WordDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

@@ -1,4 +1,4 @@
-package cz.muni.fi.umimecesky.roboti;
+package cz.muni.fi.umimecesky.roboti.activity;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -14,21 +14,29 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.muni.fi.umimecesky.roboti.db.WordDatabaseHandler;
+import cz.muni.fi.umimecesky.roboti.R;
+import cz.muni.fi.umimecesky.roboti.db.CategoryDbHelper;
+import cz.muni.fi.umimecesky.roboti.db.WordCategoryDbHelper;
+import cz.muni.fi.umimecesky.roboti.db.WordDbHelper;
+import cz.muni.fi.umimecesky.roboti.pojo.Category;
 import cz.muni.fi.umimecesky.roboti.pojo.FillWord;
 
 public class TrainingActivity extends AppCompatActivity {
 
-    private WordDatabaseHandler handler;
+    private WordDbHelper wordHelper;
+    private CategoryDbHelper categoryHelper;
+    private WordCategoryDbHelper wordCategoryHelper;
 
     private FillWord currentWord;
-    private TextView textWord;
+    private TextView wordText;
+    private TextView categoryText;
     private Button variant1;
     private Button variant2;
 
     private List<FillWord> incorrectWords = new ArrayList<>();
 
     private static final int DEFAULT_COLOR = Color.BLACK;
+    private static final int DARK_GREEN = Color.parseColor("#4C924C");
 
     private SharedPreferences sharedPref;
     private static final String LAST_FILLED_WORD = "lastWord";
@@ -39,8 +47,11 @@ public class TrainingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_training);
         sharedPref = this.getPreferences(Context.MODE_PRIVATE);
 
-        handler = new WordDatabaseHandler(this);
-        textWord = (TextView) findViewById(R.id.word);
+        wordHelper = new WordDbHelper(this);
+        categoryHelper = new CategoryDbHelper(this);
+        wordCategoryHelper = new WordCategoryDbHelper(this);
+        wordText = (TextView) findViewById(R.id.word);
+        categoryText = (TextView) findViewById(R.id.category);
         variant1  = (Button) findViewById(R.id.firstButton);
         variant2  = (Button) findViewById(R.id.secondButton);
 
@@ -62,10 +73,18 @@ public class TrainingActivity extends AppCompatActivity {
     }
 
     private void evaluateTask(int buttonNumber) {
-        Button button = buttonNumber == 0 ? variant1 : variant2;
+        final Button button = buttonNumber == 0 ? variant1 : variant2;
 
         if (currentWord.getCorrectVariant() == buttonNumber) {
-            setNewRandomWord();
+            button.setTextColor(DARK_GREEN);
+            button.setEnabled(false);
+            button.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    button.setEnabled(true);
+                    setNewRandomWord();
+                }
+            }, 500);
         } else {
             button.setTextColor(Color.RED);
             if (!incorrectWords.contains(currentWord)) {
@@ -84,16 +103,20 @@ public class TrainingActivity extends AppCompatActivity {
     }
 
     private void setNewRandomWord() {
-        setWord(handler.getRandomFilledWord());
+        setWord(wordHelper.getRandomFilledWord());
     }
 
     private void setWord(FillWord word) {
+        if (word == null) return;
         this.currentWord = word;
-        textWord.setText(word.getWordMissing());
+        wordText.setText(word.getWordMissing());
         variant1.setText(word.getVariant1());
         variant2.setText(word.getVariant2());
         variant1.setTextColor(DEFAULT_COLOR);
         variant2.setTextColor(DEFAULT_COLOR);
+        int categoryId = wordCategoryHelper.getCategoryId(currentWord.getId());
+        Category category = categoryHelper.findCategory(categoryId);
+        if (category != null) categoryText.setText(category.getName());
     }
 
     @Override

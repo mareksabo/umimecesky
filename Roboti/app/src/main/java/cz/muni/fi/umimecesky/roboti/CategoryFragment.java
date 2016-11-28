@@ -12,6 +12,8 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cz.muni.fi.umimecesky.roboti.pojo.Category;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,11 +48,6 @@ public class CategoryFragment extends ListFragment {
     private List<Category> getCategoryList() {
 
         ArrayList<Category> contactlist = new ArrayList<>();
-
-        contactlist.add(new Category("Vybrane slová po B"));
-        contactlist.add(new Category("Vybrane slová po P"));
-        contactlist.add(new Category("Vybrane slová po L"));
-
 
         return contactlist;
     }

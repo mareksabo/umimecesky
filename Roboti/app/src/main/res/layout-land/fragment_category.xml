@@ -11,7 +11,7 @@
 
 
     <ListView
-        android:id="@+id/categoryList"
+        android:id="@+id/categories"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </ListView>
