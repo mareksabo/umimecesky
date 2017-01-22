@@ -88,7 +88,6 @@ public class WordDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + WordEntry.TABLE_NAME
                 + " WHERE " + WordEntry.IS_VISIBLE + " = " + WordEntry.VISIBLE_TRUE
-                + " AND " + WordEntry.EXPLANATION + " <> '' "
                 + " ORDER BY RANDOM() LIMIT 1", null);
         if (!cursor.moveToFirst()) {
             return null;

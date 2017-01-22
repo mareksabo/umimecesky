@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cz.muni.fi.umimecesky.roboti.R;
@@ -40,8 +39,7 @@ public class TrainingActivity extends AppCompatActivity {
     private Button variant1;
     private Button variant2;
 
-    private List<FillWord> incorrectWords = new ArrayList<>();
-    private List<String> checkedCategories;
+    private List<Category> checkedCategories;
 
 
     private SharedPreferences sharedPref;
@@ -52,7 +50,7 @@ public class TrainingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_training);
         sharedPref = Utils.getSharedPreferences(getBaseContext());
 
-        checkedCategories = getIntent().getStringArrayListExtra(TICKED_CATEGORIES);
+        checkedCategories = (List<Category>) getIntent().getSerializableExtra(TICKED_CATEGORIES);
 
         wordHelper = new WordDbHelper(this);
         categoryHelper = new CategoryDbHelper(this);
@@ -97,9 +95,6 @@ public class TrainingActivity extends AppCompatActivity {
         } else {
             button.setTextColor(Color.RED);
             showExplanation();
-            if (!incorrectWords.contains(currentWord)) {
-                incorrectWords.add(currentWord);
-            }
         }
     }
 
@@ -127,15 +122,13 @@ public class TrainingActivity extends AppCompatActivity {
     private void setNewRandomWord() {
         FillWord word = wordHelper.getRandomFilledWord();
         Log.v("random word", String.valueOf(word));
-        if (checkedCategories != null) {
-            String categoryName = null;
+        if (checkedCategories != null) { // TODO: select word with one of the categories
+            Category category;
             do {
                 word = wordHelper.getRandomFilledWord();
                 int categoryId = wordCategoryHelper.getCategoryId(word.getId());
-                Category category = categoryHelper.findCategory(categoryId);
-                if (category == null) continue;
-                categoryName = category.getName();
-            } while (!checkedCategories.contains(categoryName));
+                category = categoryHelper.findCategory(categoryId);
+            } while (!checkedCategories.contains(category));
         }
         setWord(word);
     }
@@ -150,6 +143,11 @@ public class TrainingActivity extends AppCompatActivity {
         variant2.setText(word.getVariant2());
         variant1.setTextColor(DEFAULT_COLOR);
         variant2.setTextColor(DEFAULT_COLOR);
+
+        setCategoryName();
+    }
+
+    private void setCategoryName() {
         int categoryId = wordCategoryHelper.getCategoryId(currentWord.getId());
         Category category = categoryHelper.findCategory(categoryId);
         if (category != null) categoryText.setText(category.getName());
@@ -158,7 +156,6 @@ public class TrainingActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
         String json = new Gson().toJson(currentWord);
         sharedPref.edit().putString(LAST_FILLED_WORD, json).apply();
     }
