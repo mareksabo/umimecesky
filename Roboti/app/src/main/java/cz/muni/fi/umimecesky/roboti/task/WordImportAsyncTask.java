@@ -1,7 +1,6 @@
 package cz.muni.fi.umimecesky.roboti.task;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.database.sqlite.SQLiteDatabase;
@@ -17,6 +16,7 @@ import java.io.InputStreamReader;
 import cz.muni.fi.umimecesky.roboti.db.CategoryDbHelper;
 import cz.muni.fi.umimecesky.roboti.db.WordCategoryDbHelper;
 import cz.muni.fi.umimecesky.roboti.db.WordDbHelper;
+import cz.muni.fi.umimecesky.roboti.utils.Utils;
 
 import static cz.muni.fi.umimecesky.roboti.utils.Utils.IS_FILLED;
 
@@ -46,13 +46,13 @@ public class WordImportAsyncTask extends AsyncTask<Void, Void, Void> {
         dbHelper.onUpgrade(db, 1, 2); // TODO: remove later?
 
         //id;name;
-        //id;name;subname;
+        //id;name;subname; - "&ndash;" problem
 
         try {
             InputStream inStream = activity.getAssets().open("concepts.csv");
             BufferedReader buffer = new BufferedReader(new InputStreamReader(inStream));
             String line;
-            String[] columnNames = buffer.readLine().split(";");
+            buffer.readLine(); // column names
 
             db.beginTransaction();
 
@@ -80,12 +80,15 @@ public class WordImportAsyncTask extends AsyncTask<Void, Void, Void> {
 
     }
 
+    /**
+     * Format concept;word;.
+     * concept - category id
+     * word - fill word id
+     */
     private void importConversions() {
         WordCategoryDbHelper dbHelper = new WordCategoryDbHelper(activity.getApplicationContext());
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         dbHelper.onUpgrade(db, 1, 2);
-
-        //id;name;
 
         try {
             InputStream inStream = activity.getAssets().open("doplnovacka_concept_word.csv");
@@ -120,21 +123,28 @@ public class WordImportAsyncTask extends AsyncTask<Void, Void, Void> {
 
     }
 
+    /**
+     * CSV file has following data :
+     *
+     * id;word;solved;variant1;variant2;correct;explanation;grade;visible
+     * correct - 0 / 1 - if correct is variant1 or variant2
+     * grade - word clue complexity
+     * visible - 0 / 1 - if this word can be used or not
+     */
     private void importWords() {
         WordDbHelper dbHelper = new WordDbHelper(activity.getApplicationContext());
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         dbHelper.onUpgrade(db, 1, 2);
 
-        String fillInCSV = "doplnovacka_word.csv";
+        final String WORD_CSV_FILENAME = "doplnovacka_word.csv";
         AssetManager manager = activity.getAssets();
 
-        //id;word;solved;variant1;variant2;correct;explanation;grade;visible
-
         try {
-            InputStream inStream = manager.open(fillInCSV);
+            InputStream inStream = manager.open(WORD_CSV_FILENAME);
             BufferedReader buffer = new BufferedReader(new InputStreamReader(inStream));
             String line;
-            String[] columnNames = buffer.readLine().split(";");
+
+            buffer.readLine(); // column names ignored
 
             db.beginTransaction();
 
@@ -150,7 +160,11 @@ public class WordImportAsyncTask extends AsyncTask<Void, Void, Void> {
                         columns[2].trim(),
                         columns[3].trim(),
                         columns[4].trim(),
-                        columns[5].trim());
+                        columns[5].trim(),
+                        columns[6].trim(),
+                        Integer.parseInt(columns[7].trim()),
+                        Utils.stringNumberToBoolean(columns[8].trim())
+                );
             }
 
             importedSize = insertedCount;
@@ -168,7 +182,7 @@ public class WordImportAsyncTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences prefs = Utils.getSharedPreferences(activity);
         prefs.edit().putBoolean(IS_FILLED, true).apply();
 
         Toast.makeText(activity.getApplicationContext(), "Words inserted: " + importedSize,

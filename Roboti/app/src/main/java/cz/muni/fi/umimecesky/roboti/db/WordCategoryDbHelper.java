@@ -69,11 +69,12 @@ public class WordCategoryDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
-        int categoryId = -1;
+        int categoryId;
         if (cursor.moveToFirst()) {
              categoryId = Integer.parseInt(cursor.getString(0));
         } else {
-            Log.d("Invalid word", String.valueOf(wordId)); // 4230
+            Log.d("Category missing", String.valueOf(wordId));
+            categoryId = 46; // hotfix, because this category is not in conversion table
         }
 
         cursor.close();

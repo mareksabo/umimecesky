@@ -1,5 +1,6 @@
 package cz.muni.fi.umimecesky.roboti.pojo;
 
+// TODO : implements Serializable
 
 public class FillWord {
 
@@ -9,14 +10,20 @@ public class FillWord {
     private String variant1;
     private String variant2;
     private int correctVariant;
+    private String explanation;
+    private int grade;
+    private boolean visibility;
 
-    public FillWord(long id, String wordMissing, String wordFilled, String variant1, String variant2, int correctVariant) {
+    public FillWord(long id, String wordMissing, String wordFilled, String variant1, String variant2, int correctVariant, String explanation, int grade, boolean visibility) {
         this.id = id;
         this.wordMissing = wordMissing;
         this.wordFilled = wordFilled;
         this.variant1 = variant1;
         this.variant2 = variant2;
         this.correctVariant = correctVariant;
+        this.explanation = explanation;
+        this.grade = grade;
+        this.visibility = visibility;
     }
 
     @Override
@@ -28,6 +35,9 @@ public class FillWord {
                 ", variant1='" + variant1 + '\'' +
                 ", variant2='" + variant2 + '\'' +
                 ", correctVariant=" + correctVariant +
+                ", explanation='" + explanation + '\'' +
+                ", grade=" + grade +
+                ", visibility=" + visibility +
                 '}';
     }
 
@@ -53,5 +63,17 @@ public class FillWord {
 
     public int getCorrectVariant() {
         return correctVariant;
+    }
+
+    public String getExplanation() {
+        return explanation;
+    }
+
+    public int getGrade() {
+        return grade;
+    }
+
+    public boolean isVisibility() {
+        return visibility;
     }
 }

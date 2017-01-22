@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Button;
 
 import cz.muni.fi.umimecesky.roboti.R;
-import cz.muni.fi.umimecesky.roboti.db.WordDbHelper;
 import cz.muni.fi.umimecesky.roboti.task.WordImportAsyncTask;
 import cz.muni.fi.umimecesky.roboti.utils.Utils;
 
@@ -16,19 +15,21 @@ import static cz.muni.fi.umimecesky.roboti.utils.Utils.IS_FILLED;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button trainingButton;
-    private Button importButton;
-
-    private SharedPreferences sharedPref;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_menu);
-        sharedPref = Utils.getSharedPreferences(this);
 
-        WordDbHelper dbHelper = new WordDbHelper(getApplicationContext());
-        trainingButton = (Button) findViewById(R.id.trainingButton);
+        SharedPreferences sharedPref = Utils.getSharedPreferences(this);
+        setButtons();
+
+        if (!sharedPref.getBoolean(IS_FILLED, false)) {
+            new WordImportAsyncTask(MainActivity.this).execute();
+        }
+    }
+
+    private void setButtons() {
+        Button trainingButton = (Button) findViewById(R.id.trainingButton);
         trainingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -36,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        importButton = (Button) findViewById(R.id.raceButton);
+
+        Button importButton = (Button) findViewById(R.id.raceButton);
         importButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,11 +53,6 @@ public class MainActivity extends AppCompatActivity {
 //                transaction.commit();
             }
         });
-
-        if (!sharedPref.getBoolean(IS_FILLED, false)) {
-            new WordImportAsyncTask(MainActivity.this).execute();
-        }
-
     }
 
 

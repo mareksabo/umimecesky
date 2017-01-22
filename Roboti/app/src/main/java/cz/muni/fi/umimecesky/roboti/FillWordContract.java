@@ -16,6 +16,11 @@ public final class FillWordContract {
         public static final String VARIANT1 = "first_variant";
         public static final String VARIANT2 = "second_variant";
         public static final String CORRECT_VARIANT = "correct_variant";
+        public static final String EXPLANATION = "explanation";
+        public static final String GRADE = "grade";
+        public static final String IS_VISIBLE = "is_visible";
+        public static final String VISIBLE_TRUE = "1";
+        public static final String VISIBLE_FALSE = "0";
     }
 }
 

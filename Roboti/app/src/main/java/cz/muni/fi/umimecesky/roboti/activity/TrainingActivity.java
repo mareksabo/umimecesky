@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -35,6 +36,7 @@ public class TrainingActivity extends AppCompatActivity {
     private FillWord currentWord;
     private TextView wordText;
     private TextView categoryText;
+    private TextView explanationText;
     private Button variant1;
     private Button variant2;
 
@@ -49,6 +51,7 @@ public class TrainingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_training);
         sharedPref = Utils.getSharedPreferences(getBaseContext());
+
         checkedCategories = getIntent().getStringArrayListExtra(TICKED_CATEGORIES);
 
         wordHelper = new WordDbHelper(this);
@@ -56,6 +59,7 @@ public class TrainingActivity extends AppCompatActivity {
         wordCategoryHelper = new WordCategoryDbHelper(this);
         wordText = (TextView) findViewById(R.id.word);
         categoryText = (TextView) findViewById(R.id.category);
+        explanationText = (TextView) findViewById(R.id.explanationText);
         variant1  = (Button) findViewById(R.id.firstButton);
         variant2  = (Button) findViewById(R.id.secondButton);
 
@@ -89,12 +93,26 @@ public class TrainingActivity extends AppCompatActivity {
                     setNewRandomWord();
                 }
             }, 500);
+
         } else {
             button.setTextColor(Color.RED);
+            showExplanation();
             if (!incorrectWords.contains(currentWord)) {
                 incorrectWords.add(currentWord);
             }
         }
+    }
+
+    private void showExplanation() {
+        String explanation = currentWord.getExplanation();
+        if (!explanation.isEmpty()) {
+            explanationText.setText(explanation);
+            explanationText.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideExplanation() {
+        explanationText.setVisibility(View.INVISIBLE);
     }
 
     private void setFirstWord() {
@@ -108,6 +126,7 @@ public class TrainingActivity extends AppCompatActivity {
 
     private void setNewRandomWord() {
         FillWord word = wordHelper.getRandomFilledWord();
+        Log.v("random word", String.valueOf(word));
         if (checkedCategories != null) {
             String categoryName = null;
             do {
@@ -122,6 +141,8 @@ public class TrainingActivity extends AppCompatActivity {
     }
 
     private void setWord(FillWord word) {
+        hideExplanation();
+
         if (word == null) return;
         this.currentWord = word;
         wordText.setText(word.getWordMissing());
