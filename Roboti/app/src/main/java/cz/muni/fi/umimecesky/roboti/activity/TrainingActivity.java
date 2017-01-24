@@ -2,9 +2,11 @@ package cz.muni.fi.umimecesky.roboti.activity;
 
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -60,8 +62,8 @@ public class TrainingActivity extends AppCompatActivity {
         wordText = (TextView) findViewById(R.id.word);
         categoryText = (TextView) findViewById(R.id.category);
         explanationText = (TextView) findViewById(R.id.explanationText);
-        variant1  = (Button) findViewById(R.id.firstButton);
-        variant2  = (Button) findViewById(R.id.secondButton);
+        variant1 = (Button) findViewById(R.id.firstButton);
+        variant2 = (Button) findViewById(R.id.secondButton);
 
         setFirstWord();
 
@@ -78,14 +80,33 @@ public class TrainingActivity extends AppCompatActivity {
             }
         });
 
+        View.OnTouchListener touchListener = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        v.setAlpha(.8f);
+                        return false;
+                    case MotionEvent.ACTION_UP:
+                        // RELEASED
+                        v.setAlpha(1);
+                        return false;
+                }
+                return false;
+            }
+        };
+
+        variant1.setOnTouchListener(touchListener);
+        variant2.setOnTouchListener(touchListener);
+
     }
 
     private void evaluateTask(int buttonNumber) {
         final Button button = buttonNumber == 0 ? variant1 : variant2;
 
         if (currentWord.getCorrectVariant() == buttonNumber) {
-            button.setTextColor(DARK_GREEN);
-            button.setEnabled(false);
+            setCorrect(button);
+
             button.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -95,8 +116,7 @@ public class TrainingActivity extends AppCompatActivity {
             }, NEW_WORD_DELAY);
 
         } else {
-            button.setTextColor(Color.RED);
-            button.setEnabled(false);
+            setIncorrect(button);
             showExplanation();
         }
     }
@@ -104,6 +124,24 @@ public class TrainingActivity extends AppCompatActivity {
     private void setButtonsEnabled() {
         variant1.setEnabled(true);
         variant2.setEnabled(true);
+    }
+
+    private static final int STROKE_WIDTH = 7;
+
+    private void setIncorrect(Button button) {
+
+        button.setTextColor(Color.RED);
+
+        GradientDrawable gradientDrawable = (GradientDrawable) button.getBackground();
+        gradientDrawable.setStroke(STROKE_WIDTH, Color.RED);
+        button.setEnabled(false);
+    }
+
+    private void setCorrect(Button button) {
+        button.setTextColor(DARK_GREEN);
+        GradientDrawable gradientDrawable = (GradientDrawable) button.getBackground();
+        gradientDrawable.setStroke(STROKE_WIDTH, DARK_GREEN);
+        button.setEnabled(false);
     }
 
     private void showExplanation() {
@@ -148,6 +186,9 @@ public class TrainingActivity extends AppCompatActivity {
         variant2.setText(word.getVariant2());
         variant1.setTextColor(DEFAULT_COLOR);
         variant2.setTextColor(DEFAULT_COLOR);
+
+        ((GradientDrawable) variant1.getBackground()).setStroke(4, DEFAULT_COLOR);
+        ((GradientDrawable) variant2.getBackground()).setStroke(4, DEFAULT_COLOR);
 
         setCategoryName();
         setButtonsEnabled();

@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textAllCaps="false"
-                android:background="?android:attr/selectableItemBackground"
+                android:background="@drawable/button"
                 android:textSize="@dimen/button_text_size" />
 
         </LinearLayout>
