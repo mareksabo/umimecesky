@@ -63,7 +63,6 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
         }
 
         Category category = categoryList.get(position);
-        Log.d("position", position + "");
         holder.categoryName.setText(category.getName());
         holder.checkBox.setChecked(checkedStates[position]);
         holder.checkBox.setTag(position);

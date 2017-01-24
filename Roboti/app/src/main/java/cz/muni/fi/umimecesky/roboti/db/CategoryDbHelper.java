@@ -12,26 +12,24 @@ import java.util.List;
 
 import cz.muni.fi.umimecesky.roboti.pojo.Category;
 
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.CATEGORY_TABLE;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.COMMA_SEP;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.CategoryColumn.CATEGORY_ID;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.CategoryColumn.NAME;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.DATABASE_NAME;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.DATABASE_VERSION;
+
 
 public class CategoryDbHelper extends SQLiteOpenHelper {
 
 
-    private static final String COMMA_SEP = ",";
-    private static final String TABLE_NAME = "categories";
-    private static final String _ID = "id";
-    private static final String NAME = "name";
-
-    private static final String SQL_CREATE_ENTRIES =
-            "CREATE TABLE " + TABLE_NAME + " ( " +
-                    _ID + " INT PRIMARY KEY " + COMMA_SEP +
+    private static final String CATEGORY_CREATE_TABLE =
+            "CREATE TABLE " + CATEGORY_TABLE + " ( " +
+                    CATEGORY_ID + " INT PRIMARY KEY " + COMMA_SEP +
                     NAME + " TEXT NOT NULL " + " )";
 
-    private static final String SQL_DELETE_ENTRIES =
-            "DROP TABLE IF EXISTS " + TABLE_NAME;
-
-    // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "Categories.db";
+    private static final String CATEGORY_DELETE_TABLE =
+            "DROP TABLE IF EXISTS " + CATEGORY_TABLE;
 
 
     public CategoryDbHelper(Context context) {
@@ -40,38 +38,31 @@ public class CategoryDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(SQL_CREATE_ENTRIES);
+        db.execSQL(CATEGORY_CREATE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(SQL_DELETE_ENTRIES);
+        db.execSQL(CATEGORY_DELETE_TABLE);
         onCreate(db);
     }
 
 
     public boolean addCategory(SQLiteDatabase db, long id, String name) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(_ID, id);
+        contentValues.put(CATEGORY_ID, id);
         contentValues.put(NAME, name);
-        long wordId = db.insert(TABLE_NAME, null, contentValues);
+        long wordId = db.insert(CATEGORY_TABLE, null, contentValues);
         return wordId != -1;
-    }
-
-    public Integer deleteCategory(long id) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(TABLE_NAME,
-                "id = ? ",
-                new String[]{Long.toString(id)});
     }
 
     public Category findCategory(long id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String selectQuery = "SELECT * FROM " + TABLE_NAME + " WHERE " + _ID + " = " + id;
+        String selectQuery = "SELECT * FROM " + CATEGORY_TABLE + " WHERE " + CATEGORY_ID + " = " + id;
         Cursor cursor = db.rawQuery(selectQuery, null);
         Category category = null;
         if (cursor.moveToFirst()) {
-             category = cursorToCategory(cursor);
+            category = cursorToCategory(cursor);
         } else {
             Log.d("Category not found,id", String.valueOf(id));
         }
@@ -84,7 +75,7 @@ public class CategoryDbHelper extends SQLiteOpenHelper {
     public List<Category> getAllCategories() {
         List<Category> categoryList = new ArrayList<>();
 
-        String selectQuery = "SELECT  * FROM " + TABLE_NAME;
+        String selectQuery = "SELECT  * FROM " + CATEGORY_TABLE;
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);

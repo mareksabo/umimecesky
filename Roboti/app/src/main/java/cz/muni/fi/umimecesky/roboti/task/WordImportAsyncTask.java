@@ -39,14 +39,13 @@ public class WordImportAsyncTask extends AsyncTask<Void, Void, Void> {
         return null;
     }
 
-
     private void importCategories() {
         CategoryDbHelper dbHelper = new CategoryDbHelper(activity.getApplicationContext());
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         dbHelper.onUpgrade(db, 1, 2); // TODO: remove later?
 
         //id;name;
-        //id;name;subname; - "&ndash;" problem
+        //id;name;name2; - "&ndash;" problem
 
         try {
             InputStream inStream = activity.getAssets().open("concepts.csv");
@@ -94,7 +93,8 @@ public class WordImportAsyncTask extends AsyncTask<Void, Void, Void> {
             InputStream inStream = activity.getAssets().open("doplnovacka_concept_word.csv");
             BufferedReader buffer = new BufferedReader(new InputStreamReader(inStream));
             String line;
-            String[] columnNames = buffer.readLine().split(";");
+
+            buffer.readLine(); // column names
 
             db.beginTransaction();
 
@@ -125,7 +125,7 @@ public class WordImportAsyncTask extends AsyncTask<Void, Void, Void> {
 
     /**
      * CSV file has following data :
-     *
+     * <p>
      * id;word;solved;variant1;variant2;correct;explanation;grade;visible
      * correct - 0 / 1 - if correct is variant1 or variant2
      * grade - word clue complexity

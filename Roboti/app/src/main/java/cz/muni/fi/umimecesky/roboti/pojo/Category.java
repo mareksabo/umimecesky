@@ -34,8 +34,7 @@ public class Category implements Serializable {
 
         Category category = (Category) o;
 
-        if (id != category.id) return false;
-        return name.equals(category.name);
+        return id == category.id && name.equals(category.name);
 
     }
 
@@ -45,4 +44,5 @@ public class Category implements Serializable {
         result = 31 * result + name.hashCode();
         return result;
     }
+
 }

@@ -3,7 +3,11 @@ package cz.muni.fi.umimecesky.roboti.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Color;
+
+import cz.muni.fi.umimecesky.roboti.pojo.FillWord;
+import cz.muni.fi.umimecesky.roboti.pojo.FillWordBuilder;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -38,6 +42,21 @@ public final class Utils {
             default:
                 throw new NumberFormatException("Parsed number is neither 1 or 0, but: " + parsedInt);
         }
+    }
+
+    public static FillWord convertCursorToFillWord(Cursor cursor) {
+
+        return new FillWordBuilder()
+                .id(cursor.getLong(0))
+                .wordMissing(cursor.getString(1))
+                .wordFilled(cursor.getString(2))
+                .variant1(cursor.getString(3))
+                .variant2(cursor.getString(4))
+                .correctVariant(cursor.getInt(5))
+                .explanation(cursor.getString(6))
+                .grade(cursor.getInt(7))
+                .visibility(cursor.getInt(8) != 0)
+                .createFillWord();
     }
 
 }

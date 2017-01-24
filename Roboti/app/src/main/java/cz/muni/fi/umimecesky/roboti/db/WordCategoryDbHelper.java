@@ -7,28 +7,36 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import cz.muni.fi.umimecesky.roboti.pojo.Category;
+import cz.muni.fi.umimecesky.roboti.pojo.FillWord;
+
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.ALL_WORD_COLUMNS;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.CATEGORY_TABLE;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.COMMA_SEP;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.CategoryColumn.CATEGORY_ID;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.DATABASE_NAME;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.DATABASE_VERSION;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.JOIN_TABLE;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.JoinColumn.JOIN_CATEGORY_ID;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.JoinColumn.JOIN_WORD_ID;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.WORD_TABLE;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.WordColumn.WORD_ID;
+import static cz.muni.fi.umimecesky.roboti.utils.Utils.convertCursorToFillWord;
+
 
 public class WordCategoryDbHelper extends SQLiteOpenHelper {
 
 
-    private static final String COMMA_SEP = ",";
-    private static final String TABLE_NAME = "words_categories";
-    private static final String CATEGORY_ID = "category_id";
-    private static final String WORD_ID = "word_id";
-    private static final String _ID = WORD_ID;
-
-    private static final String SQL_CREATE_ENTRIES =
-            "CREATE TABLE " + TABLE_NAME + " ( " +
-                    WORD_ID + " LONG PRIMARY KEY NOT NULL " + COMMA_SEP +
-                    CATEGORY_ID + " INT NOT NULL " + " )";
+    private static final String SQL_CREATE_ENTRIES = "CREATE TABLE " + JOIN_TABLE + " ( " +
+            JOIN_WORD_ID + " LONG PRIMARY KEY NOT NULL " + COMMA_SEP +
+            JOIN_CATEGORY_ID + " INT NOT NULL " + " )";
 
     private static final String SQL_DELETE_ENTRIES =
-            "DROP TABLE IF EXISTS " + TABLE_NAME;
-
-    // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "WordsCategories.db";
-
+            "DROP TABLE IF EXISTS " + JOIN_TABLE;
 
     public WordCategoryDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -48,30 +56,23 @@ public class WordCategoryDbHelper extends SQLiteOpenHelper {
 
     public boolean addConversion(SQLiteDatabase db, int categoryId, long wordId) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(CATEGORY_ID, categoryId);
-        contentValues.put(WORD_ID, wordId);
-        long result = db.insert(TABLE_NAME, null, contentValues);
+        contentValues.put(JOIN_CATEGORY_ID, categoryId);
+        contentValues.put(JOIN_WORD_ID, wordId);
+        long result = db.insert(JOIN_TABLE, null, contentValues);
         return result != -1;
-    }
-
-    public Integer deleteConversion(long id) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(TABLE_NAME,
-                _ID + " = ? ",
-                new String[]{Long.toString(id)});
     }
 
     public Integer getCategoryId(long wordId) {
 
-        String selectQuery = "SELECT " + CATEGORY_ID + " FROM " + TABLE_NAME + " WHERE "
-                 + WORD_ID + " = " + wordId;
+        String selectQuery = "SELECT " + JOIN_CATEGORY_ID + " FROM " + JOIN_TABLE + " WHERE "
+                + JOIN_WORD_ID + " = " + wordId;
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         int categoryId;
         if (cursor.moveToFirst()) {
-             categoryId = Integer.parseInt(cursor.getString(0));
+            categoryId = Integer.parseInt(cursor.getString(0));
         } else {
             Log.d("Category missing", String.valueOf(wordId));
             categoryId = 46; // hotfix, because this category is not in conversion table
@@ -80,6 +81,60 @@ public class WordCategoryDbHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return categoryId;
+    }
+
+    //TODO: add to table conversion category 46 and remove hotfix
+
+    private List<FillWord> storedWords = new ArrayList<>();
+    private List<Category> storedCategories = new ArrayList<>();
+    private final Random random = new Random();
+
+
+    public FillWord getRandomCategoryWord(List<Category> categories) {
+
+        if (!storedWords.isEmpty() && !storedCategories.isEmpty() && categories.equals(storedCategories)) {
+            Log.i("words count", String.valueOf(storedWords.size()));
+            Log.i("words", String.valueOf(storedWords));
+            int index = random.nextInt(storedWords.size());
+            return storedWords.remove(index);
+        }
+
+        String categoryIds = getCategoryIds(categories);
+
+        final String QUERY = "SELECT " +
+                ALL_WORD_COLUMNS +
+                " FROM " + JOIN_TABLE + " INNER JOIN " + WORD_TABLE + " INNER JOIN " + CATEGORY_TABLE
+                + " WHERE " + JOIN_TABLE + "." + JOIN_WORD_ID + " = " + WORD_TABLE + "." + WORD_ID
+                + " AND " + JOIN_TABLE + "." + JOIN_CATEGORY_ID + " = " + CATEGORY_TABLE + "." + CATEGORY_ID
+                + " AND " + JOIN_TABLE + "." + JOIN_CATEGORY_ID + " IN " + categoryIds;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(QUERY, null);
+
+        storedCategories = categories;
+        storedWords = new ArrayList<>();
+
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            FillWord word = convertCursorToFillWord(cursor);
+            storedWords.add(word);
+        }
+        Log.v("words count", String.valueOf(storedWords.size()));
+        Log.v("words", String.valueOf(storedWords));
+
+        cursor.close();
+        return storedWords.remove(0);
+    }
+
+    private String getCategoryIds(List<Category> categoryList) {
+
+        StringBuilder builder = new StringBuilder("(");
+        String delimiter = "";
+        for (Category category : categoryList) {
+            builder.append(delimiter).append(category.getId());
+            delimiter = ",";
+        }
+        builder.append(")");
+        return builder.toString();
     }
 
 }

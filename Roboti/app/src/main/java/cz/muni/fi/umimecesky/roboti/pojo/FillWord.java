@@ -14,7 +14,8 @@ public class FillWord {
     private int grade;
     private boolean visibility;
 
-    public FillWord(long id, String wordMissing, String wordFilled, String variant1, String variant2, int correctVariant, String explanation, int grade, boolean visibility) {
+    FillWord(long id, String wordMissing, String wordFilled, String variant1, String variant2,
+             int correctVariant, String explanation, int grade, boolean visibility) {
         this.id = id;
         this.wordMissing = wordMissing;
         this.wordFilled = wordFilled;
@@ -73,7 +74,7 @@ public class FillWord {
         return grade;
     }
 
-    public boolean isVisibility() {
+    public boolean isVisible() {
         return visibility;
     }
 }

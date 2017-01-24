@@ -45,6 +45,7 @@ public class TrainingActivity extends AppCompatActivity {
     private SharedPreferences sharedPref;
 
     @Override
+    @SuppressWarnings("unchecked assignment")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_training);
@@ -113,8 +114,10 @@ public class TrainingActivity extends AppCompatActivity {
     private void setFirstWord() {
         String json = sharedPref.getString(LAST_FILLED_WORD, null);
         FillWord lastWord = new Gson().fromJson(json, FillWord.class);
-        setWord(lastWord);
-        if (currentWord == null) {
+
+        if (lastWord != null) {
+            setWord(lastWord);
+        } else {
             setNewRandomWord();
         }
     }
@@ -122,13 +125,8 @@ public class TrainingActivity extends AppCompatActivity {
     private void setNewRandomWord() {
         FillWord word = wordHelper.getRandomFilledWord();
         Log.v("random word", String.valueOf(word));
-        if (checkedCategories != null) { // TODO: select word with one of the categories
-            Category category;
-            do {
-                word = wordHelper.getRandomFilledWord();
-                int categoryId = wordCategoryHelper.getCategoryId(word.getId());
-                category = categoryHelper.findCategory(categoryId);
-            } while (!checkedCategories.contains(category));
+        if (checkedCategories != null) {
+            word = wordCategoryHelper.getRandomCategoryWord(checkedCategories);
         }
         setWord(word);
     }

@@ -7,34 +7,39 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import cz.muni.fi.umimecesky.roboti.pojo.FillWord;
-import cz.muni.fi.umimecesky.roboti.pojo.FillWordBuilder;
 
-import static cz.muni.fi.umimecesky.roboti.FillWordContract.WordEntry;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.COMMA_SEP;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.DATABASE_NAME;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.DATABASE_VERSION;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.VISIBLE_TRUE;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.WORD_TABLE;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.WordColumn.CORRECT_VARIANT;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.WordColumn.EXPLANATION;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.WordColumn.GRADE;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.WordColumn.IS_VISIBLE;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.WordColumn.VARIANT1;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.WordColumn.VARIANT2;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.WordColumn.WORD_FILLED;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.WordColumn.WORD_ID;
+import static cz.muni.fi.umimecesky.roboti.db.DbContract.WordColumn.WORD_MISSING;
+import static cz.muni.fi.umimecesky.roboti.utils.Utils.convertCursorToFillWord;
 
 public class WordDbHelper extends SQLiteOpenHelper {
 
-
-    private static final String COMMA_SEP = ",";
     private static final String SQL_CREATE_ENTRIES =
-            "CREATE TABLE " + WordEntry.TABLE_NAME + " ( " +
-                    WordEntry._ID + " LONG PRIMARY KEY," +
-                    WordEntry.WORD_MISSING + " TEXT NOT NULL " + COMMA_SEP +
-                    WordEntry.WORD_FILLED + " TEXT NOT NULL " + COMMA_SEP +
-                    WordEntry.VARIANT1 + " TEXT NOT NULL " + COMMA_SEP +
-                    WordEntry.VARIANT2 + " TEXT NOT NULL " + COMMA_SEP +
-                    WordEntry.CORRECT_VARIANT + " INTEGER NOT NULL " + COMMA_SEP +
-                    WordEntry.EXPLANATION + " TEXT NOT NULL " + COMMA_SEP +
-                    WordEntry.GRADE + " INTEGER NOT NULL " + COMMA_SEP +
-                    WordEntry.IS_VISIBLE + " INTEGER NOT NULL " +
+            "CREATE TABLE " + WORD_TABLE + " ( " +
+                    WORD_ID + " LONG PRIMARY KEY " + COMMA_SEP +
+                    WORD_MISSING + " TEXT NOT NULL " + COMMA_SEP +
+                    WORD_FILLED + " TEXT NOT NULL " + COMMA_SEP +
+                    VARIANT1 + " TEXT NOT NULL " + COMMA_SEP +
+                    VARIANT2 + " TEXT NOT NULL " + COMMA_SEP +
+                    CORRECT_VARIANT + " INTEGER NOT NULL " + COMMA_SEP +
+                    EXPLANATION + " TEXT NOT NULL " + COMMA_SEP +
+                    GRADE + " INTEGER NOT NULL " + COMMA_SEP +
+                    IS_VISIBLE + " INTEGER NOT NULL " +
                     " )";
 
-    private static final String SQL_DELETE_ENTRIES =
-            "DROP TABLE IF EXISTS " + WordEntry.TABLE_NAME;
-
-    // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "FillWords.db";
-
+    private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + WORD_TABLE;
 
     public WordDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -53,31 +58,27 @@ public class WordDbHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean addFilledWord(SQLiteDatabase db, long id, String missingWord, String filledWord, String variant1, String variant2, String correctVariant,
-                                 String explanation, int grade, boolean visibility) { //TODO
+    public boolean addFilledWord(SQLiteDatabase db, long id, String missingWord, String filledWord,
+                                 String variant1, String variant2, String correctVariant,
+                                 String explanation, int grade, boolean visibility) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(WordEntry._ID, id);
-        contentValues.put(WordEntry.WORD_MISSING, missingWord);
-        contentValues.put(WordEntry.WORD_FILLED, filledWord);
-        contentValues.put(WordEntry.VARIANT1, variant1);
-        contentValues.put(WordEntry.VARIANT2, variant2);
-        contentValues.put(WordEntry.CORRECT_VARIANT, correctVariant);
-        contentValues.put(WordEntry.EXPLANATION, explanation);
-        contentValues.put(WordEntry.GRADE, grade);
-        contentValues.put(WordEntry.IS_VISIBLE, visibility);
-        long wordId = db.insert(WordEntry.TABLE_NAME, null, contentValues);
+        contentValues.put(WORD_ID, id);
+        contentValues.put(WORD_MISSING, missingWord);
+        contentValues.put(WORD_FILLED, filledWord);
+        contentValues.put(VARIANT1, variant1);
+        contentValues.put(VARIANT2, variant2);
+        contentValues.put(CORRECT_VARIANT, correctVariant);
+        contentValues.put(EXPLANATION, explanation);
+        contentValues.put(GRADE, grade);
+        contentValues.put(IS_VISIBLE, visibility);
+        long wordId = db.insert(WORD_TABLE, null, contentValues);
         return wordId != -1;
-    }
-
-    public int deleteWord(long id) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(WordEntry.TABLE_NAME, "id = ? ", new String[]{Long.toString(id)});
     }
 
     public FillWord findWord(String filledName) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM " + WordEntry.TABLE_NAME + " WHERE "
-                + WordEntry.WORD_FILLED + " = ?", new String[]{filledName});
+        Cursor c = db.rawQuery("SELECT * FROM " + WORD_TABLE + " WHERE "
+                + WORD_FILLED + " = ?", new String[]{filledName});
         if (!c.moveToFirst()) {
             return null;
         }
@@ -86,8 +87,8 @@ public class WordDbHelper extends SQLiteOpenHelper {
 
     public FillWord getRandomFilledWord() {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + WordEntry.TABLE_NAME
-                + " WHERE " + WordEntry.IS_VISIBLE + " = " + WordEntry.VISIBLE_TRUE
+        Cursor cursor = db.rawQuery("SELECT * FROM " + WORD_TABLE
+                + " WHERE " + IS_VISIBLE + " = " + VISIBLE_TRUE
                 + " ORDER BY RANDOM() LIMIT 1", null);
         if (!cursor.moveToFirst()) {
             return null;
@@ -96,18 +97,5 @@ public class WordDbHelper extends SQLiteOpenHelper {
 
     }
 
-    private FillWord convertCursorToFillWord(Cursor cursor) {
 
-        return new FillWordBuilder()
-                .id(cursor.getLong(0))
-                .wordMissing(cursor.getString(1))
-                .wordFilled(cursor.getString(2))
-                .variant1(cursor.getString(3))
-                .variant2(cursor.getString(4))
-                .correctVariant(cursor.getInt(5))
-                .explanation(cursor.getString(6))
-                .grade(cursor.getInt(7))
-                .visibility(cursor.getInt(8) != 0)
-                .createFillWord();
-    }
 }
