@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.io.Serializable;
 import java.util.List;
@@ -55,15 +54,8 @@ public class ListCategoriesActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                StringBuffer responseText = new StringBuffer();
-
                 List<Category> selectedCategories = dataAdapter.getSelectedCategories();
-                for (Category category : selectedCategories) {
-                        responseText.append("\n").append(category.getName());
-                }
-                Toast.makeText(getApplicationContext(),responseText, Toast.LENGTH_LONG).show();
 
-                //todo: send categories
                 Intent intent = new Intent(getBaseContext(), TrainingActivity.class);
                 intent.putExtra(TICKED_CATEGORIES, (Serializable) selectedCategories);
 

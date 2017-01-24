@@ -42,7 +42,6 @@ public class WordImportAsyncTask extends AsyncTask<Void, Void, Void> {
     private void importCategories() {
         CategoryDbHelper dbHelper = new CategoryDbHelper(activity.getApplicationContext());
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        dbHelper.onUpgrade(db, 1, 2); // TODO: remove later?
 
         //id;name;
         //id;name;name2; - "&ndash;" problem

@@ -1,7 +1,5 @@
 package cz.muni.fi.umimecesky.roboti.pojo;
 
-// TODO : implements Serializable
-
 public class FillWord {
 
     private long id;
