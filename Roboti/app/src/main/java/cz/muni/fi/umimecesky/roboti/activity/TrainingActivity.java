@@ -24,6 +24,7 @@ import cz.muni.fi.umimecesky.roboti.utils.Utils;
 import static cz.muni.fi.umimecesky.roboti.utils.Utils.DARK_GREEN;
 import static cz.muni.fi.umimecesky.roboti.utils.Utils.DEFAULT_COLOR;
 import static cz.muni.fi.umimecesky.roboti.utils.Utils.LAST_FILLED_WORD;
+import static cz.muni.fi.umimecesky.roboti.utils.Utils.NEW_WORD_DELAY;
 import static cz.muni.fi.umimecesky.roboti.utils.Utils.TICKED_CATEGORIES;
 
 public class TrainingActivity extends AppCompatActivity {
@@ -88,15 +89,21 @@ public class TrainingActivity extends AppCompatActivity {
             button.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    button.setEnabled(true);
+                    setButtonsEnabled();
                     setNewRandomWord();
                 }
-            }, 500);
+            }, NEW_WORD_DELAY);
 
         } else {
             button.setTextColor(Color.RED);
+            button.setEnabled(false);
             showExplanation();
         }
+    }
+
+    private void setButtonsEnabled() {
+        variant1.setEnabled(true);
+        variant2.setEnabled(true);
     }
 
     private void showExplanation() {
@@ -143,6 +150,7 @@ public class TrainingActivity extends AppCompatActivity {
         variant2.setTextColor(DEFAULT_COLOR);
 
         setCategoryName();
+        setButtonsEnabled();
     }
 
     private void setCategoryName() {

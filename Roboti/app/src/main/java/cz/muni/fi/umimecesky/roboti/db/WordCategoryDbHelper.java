@@ -93,10 +93,7 @@ public class WordCategoryDbHelper extends SQLiteOpenHelper {
     public FillWord getRandomCategoryWord(List<Category> categories) {
 
         if (!storedWords.isEmpty() && !storedCategories.isEmpty() && categories.equals(storedCategories)) {
-            Log.i("words count", String.valueOf(storedWords.size()));
-            Log.i("words", String.valueOf(storedWords));
-            int index = random.nextInt(storedWords.size());
-            return storedWords.remove(index);
+            return getRandomWord(storedWords);
         }
 
         String categoryIds = getCategoryIds(categories);
@@ -118,11 +115,16 @@ public class WordCategoryDbHelper extends SQLiteOpenHelper {
             FillWord word = convertCursorToFillWord(cursor);
             storedWords.add(word);
         }
-        Log.v("words count", String.valueOf(storedWords.size()));
-        Log.v("words", String.valueOf(storedWords));
 
         cursor.close();
-        return storedWords.remove(0);
+        return getRandomWord(storedWords);
+    }
+
+    private FillWord getRandomWord(List<FillWord> storedWords) {
+        Log.i("words count", String.valueOf(storedWords.size()));
+        Log.i("words", String.valueOf(storedWords));
+        int index = random.nextInt(storedWords.size());
+        return storedWords.remove(index);
     }
 
     private String getCategoryIds(List<Category> categoryList) {

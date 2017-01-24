@@ -13,6 +13,8 @@ import static android.content.Context.MODE_PRIVATE;
 
 public final class Utils {
 
+    public static final int NEW_WORD_DELAY = 500; //ms
+
     public static final int DEFAULT_COLOR = Color.BLACK;
     public static final int DARK_GREEN = Color.parseColor("#4C924C");
     public static final String LAST_FILLED_WORD = "lastWord";
