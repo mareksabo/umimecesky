@@ -9,6 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <View
+            android:layout_width="3dp"
+            android:layout_height="320dp"
+            android:layout_marginStart="300dp"
+            android:layout_marginLeft="300dp"
+            android:background="@android:color/holo_red_light" />
 
         <ImageView
             android:id="@+id/usersRobot"
@@ -46,6 +52,11 @@
             android:src="@drawable/robot12"
             tools:ignore="ContentDescription" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_below="@id/bot3"
+            android:background="@android:color/black" />
 
     </RelativeLayout>
 

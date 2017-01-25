@@ -15,6 +15,7 @@ public final class Utils {
 
     public static final int NEW_WORD_DELAY = 500; //ms
     public static final float ROBOT_MOVE = 80.0f;
+    public static final float WINNING_X_COORDINATES = 800;
 
 
     public static final int DEFAULT_COLOR = Color.BLACK;

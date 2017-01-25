@@ -7,6 +7,7 @@ import cz.muni.fi.umimecesky.roboti.utils.RobotLogic;
 import cz.muni.fi.umimecesky.roboti.utils.Utils;
 
 import static cz.muni.fi.umimecesky.roboti.utils.Utils.ROBOT_MOVE;
+import static cz.muni.fi.umimecesky.roboti.utils.Utils.WINNING_X_COORDINATES;
 
 public class Bot {
 
@@ -33,7 +34,9 @@ public class Bot {
         if (canMove) {
             moveForward();
         } else {
-            moveBackward();
+            if (!isWrong) { // bot moves back only once
+                moveBackward();
+            }
         }
         return canMove;
     }
@@ -55,6 +58,10 @@ public class Bot {
             return;
         }
         getView().animate().translationXBy(-ROBOT_MOVE);
+    }
+
+    public boolean isWinner() {
+        return getView().getX() >= WINNING_X_COORDINATES;
     }
 
 }

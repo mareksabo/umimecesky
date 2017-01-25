@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import cz.muni.fi.umimecesky.roboti.R;
 import cz.muni.fi.umimecesky.roboti.db.WordDbHelper;
@@ -40,7 +41,7 @@ public class RaceActivity extends AppCompatActivity {
         ImageView bot2 = (ImageView) findViewById(R.id.bot2);
         ImageView bot3 = (ImageView) findViewById(R.id.bot3);
 
-        moveLogic = new MoveLogic(usersRobot, bot1, bot2, bot3);
+        moveLogic = new MoveLogic(this, usersRobot, bot1, bot2, bot3);
 
         wordHelper = new WordDbHelper(this);
         wordText = (TextView) findViewById(R.id.word);
@@ -98,6 +99,9 @@ public class RaceActivity extends AppCompatActivity {
         button.setTextColor(DARK_GREEN);
         setButtonsDisabled();
         moveLogic.getUsersRobot().moveForward();
+        if (moveLogic.getUsersRobot().isWinner()) {
+            showWinningDialog();
+        }
         button.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -105,6 +109,11 @@ public class RaceActivity extends AppCompatActivity {
                 setNewRandomWord();
             }
         }, NEW_WORD_DELAY);
+    }
+
+    private void showWinningDialog() {
+        moveLogic.stopBots();
+        Toast.makeText(this, "Vyhral si!", Toast.LENGTH_LONG).show();
     }
 
     private void chosenWrong(Button button) {
@@ -127,6 +136,7 @@ public class RaceActivity extends AppCompatActivity {
     private void setNewRandomWord() {
         FillWord word = wordHelper.getRandomFilledWord();
         Log.d("random word", String.valueOf(word));
+        Log.e("correct", String.valueOf(word.getCorrectVariant()));
         setWord(word);
     }
 
