@@ -46,20 +46,11 @@ public class MainActivity extends AppCompatActivity {
         importButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, TrainingActivity.class);
+                Intent intent = new Intent(MainActivity.this, RaceActivity.class);
                 startActivity(intent);
-//                Fragment secondFragment = new CategoryFragment();
-//                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-//
-//                transaction.replace(R.id.fragment_container, secondFragment);
-//                transaction.addToBackStack(null);
-//
-//                transaction.commit();
             }
         });
     }
-
-
 
 
 }

@@ -14,6 +14,8 @@ import static android.content.Context.MODE_PRIVATE;
 public final class Utils {
 
     public static final int NEW_WORD_DELAY = 500; //ms
+    public static final float ROBOT_MOVE = 80.0f;
+
 
     public static final int DEFAULT_COLOR = Color.BLACK;
     public static final int DARK_GREEN = Color.parseColor("#4C924C");
@@ -30,6 +32,7 @@ public final class Utils {
 
     /**
      * Parses string containing 0 or 1.
+     *
      * @param inputString 0 or 1 in String
      * @return false if 0, true if 1
      * @throws NumberFormatException if cannot be parsed or contains other number
@@ -59,6 +62,10 @@ public final class Utils {
                 .grade(cursor.getInt(7))
                 .visibility(cursor.getInt(8) != 0)
                 .createFillWord();
+    }
+
+    public static boolean probabilityTrue(double probabilityRatio) {
+        return Math.random() >= 1.0 - probabilityRatio;
     }
 
 }
