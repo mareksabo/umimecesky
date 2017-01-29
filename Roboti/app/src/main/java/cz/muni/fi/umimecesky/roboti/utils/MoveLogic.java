@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -42,14 +43,15 @@ public class MoveLogic {
                 bot.processBotMove();
                 if (bot.isWinner()) {
                     stopBots();
-                    Log.d("won", String.valueOf(bot.getLogic()));
+                    Log.d("x coordinate", String.valueOf(bot.getView().getX()));
+                    Log.d("y coordinate", String.valueOf(bot.getView().getY()));
                     showLosingDialog();
                     return;
                 }
                 Log.d("bot", String.valueOf(logic.milisecondsPerSolution()));
                 handler.postDelayed(this, logic.milisecondsPerSolution());
             }
-        }, Math.round(Math.random()*2000));
+        }, Math.round(Math.random() * 3000));
         handlers.add(handler);
     }
 
@@ -67,6 +69,7 @@ public class MoveLogic {
     }
 
     public void stopBots() {
+        SystemClock.sleep(100); // have enough time to animate move forward
         for (Handler handler : handlers) {
             handler.removeCallbacksAndMessages(null);
         }

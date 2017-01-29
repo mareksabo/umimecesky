@@ -43,6 +43,7 @@ public class Bot {
 
 
     public void moveForward() {
+        Log.v("forward", String.valueOf(logic));
         if (isWrong) {
             isWrong = false;
             return;
@@ -53,6 +54,7 @@ public class Bot {
     }
 
     public void moveBackward() {
+        Log.v("backward", String.valueOf(logic));
         isWrong = true;
         if (getView().getX() - ROBOT_MOVE < 0) {
             return;

@@ -15,6 +15,7 @@ import cz.muni.fi.umimecesky.roboti.R;
 import cz.muni.fi.umimecesky.roboti.db.WordDbHelper;
 import cz.muni.fi.umimecesky.roboti.pojo.FillWord;
 import cz.muni.fi.umimecesky.roboti.utils.MoveLogic;
+import cz.muni.fi.umimecesky.roboti.utils.RobotDrawable;
 
 import static cz.muni.fi.umimecesky.roboti.utils.Utils.DARK_GREEN;
 import static cz.muni.fi.umimecesky.roboti.utils.Utils.DEFAULT_COLOR;
@@ -36,10 +37,16 @@ public class RaceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_race);
 
+        RobotDrawable robotDrawable = new RobotDrawable(this);
+
         ImageView usersRobot = (ImageView) findViewById(R.id.usersRobot);
+
         ImageView bot1 = (ImageView) findViewById(R.id.bot1);
+        bot1.setImageDrawable(robotDrawable.removeRobotDrawable());
         ImageView bot2 = (ImageView) findViewById(R.id.bot2);
+        bot2.setImageDrawable(robotDrawable.removeRobotDrawable());
         ImageView bot3 = (ImageView) findViewById(R.id.bot3);
+        bot3.setImageDrawable(robotDrawable.removeRobotDrawable());
 
         moveLogic = new MoveLogic(this, usersRobot, bot1, bot2, bot3);
 
