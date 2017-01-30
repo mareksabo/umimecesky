@@ -2,8 +2,10 @@
     <string name="app_name">Roboti</string>
     <string name="action_settings">Settings</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="train_button_name">Procvičovat</string>
     <string name="race_button_name">Závodit</string>
+    <string name="none">Žádné</string>
+    <string name="all">Všechny</string>
+    <string name="next">Další</string>
+    <string name="back">Zpět</string>
 </resources>

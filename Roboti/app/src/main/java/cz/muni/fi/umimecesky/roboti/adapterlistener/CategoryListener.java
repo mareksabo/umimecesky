@@ -8,11 +8,11 @@ import cz.muni.fi.umimecesky.roboti.R;
 
 class CategoryListener implements View.OnClickListener {
 
-    private boolean[] checkedStates;
+    private CategoryAdapter categoryAdapter;
     private CheckBox checkBox;
 
-    CategoryListener(boolean[] checkedStates, CheckBox checkBox) {
-        this.checkedStates = checkedStates;
+    CategoryListener(CategoryAdapter categoryAdapter, CheckBox checkBox) {
+        this.categoryAdapter = categoryAdapter;
         this.checkBox = checkBox;
     }
 
@@ -31,9 +31,10 @@ class CategoryListener implements View.OnClickListener {
             default:
                 throw new IllegalArgumentException("Wrong class: " + v.getClass().getName());
         }
-        checkedStates[position] = !checkedStates[position];
-        checkBox.setChecked(checkedStates[position]);
+        boolean changeChecked = !categoryAdapter.isChecked(position);
+        categoryAdapter.setCategoryChecked(position, changeChecked);
+        checkBox.setChecked(changeChecked);
 
-        Log.v("checkbox" + position, String.valueOf(checkedStates[position]));
+        Log.v("checkbox" + position, String.valueOf(changeChecked));
     }
 }

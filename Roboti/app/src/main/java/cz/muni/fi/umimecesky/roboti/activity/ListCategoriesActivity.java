@@ -27,12 +27,16 @@ public class ListCategoriesActivity extends AppCompatActivity {
     private CategoryDbHelper categoryHelper;
     private CategoryAdapter dataAdapter;
 
+    private Button tickAllButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_categories);
 
         categoryHelper = new CategoryDbHelper(this);
+
+        tickAllButton = (Button) findViewById(R.id.tickAll);
 
         displayListView();
         checkButtonClick();
@@ -41,7 +45,7 @@ public class ListCategoriesActivity extends AppCompatActivity {
     private void displayListView() {
         List<Category> categories = categoryHelper.getAllCategories();
 
-        dataAdapter = new CategoryAdapter(this, this, R.layout.category_info, categories);
+        dataAdapter = new CategoryAdapter(this, this, R.layout.category_info, categories, tickAllButton);
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(dataAdapter);
     }
@@ -73,13 +77,13 @@ public class ListCategoriesActivity extends AppCompatActivity {
         });
 
 
-        Button tickAllButton = (Button) findViewById(R.id.tickAll);
         tickAllButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 boolean allChecked = dataAdapter.areAllChecked();
                 Log.v("allChecked", String.valueOf(allChecked));
                 dataAdapter.setAll(!allChecked);
+
             }
         });
 

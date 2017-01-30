@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -25,12 +26,14 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
     private Activity activity;
     private boolean[] checkedStates;
     private List<Category> categoryList;
+    private final Button tickAll;
 
-    public CategoryAdapter(Activity activity, Context context, int textViewResourceId, List<Category> categories) {
+    public CategoryAdapter(Activity activity, Context context, int textViewResourceId, List<Category> categories, Button tickAll) {
         super(context, textViewResourceId, categories);
         this.activity = activity;
         checkedStates = new boolean[categories.size()];
         categoryList = new ArrayList<>(categories);
+        this.tickAll = tickAll;
     }
 
 
@@ -55,7 +58,7 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
             holder.checkBox.setTag(position);
             convertView.setTag(holder);
 
-            CategoryListener listener = new CategoryListener(checkedStates, holder.checkBox);
+            CategoryListener listener = new CategoryListener(this, holder.checkBox);
             convertView.setOnClickListener(listener);
             holder.checkBox.setOnClickListener(listener);
         } else {
@@ -72,14 +75,15 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
     }
 
 
-    private boolean isChecked(int position) {
+    boolean isChecked(int position) {
         return checkedStates[position];
     }
 
-    private void setCategoryChecked(int position, boolean isChecked) {
+    void setCategoryChecked(int position, boolean isChecked) {
         checkedStates[position] = isChecked;
         Log.i("checked", Arrays.toString(checkedStates));
         notifyDataSetChanged();
+        checkTickAllText();
     }
 
     public void setAll(boolean isChecked) {
@@ -105,5 +109,13 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
             }
         }
         return selectedCategories;
+    }
+
+    public void checkTickAllText() {
+        if (areAllChecked()) {
+            tickAll.setText(R.string.none);
+        } else {
+            tickAll.setText(R.string.all);
+        }
     }
 }

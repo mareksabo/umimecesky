@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             style="?android:attr/buttonBarButtonStyle"
-            android:text="Zpět" />
+            android:text="@string/back" />
 
         <Button
             android:id="@+id/tickAll"
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             style="?android:attr/buttonBarButtonStyle"
-            android:text="Všechny" />
+            android:text="@string/all" />
 
         <Button
             android:id="@+id/next"
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             style="?android:attr/buttonBarButtonStyle"
-            android:text="Další" />
+            android:text="@string/next" />
 
     </LinearLayout>
 
