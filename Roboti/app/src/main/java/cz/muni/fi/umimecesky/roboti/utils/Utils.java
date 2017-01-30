@@ -14,7 +14,8 @@ import static android.content.Context.MODE_PRIVATE;
 
 public final class Utils {
 
-    public static final int NEW_WORD_DELAY = 500; //ms
+    public static final int TRAINING_NEW_WORD_DELAY = 800; //ms
+    public static final int RACE_NEW_WORD_DELAY = 300; //ms
     public static final float ROBOT_MOVE = 80.0f;
     public static final float WINNING_X_COORDINATES = 800 - ROBOT_MOVE;
 

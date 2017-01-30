@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,21 +25,15 @@ import cz.muni.fi.umimecesky.roboti.utils.Utils;
 import static cz.muni.fi.umimecesky.roboti.utils.Utils.DARK_GREEN;
 import static cz.muni.fi.umimecesky.roboti.utils.Utils.DEFAULT_COLOR;
 import static cz.muni.fi.umimecesky.roboti.utils.Utils.LAST_FILLED_WORD;
-import static cz.muni.fi.umimecesky.roboti.utils.Utils.NEW_WORD_DELAY;
 import static cz.muni.fi.umimecesky.roboti.utils.Utils.TICKED_CATEGORIES;
+import static cz.muni.fi.umimecesky.roboti.utils.Utils.TRAINING_NEW_WORD_DELAY;
 
-public class TrainingActivity extends AppCompatActivity {
+public class TrainingActivity extends BaseAbstractActivity {
 
-    private WordDbHelper wordHelper;
     private CategoryDbHelper categoryHelper;
     private WordCategoryDbHelper wordCategoryHelper;
 
-    private FillWord currentWord;
-    private TextView wordText;
-    private TextView categoryText;
     private TextView explanationText;
-    private Button variant1;
-    private Button variant2;
 
     private List<Category> checkedCategories;
 
@@ -56,29 +49,18 @@ public class TrainingActivity extends AppCompatActivity {
 
         checkedCategories = (List<Category>) getIntent().getSerializableExtra(TICKED_CATEGORIES);
 
-        wordHelper = new WordDbHelper(this);
+        setWordHelper(new WordDbHelper(this));
         categoryHelper = new CategoryDbHelper(this);
         wordCategoryHelper = new WordCategoryDbHelper(this);
-        wordText = (TextView) findViewById(R.id.word);
-        categoryText = (TextView) findViewById(R.id.category);
+        setWordText((TextView) findViewById(R.id.word));
+        setCategoryText((TextView) findViewById(R.id.category));
         explanationText = (TextView) findViewById(R.id.explanationText);
-        variant1 = (Button) findViewById(R.id.firstButton);
-        variant2 = (Button) findViewById(R.id.secondButton);
+        setVariant1((Button) findViewById(R.id.firstButton));
+        setVariant2((Button) findViewById(R.id.secondButton));
 
-        setFirstWord();
+        setLastWord();
 
-        variant1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                evaluateTask(0);
-            }
-        });
-        variant2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                evaluateTask(1);
-            }
-        });
+        super.init();
 
         View.OnTouchListener touchListener = new View.OnTouchListener() {
             @Override
@@ -96,34 +78,29 @@ public class TrainingActivity extends AppCompatActivity {
             }
         };
 
-        variant1.setOnTouchListener(touchListener);
-        variant2.setOnTouchListener(touchListener);
+        getVariant1().setOnTouchListener(touchListener);
+        getVariant2().setOnTouchListener(touchListener);
 
     }
 
-    private void evaluateTask(int buttonNumber) {
-        final Button button = buttonNumber == 0 ? variant1 : variant2;
-
-        if (currentWord.getCorrectVariant() == buttonNumber) {
-            setCorrect(button);
-
-            button.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    setButtonsEnabled();
-                    setNewRandomWord();
-                }
-            }, NEW_WORD_DELAY);
-
-        } else {
-            setIncorrect(button);
-            showExplanation();
-        }
+    @Override
+    protected void chosenWrong(Button button) {
+        setIncorrect(button);
+        showExplanation();
     }
 
-    private void setButtonsEnabled() {
-        variant1.setEnabled(true);
-        variant2.setEnabled(true);
+    @Override
+    protected void chosenCorrect(Button button) {
+        setCorrect(button);
+
+        button.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setButtonsEnabled();
+                setNewRandomWord();
+            }
+        }, TRAINING_NEW_WORD_DELAY);
+
     }
 
     private static final int STROKE_WIDTH = 7;
@@ -138,6 +115,7 @@ public class TrainingActivity extends AppCompatActivity {
     }
 
     private void setCorrect(Button button) {
+        getWordText().setText(getCurrentWord().getWordFilled());
         button.setTextColor(DARK_GREEN);
         GradientDrawable gradientDrawable = (GradientDrawable) button.getBackground();
         gradientDrawable.setStroke(STROKE_WIDTH, DARK_GREEN);
@@ -145,7 +123,7 @@ public class TrainingActivity extends AppCompatActivity {
     }
 
     private void showExplanation() {
-        String explanation = currentWord.getExplanation();
+        String explanation = getCurrentWord().getExplanation();
         if (!explanation.isEmpty()) {
             explanationText.setText(explanation);
             explanationText.setVisibility(View.VISIBLE);
@@ -156,7 +134,7 @@ public class TrainingActivity extends AppCompatActivity {
         explanationText.setVisibility(View.INVISIBLE);
     }
 
-    private void setFirstWord() {
+    private void setLastWord() {
         String json = sharedPref.getString(LAST_FILLED_WORD, null);
         FillWord lastWord = new Gson().fromJson(json, FillWord.class);
 
@@ -168,7 +146,7 @@ public class TrainingActivity extends AppCompatActivity {
     }
 
     private void setNewRandomWord() {
-        FillWord word = wordHelper.getRandomFilledWord();
+        FillWord word = getWordHelper().getRandomFilledWord();
         Log.v("random word", String.valueOf(word));
         if (checkedCategories != null) {
             word = wordCategoryHelper.getRandomCategoryWord(checkedCategories);
@@ -176,34 +154,27 @@ public class TrainingActivity extends AppCompatActivity {
         setWord(word);
     }
 
-    private void setWord(FillWord word) {
+    @Override
+    protected void setWord(FillWord word) {
+        super.setWord(word);
+
         hideExplanation();
-
-        if (word == null) return;
-        this.currentWord = word;
-        wordText.setText(word.getWordMissing());
-        variant1.setText(word.getVariant1());
-        variant2.setText(word.getVariant2());
-        variant1.setTextColor(DEFAULT_COLOR);
-        variant2.setTextColor(DEFAULT_COLOR);
-
-        ((GradientDrawable) variant1.getBackground()).setStroke(4, DEFAULT_COLOR);
-        ((GradientDrawable) variant2.getBackground()).setStroke(4, DEFAULT_COLOR);
-
+        ((GradientDrawable) getVariant1().getBackground()).setStroke(4, DEFAULT_COLOR);
+        ((GradientDrawable) getVariant2().getBackground()).setStroke(4, DEFAULT_COLOR);
         setCategoryName();
         setButtonsEnabled();
     }
 
     private void setCategoryName() {
-        int categoryId = wordCategoryHelper.getCategoryId(currentWord.getId());
+        int categoryId = wordCategoryHelper.getCategoryId(getCurrentWord().getId());
         Category category = categoryHelper.findCategory(categoryId);
-        if (category != null) categoryText.setText(category.getName());
+        if (category != null) getCategoryText().setText(category.getName());
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        String json = new Gson().toJson(currentWord);
+        String json = new Gson().toJson(getCurrentWord());
         sharedPref.edit().putString(LAST_FILLED_WORD, json).apply();
     }
 }

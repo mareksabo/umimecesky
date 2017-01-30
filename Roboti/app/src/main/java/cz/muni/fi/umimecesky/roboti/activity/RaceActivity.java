@@ -3,7 +3,6 @@ package cz.muni.fi.umimecesky.roboti.activity;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -19,18 +18,11 @@ import cz.muni.fi.umimecesky.roboti.utils.MoveLogic;
 import cz.muni.fi.umimecesky.roboti.utils.RobotDrawable;
 
 import static cz.muni.fi.umimecesky.roboti.utils.Utils.DARK_GREEN;
-import static cz.muni.fi.umimecesky.roboti.utils.Utils.DEFAULT_COLOR;
-import static cz.muni.fi.umimecesky.roboti.utils.Utils.NEW_WORD_DELAY;
+import static cz.muni.fi.umimecesky.roboti.utils.Utils.RACE_NEW_WORD_DELAY;
 import static cz.muni.fi.umimecesky.roboti.utils.Utils.ROBOT_MOVE;
 
-public class RaceActivity extends AppCompatActivity {
+public class RaceActivity extends BaseAbstractActivity {
 
-    private WordDbHelper wordHelper;
-
-    private FillWord currentWord;
-    private TextView wordText;
-    private Button variant1;
-    private Button variant2;
 
     private MoveLogic moveLogic;
 
@@ -59,28 +51,21 @@ public class RaceActivity extends AppCompatActivity {
 
         moveLogic = new MoveLogic(this, usersRobot, bot1, bot2, bot3);
 
-        wordHelper = new WordDbHelper(this);
-        wordText = (TextView) findViewById(R.id.word);
-        variant1 = (Button) findViewById(R.id.firstButton);
-        variant2 = (Button) findViewById(R.id.secondButton);
+        setWordHelper(new WordDbHelper(this));
+        setWordText((TextView) findViewById(R.id.word));
+        setVariant1((Button) findViewById(R.id.firstButton));
+        setVariant2((Button) findViewById(R.id.secondButton));
 
         setNewRandomWord();
 
-        variant1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                evaluateTask(0);
-            }
-        });
-        variant2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                evaluateTask(1);
-            }
-        });
-
+        super.init();
     }
 
+    protected void setNewRandomWord() {
+        FillWord word = getWordHelper().getRandomFilledWord();
+        Log.d("random word", String.valueOf(word));
+        setWord(word);
+    }
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -98,20 +83,8 @@ public class RaceActivity extends AppCompatActivity {
         }
     }
 
-
-
-
-    private void evaluateTask(int buttonNumber) {
-        final Button button = buttonNumber == 0 ? variant1 : variant2;
-
-        if (currentWord.getCorrectVariant() == buttonNumber) {
-            chosenCorrect(button);
-        } else {
-            chosenWrong(button);
-        }
-    }
-
-    private void chosenCorrect(Button button) {
+    @Override
+    protected void chosenCorrect(Button button) {
         button.setTextColor(DARK_GREEN);
         setButtonsDisabled();
         moveLogic.getUsersRobot().moveForward();
@@ -124,7 +97,7 @@ public class RaceActivity extends AppCompatActivity {
                 setButtonsEnabled();
                 setNewRandomWord();
             }
-        }, NEW_WORD_DELAY);
+        }, RACE_NEW_WORD_DELAY);
     }
 
     private void showWinningDialog() {
@@ -132,41 +105,11 @@ public class RaceActivity extends AppCompatActivity {
         Toast.makeText(this, "Vyhral si!", Toast.LENGTH_LONG).show();
     }
 
-    private void chosenWrong(Button button) {
+    @Override
+    protected void chosenWrong(Button button) {
         button.setTextColor(Color.RED);
         button.setEnabled(false);
         moveLogic.getUsersRobot().moveBackward();
-    }
-
-    private void setButtonsEnabled() {
-        variant1.setEnabled(true);
-        variant2.setEnabled(true);
-    }
-
-
-    private void setButtonsDisabled() {
-        variant1.setEnabled(false);
-        variant2.setEnabled(false);
-    }
-
-    private void setNewRandomWord() {
-        FillWord word = wordHelper.getRandomFilledWord();
-        Log.d("random word", String.valueOf(word));
-        Log.e("correct", String.valueOf(word.getCorrectVariant()));
-        setWord(word);
-    }
-
-    private void setWord(FillWord word) {
-
-        if (word == null) return;
-        this.currentWord = word;
-        wordText.setText(word.getWordMissing());
-        variant1.setText(word.getVariant1());
-        variant2.setText(word.getVariant2());
-        variant1.setTextColor(DEFAULT_COLOR);
-        variant2.setTextColor(DEFAULT_COLOR);
-
-        setButtonsEnabled();
     }
 
     @Override
@@ -174,5 +117,6 @@ public class RaceActivity extends AppCompatActivity {
         super.onPause();
         moveLogic.stopBots();
     }
+
 
 }
