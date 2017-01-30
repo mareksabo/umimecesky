@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_menu);
+        setContentView(R.layout.activity_main);
 
         // TODO: solve slow start
         SharedPreferences sharedPref = Utils.getSharedPreferences(this);

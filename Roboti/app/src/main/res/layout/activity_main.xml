@@ -10,10 +10,40 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="cz.muni.fi.umimecesky.roboti.activity.MainActivity">
 
-    <fragment android:name="cz.muni.fi.umimecesky.roboti.MenuFragment"
-        android:id="@+id/menu_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/fragment_menu" />
+
+    <Button
+        android:id="@+id/trainingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/middle"
+        android:layout_margin="15dp"
+        android:background="@drawable/button"
+        android:padding="10dp"
+        android:text="@string/train_button_name"
+        android:textAllCaps="false"
+        android:textSize="@dimen/button_text_size" />
+
+    <TextView
+        android:id="@+id/middle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        />
+
+    <Button
+        android:id="@+id/raceButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/middle"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="15dp"
+        android:background="@drawable/button"
+        android:padding="10dp"
+        android:text="@string/race_button_name"
+        android:textAllCaps="false"
+        android:textSize="@dimen/button_text_size" />
 
 </RelativeLayout>

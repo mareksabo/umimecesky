@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.Serializable;
 import java.util.List;
@@ -55,6 +56,11 @@ public class ListCategoriesActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 List<Category> selectedCategories = dataAdapter.getSelectedCategories();
+                if (selectedCategories.isEmpty()) {
+                    Toast.makeText(ListCategoriesActivity.this, "Zvolte alespoň jednu kategorii",
+                            Toast.LENGTH_LONG).show();
+                    return;
+                }
 
                 Intent intent = new Intent(getBaseContext(), TrainingActivity.class);
                 intent.putExtra(TICKED_CATEGORIES, (Serializable) selectedCategories);

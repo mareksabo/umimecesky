@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +21,7 @@ import cz.muni.fi.umimecesky.roboti.utils.RobotDrawable;
 import static cz.muni.fi.umimecesky.roboti.utils.Utils.DARK_GREEN;
 import static cz.muni.fi.umimecesky.roboti.utils.Utils.DEFAULT_COLOR;
 import static cz.muni.fi.umimecesky.roboti.utils.Utils.NEW_WORD_DELAY;
+import static cz.muni.fi.umimecesky.roboti.utils.Utils.ROBOT_MOVE;
 
 public class RaceActivity extends AppCompatActivity {
 
@@ -40,6 +42,13 @@ public class RaceActivity extends AppCompatActivity {
         RobotDrawable robotDrawable = new RobotDrawable(this);
 
         ImageView usersRobot = (ImageView) findViewById(R.id.usersRobot);
+        View view = findViewById(R.id.finishLine);
+        final DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        float finalLine = metrics.widthPixels -200 -ROBOT_MOVE;//-usersRobot.getDrawable().;
+        Log.e("finalLine", String.valueOf(finalLine));
+        view.setX(finalLine);
 
         ImageView bot1 = (ImageView) findViewById(R.id.bot1);
         bot1.setImageDrawable(robotDrawable.removeRobotDrawable());

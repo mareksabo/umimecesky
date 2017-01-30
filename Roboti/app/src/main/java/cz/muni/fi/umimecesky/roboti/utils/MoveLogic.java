@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Handler;
-import android.os.SystemClock;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -40,8 +40,17 @@ public class MoveLogic {
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
-                bot.processBotMove();
-                if (bot.isWinner()) {
+
+                Log.d("x coordinate", String.valueOf(bot.getView().getX()));
+                final float dpi = Utils.pixelsToDpi(bot.getView().getX());
+                Log.v("dpi", String.valueOf(dpi));
+                Log.v("px", String.valueOf(Utils.dpiToPixels(dpi)));
+                final DisplayMetrics metrics = new DisplayMetrics();
+                activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+                Log.d("ApplicationTagName", "Display width in px is " + metrics.widthPixels);
+
+
+                if (bot.processBotMove()) {
                     stopBots();
                     Log.d("x coordinate", String.valueOf(bot.getView().getX()));
                     Log.d("y coordinate", String.valueOf(bot.getView().getY()));
@@ -69,7 +78,6 @@ public class MoveLogic {
     }
 
     public void stopBots() {
-        SystemClock.sleep(100); // have enough time to animate move forward
         for (Handler handler : handlers) {
             handler.removeCallbacksAndMessages(null);
         }

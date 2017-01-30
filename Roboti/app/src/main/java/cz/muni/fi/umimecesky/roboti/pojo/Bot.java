@@ -38,7 +38,7 @@ public class Bot {
                 moveBackward();
             }
         }
-        return canMove;
+        return isWinner();
     }
 
 
@@ -49,7 +49,6 @@ public class Bot {
             return;
         }
         getView().animate().translationXBy(ROBOT_MOVE);
-
         Log.i("getX", String.valueOf(getView().getX()));
     }
 
@@ -60,6 +59,15 @@ public class Bot {
             return;
         }
         getView().animate().translationXBy(-ROBOT_MOVE);
+    }
+
+    @Override
+    public String toString() {
+        return "Bot{" +
+                "view=" + view +
+                ", logic=" + logic +
+                ", isWrong=" + isWrong +
+                '}';
     }
 
     public boolean isWinner() {

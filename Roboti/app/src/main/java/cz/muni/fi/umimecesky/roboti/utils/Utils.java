@@ -3,6 +3,7 @@ package cz.muni.fi.umimecesky.roboti.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
 
@@ -15,7 +16,7 @@ public final class Utils {
 
     public static final int NEW_WORD_DELAY = 500; //ms
     public static final float ROBOT_MOVE = 80.0f;
-    public static final float WINNING_X_COORDINATES = 800;
+    public static final float WINNING_X_COORDINATES = 800 - ROBOT_MOVE;
 
 
     public static final int DEFAULT_COLOR = Color.BLACK;
@@ -67,6 +68,16 @@ public final class Utils {
 
     public static boolean probabilityTrue(double probabilityRatio) {
         return Math.random() >= 1.0 - probabilityRatio;
+    }
+
+    public static float dpiToPixels(float dpi) {
+        float density = Resources.getSystem().getDisplayMetrics().density;
+        return dpi * density;
+    }
+
+    public static float pixelsToDpi(float px) {
+        float density = Resources.getSystem().getDisplayMetrics().density;
+        return px / density;
     }
 
 }
