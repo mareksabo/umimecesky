@@ -19,14 +19,15 @@
 
 
     <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+        android:id="@+id/levelProgress"
         android:layout_width="0sp"
         android:layout_height="30sp"
         android:layout_margin="20sp"
         android:layout_weight="2"
-        app:rcProgress="2"
-        app:rcSecondaryProgress="3"
+        app:rcProgress="0"
+        app:rcSecondaryProgress="1"
         app:rcMax="7"
-        app:rcRadius="15sp"
+        app:rcRadius="12sp"
         app:rcBackgroundPadding="3sp"
         app:rcReverse="false"
         app:rcProgressColor="@android:color/holo_green_light"

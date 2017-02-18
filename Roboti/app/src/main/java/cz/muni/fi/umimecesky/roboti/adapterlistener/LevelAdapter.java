@@ -8,12 +8,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
+
 import java.util.List;
 
 import cz.muni.fi.umimecesky.roboti.R;
 import cz.muni.fi.umimecesky.roboti.pojo.RaceConcept;
-
-import static cz.muni.fi.umimecesky.roboti.R.id.sectionName;
 
 public class LevelAdapter extends BaseAdapter {
 
@@ -34,9 +34,8 @@ public class LevelAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(activity).inflate(R.layout.column_category_race, parent, false);
 
             holder = new ViewHolder();
-            holder.sectionName = (TextView) convertView.findViewById(sectionName);
-// TODO: add logic moving progress bar
-//            holder.achievedLevel = (TextView) convertView.findViewById(R.id.level);
+            holder.sectionName = (TextView) convertView.findViewById(R.id.sectionName);
+            holder.progressBar = (RoundCornerProgressBar) convertView.findViewById(R.id.levelProgress);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -45,9 +44,14 @@ public class LevelAdapter extends BaseAdapter {
         RaceConcept raceConcept = list.get(position);
         Log.d("race concept", raceConcept + "");
         holder.sectionName.setText(raceConcept.getName());
-//        holder.achievedLevel.setText(buildLevelsString(raceConcept.getNumberOfLevels()) );
-
+        progressBarSetup(holder.progressBar,raceConcept);
         return convertView;
+    }
+
+    private void progressBarSetup(RoundCornerProgressBar progressBar, RaceConcept raceConcept) {
+        int currentLevel = raceConcept.getCurrentLevel();
+        progressBar.setProgress(currentLevel);
+        progressBar.setSecondaryProgress(currentLevel + 1);
     }
 
     private String buildLevelsString(int maxLevel) {
@@ -60,7 +64,7 @@ public class LevelAdapter extends BaseAdapter {
 
     private class ViewHolder {
         TextView sectionName;
-//        TextView achievedLevel;
+        RoundCornerProgressBar progressBar;
     }
 
     @Override
