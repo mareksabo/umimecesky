@@ -16,9 +16,9 @@ import cz.muni.fi.umimecesky.roboti.pojo.FillWord;
 import cz.muni.fi.umimecesky.roboti.utils.MoveLogic;
 import cz.muni.fi.umimecesky.roboti.utils.RobotDrawable;
 
-import static cz.muni.fi.umimecesky.roboti.utils.Utils.DARK_GREEN;
-import static cz.muni.fi.umimecesky.roboti.utils.Utils.RACE_NEW_WORD_DELAY;
-import static cz.muni.fi.umimecesky.roboti.utils.Utils.ROBOT_MOVE;
+import static cz.muni.fi.umimecesky.roboti.utils.Constant.DARK_GREEN;
+import static cz.muni.fi.umimecesky.roboti.utils.Constant.RACE_NEW_WORD_DELAY;
+import static cz.muni.fi.umimecesky.roboti.utils.Constant.ROBOT_MOVE;
 
 public class RaceActivity extends BaseAbstractActivity {
 

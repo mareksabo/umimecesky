@@ -16,7 +16,7 @@ import cz.muni.fi.umimecesky.roboti.pojo.Category;
 import cz.muni.fi.umimecesky.roboti.pojo.FillWord;
 import cz.muni.fi.umimecesky.roboti.utils.Utils;
 
-import static cz.muni.fi.umimecesky.roboti.utils.Utils.DEFAULT_COLOR;
+import static cz.muni.fi.umimecesky.roboti.utils.Constant.DEFAULT_COLOR;
 
 /**
  * Activity containing major properties needed to show words with word puzzles and its answers.

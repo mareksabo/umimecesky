@@ -17,11 +17,11 @@ import cz.muni.fi.umimecesky.roboti.R;
 import cz.muni.fi.umimecesky.roboti.pojo.Category;
 import cz.muni.fi.umimecesky.roboti.pojo.FillWord;
 
-import static cz.muni.fi.umimecesky.roboti.utils.Utils.DARK_GREEN;
-import static cz.muni.fi.umimecesky.roboti.utils.Utils.DEFAULT_COLOR;
-import static cz.muni.fi.umimecesky.roboti.utils.Utils.LAST_FILLED_WORD;
-import static cz.muni.fi.umimecesky.roboti.utils.Utils.TICKED_CATEGORIES;
-import static cz.muni.fi.umimecesky.roboti.utils.Utils.TRAINING_NEW_WORD_DELAY;
+import static cz.muni.fi.umimecesky.roboti.utils.Constant.DARK_GREEN;
+import static cz.muni.fi.umimecesky.roboti.utils.Constant.DEFAULT_COLOR;
+import static cz.muni.fi.umimecesky.roboti.utils.Constant.LAST_FILLED_WORD;
+import static cz.muni.fi.umimecesky.roboti.utils.Constant.TICKED_CATEGORIES;
+import static cz.muni.fi.umimecesky.roboti.utils.Constant.TRAINING_NEW_WORD_DELAY;
 
 public class TrainingActivity extends BaseAbstractActivity {
 

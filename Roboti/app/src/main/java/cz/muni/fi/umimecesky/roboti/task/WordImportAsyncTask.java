@@ -18,7 +18,7 @@ import cz.muni.fi.umimecesky.roboti.db.WordCategoryDbHelper;
 import cz.muni.fi.umimecesky.roboti.db.WordDbHelper;
 import cz.muni.fi.umimecesky.roboti.utils.Utils;
 
-import static cz.muni.fi.umimecesky.roboti.utils.Utils.IS_FILLED;
+import static cz.muni.fi.umimecesky.roboti.utils.Constant.IS_FILLED;
 
 public class WordImportAsyncTask extends AsyncTask<Void, Void, Void> {
 

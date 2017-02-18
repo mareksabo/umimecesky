@@ -19,8 +19,8 @@ import cz.muni.fi.umimecesky.roboti.db.CategoryDbHelper;
 import cz.muni.fi.umimecesky.roboti.pojo.Category;
 import cz.muni.fi.umimecesky.roboti.utils.Utils;
 
-import static cz.muni.fi.umimecesky.roboti.utils.Utils.LAST_FILLED_WORD;
-import static cz.muni.fi.umimecesky.roboti.utils.Utils.TICKED_CATEGORIES;
+import static cz.muni.fi.umimecesky.roboti.utils.Constant.LAST_FILLED_WORD;
+import static cz.muni.fi.umimecesky.roboti.utils.Constant.TICKED_CATEGORIES;
 
 public class ListCategoriesActivity extends AppCompatActivity {
 
