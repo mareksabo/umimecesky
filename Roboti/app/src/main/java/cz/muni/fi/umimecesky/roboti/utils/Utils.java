@@ -6,8 +6,14 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import cz.muni.fi.umimecesky.roboti.pojo.FillWord;
 import cz.muni.fi.umimecesky.roboti.pojo.FillWordBuilder;
+import cz.muni.fi.umimecesky.roboti.pojo.RaceConcept;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -64,6 +70,48 @@ public final class Utils {
     public static float pixelsToDpi(float px) {
         float density = Resources.getSystem().getDisplayMetrics().density;
         return px / density;
+    }
+
+    /**
+     * Categories bundled into testable groups according to original website (first 6 categories).
+     *
+     * @see <a href="https://www.umimecesky.cz/roboti">https://www.umimecesky.cz/roboti</a>
+     */
+    public static List<RaceConcept> getWebConcepts() {
+        List<RaceConcept> concepts = new ArrayList<>();
+
+        concepts.add(
+                new RaceConcept("Koncovky Y/I",
+                        Arrays.asList(1, 2, 3, 4, 5, 6, 7),
+                        7)
+        );
+        concepts.add(
+                new RaceConcept("Vyjmenovaná slova",
+                        Arrays.asList(8, 9, 10, 11, 12, 13, 14),
+                        7)
+        );
+        concepts.add(
+                new RaceConcept("Přejatá slova, délka samohlásek",
+                        Arrays.asList(38, 39, 40, 41),
+                        7)
+        );
+        concepts.add(
+                new RaceConcept("Psaní ě",
+                        Arrays.asList(26, 27, 28, 29),
+                        6)
+        );
+        concepts.add(
+                new RaceConcept("Zkratky a typografie",
+                        Arrays.asList(15, 16, 17, 18),
+                        5)
+        );
+        concepts.add(
+                new RaceConcept("Velká písmena",
+                        Arrays.asList(34, 35, 36, 37),
+                        7)
+        );
+
+        return Collections.unmodifiableList(concepts);
     }
 
 }

@@ -19,6 +19,7 @@
         <activity android:name=".activity.TrainingActivity" />
         <activity android:name=".activity.ListCategoriesActivity" />
         <activity android:name=".activity.RaceActivity" />
+        <activity android:name=".activity.LevelRaceActivity" />
     </application>
 
 </manifest>
