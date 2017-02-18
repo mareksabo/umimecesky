@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import cz.muni.fi.umimecesky.roboti.R;
-import cz.muni.fi.umimecesky.roboti.db.WordDbHelper;
 import cz.muni.fi.umimecesky.roboti.pojo.FillWord;
 import cz.muni.fi.umimecesky.roboti.utils.MoveLogic;
 import cz.muni.fi.umimecesky.roboti.utils.RobotDrawable;
@@ -31,9 +30,6 @@ public class RaceActivity extends BaseAbstractActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_race);
 
-        RobotDrawable robotDrawable = new RobotDrawable(this);
-
-        ImageView usersRobot = (ImageView) findViewById(R.id.usersRobot);
         View view = findViewById(R.id.finishLine);
         final DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -42,23 +38,31 @@ public class RaceActivity extends BaseAbstractActivity {
         Log.e("finalLine", String.valueOf(finalLine));
         view.setX(finalLine);
 
-        ImageView bot1 = (ImageView) findViewById(R.id.bot1);
-        bot1.setImageDrawable(robotDrawable.removeRobotDrawable());
-        ImageView bot2 = (ImageView) findViewById(R.id.bot2);
-        bot2.setImageDrawable(robotDrawable.removeRobotDrawable());
-        ImageView bot3 = (ImageView) findViewById(R.id.bot3);
-        bot3.setImageDrawable(robotDrawable.removeRobotDrawable());
+        setUpRobotViews();
 
-        moveLogic = new MoveLogic(this, usersRobot, bot1, bot2, bot3);
-
-        setWordHelper(new WordDbHelper(this));
         setWordText((TextView) findViewById(R.id.word));
         setVariant1((Button) findViewById(R.id.firstButton));
         setVariant2((Button) findViewById(R.id.secondButton));
 
+        super.init();
         setNewRandomWord();
 
-        super.init();
+    }
+
+    private void setUpRobotViews() {
+
+        RobotDrawable robotDrawable = new RobotDrawable(this);
+        ImageView usersRobot = (ImageView) findViewById(R.id.usersRobot);
+
+        ImageView bot1 = (ImageView) findViewById(R.id.bot1);
+        ImageView bot2 = (ImageView) findViewById(R.id.bot2);
+        ImageView bot3 = (ImageView) findViewById(R.id.bot3);
+
+        bot1.setImageDrawable(robotDrawable.removeRobotDrawable());
+        bot2.setImageDrawable(robotDrawable.removeRobotDrawable());
+        bot3.setImageDrawable(robotDrawable.removeRobotDrawable());
+
+        moveLogic = new MoveLogic(this, usersRobot, bot1, bot2, bot3);
     }
 
     protected void setNewRandomWord() {

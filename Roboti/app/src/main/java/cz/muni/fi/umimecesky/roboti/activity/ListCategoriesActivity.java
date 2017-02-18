@@ -39,7 +39,7 @@ public class ListCategoriesActivity extends AppCompatActivity {
         tickAllButton = (Button) findViewById(R.id.tickAll);
 
         displayListView();
-        checkButtonClick();
+        setButtonClick();
     }
 
     private void displayListView() {
@@ -51,7 +51,7 @@ public class ListCategoriesActivity extends AppCompatActivity {
     }
 
 
-    private void checkButtonClick() {
+    private void setButtonClick() {
 
         Button nextButton = (Button) findViewById(R.id.next);
         nextButton.setOnClickListener(new View.OnClickListener() {

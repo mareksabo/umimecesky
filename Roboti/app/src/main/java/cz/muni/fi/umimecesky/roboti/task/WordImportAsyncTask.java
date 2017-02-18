@@ -64,10 +64,10 @@ public class WordImportAsyncTask extends AsyncTask<Void, Void, Void> {
                 if (columns.length == 3) {
                     columns[1] = columns[1].trim() + " - " + columns[2].trim();
                 }
+
                 int id = Integer.parseInt(columns[0].trim());
-                if (id != 46) { // remove strange category
-                    dbHelper.addCategory(db, id, columns[1].trim());
-                }
+                if (id == 46) continue;
+                dbHelper.addCategory(db, id, columns[1].trim());
             }
 
             db.setTransactionSuccessful();

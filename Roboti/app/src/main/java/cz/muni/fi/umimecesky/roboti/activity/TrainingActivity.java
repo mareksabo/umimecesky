@@ -1,6 +1,5 @@
 package cz.muni.fi.umimecesky.roboti.activity;
 
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -15,12 +14,8 @@ import com.google.gson.Gson;
 import java.util.List;
 
 import cz.muni.fi.umimecesky.roboti.R;
-import cz.muni.fi.umimecesky.roboti.db.CategoryDbHelper;
-import cz.muni.fi.umimecesky.roboti.db.WordCategoryDbHelper;
-import cz.muni.fi.umimecesky.roboti.db.WordDbHelper;
 import cz.muni.fi.umimecesky.roboti.pojo.Category;
 import cz.muni.fi.umimecesky.roboti.pojo.FillWord;
-import cz.muni.fi.umimecesky.roboti.utils.Utils;
 
 import static cz.muni.fi.umimecesky.roboti.utils.Utils.DARK_GREEN;
 import static cz.muni.fi.umimecesky.roboti.utils.Utils.DEFAULT_COLOR;
@@ -30,37 +25,25 @@ import static cz.muni.fi.umimecesky.roboti.utils.Utils.TRAINING_NEW_WORD_DELAY;
 
 public class TrainingActivity extends BaseAbstractActivity {
 
-    private CategoryDbHelper categoryHelper;
-    private WordCategoryDbHelper wordCategoryHelper;
-
     private TextView explanationText;
-
-    private List<Category> checkedCategories;
-
-
-    private SharedPreferences sharedPref;
 
     @Override
     @SuppressWarnings("unchecked assignment")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_training);
-        sharedPref = Utils.getSharedPreferences(getBaseContext());
 
-        checkedCategories = (List<Category>) getIntent().getSerializableExtra(TICKED_CATEGORIES);
+        setCheckedCategories((List<Category>) getIntent().getSerializableExtra(TICKED_CATEGORIES));
 
-        setWordHelper(new WordDbHelper(this));
-        categoryHelper = new CategoryDbHelper(this);
-        wordCategoryHelper = new WordCategoryDbHelper(this);
         setWordText((TextView) findViewById(R.id.word));
         setCategoryText((TextView) findViewById(R.id.category));
         explanationText = (TextView) findViewById(R.id.explanationText);
         setVariant1((Button) findViewById(R.id.firstButton));
         setVariant2((Button) findViewById(R.id.secondButton));
-
-        setLastWord();
-
         super.init();
+
+        setLastUsedWord();
+
 
         View.OnTouchListener touchListener = new View.OnTouchListener() {
             @Override
@@ -134,8 +117,8 @@ public class TrainingActivity extends BaseAbstractActivity {
         explanationText.setVisibility(View.INVISIBLE);
     }
 
-    private void setLastWord() {
-        String json = sharedPref.getString(LAST_FILLED_WORD, null);
+    private void setLastUsedWord() {
+        String json = getSharedPref().getString(LAST_FILLED_WORD, null);
         FillWord lastWord = new Gson().fromJson(json, FillWord.class);
 
         if (lastWord != null) {
@@ -146,11 +129,13 @@ public class TrainingActivity extends BaseAbstractActivity {
     }
 
     private void setNewRandomWord() {
-        FillWord word = getWordHelper().getRandomFilledWord();
-        Log.v("random word", String.valueOf(word));
-        if (checkedCategories != null) {
-            word = wordCategoryHelper.getRandomCategoryWord(checkedCategories);
+        FillWord word;
+        if (getCheckedCategories() == null || getCheckedCategories().isEmpty()) {
+            word = getWordHelper().getRandomFilledWord();
+        } else {
+            word = getWordCategoryHelper().getRandomCategoryWord(getCheckedCategories());
         }
+        Log.v("random word", String.valueOf(word));
         setWord(word);
     }
 
@@ -166,8 +151,8 @@ public class TrainingActivity extends BaseAbstractActivity {
     }
 
     private void setCategoryName() {
-        int categoryId = wordCategoryHelper.getCategoryId(getCurrentWord().getId());
-        Category category = categoryHelper.findCategory(categoryId);
+        int categoryId = getWordCategoryHelper().getCategoryId(getCurrentWord().getId());
+        Category category = getCategoryHelper().findCategory(categoryId);
         if (category != null) getCategoryText().setText(category.getName());
     }
 
@@ -175,6 +160,6 @@ public class TrainingActivity extends BaseAbstractActivity {
     protected void onPause() {
         super.onPause();
         String json = new Gson().toJson(getCurrentWord());
-        sharedPref.edit().putString(LAST_FILLED_WORD, json).apply();
+        getSharedPref().edit().putString(LAST_FILLED_WORD, json).apply();
     }
 }
