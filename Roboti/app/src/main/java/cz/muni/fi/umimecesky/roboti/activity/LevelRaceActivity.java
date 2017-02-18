@@ -9,7 +9,8 @@ import android.widget.ListView;
 
 import cz.muni.fi.umimecesky.roboti.R;
 import cz.muni.fi.umimecesky.roboti.adapterlistener.LevelAdapter;
-import cz.muni.fi.umimecesky.roboti.utils.Utils;
+
+import static cz.muni.fi.umimecesky.roboti.utils.Utils.getWebConcepts;
 
 public class LevelRaceActivity extends AppCompatActivity {
 
@@ -20,13 +21,18 @@ public class LevelRaceActivity extends AppCompatActivity {
 
         ListView listView = (ListView) findViewById(R.id.levelListView);
 
-        LevelAdapter adapter = new LevelAdapter(this, Utils.getWebConcepts());
+        LevelAdapter adapter = new LevelAdapter(this, getWebConcepts(this));
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-                // TODO: go to race
+                //TODO: increases level, just for testing
+//                List<RaceConcept> raceConcepts = Utils.getWebConcepts(LevelRaceActivity.this);
+//                RaceConcept raceConcept = raceConcepts.get(position);
+//                raceConcept.setCurrentLevel(raceConcept.getCurrentLevel()+1);
+//                setWebConcepts(LevelRaceActivity.this, raceConcepts);
+//                Log.v("race concept", String.valueOf(raceConcept));
             }
 
         });

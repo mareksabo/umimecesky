@@ -35,7 +35,10 @@ public class LevelAdapter extends BaseAdapter {
 
             holder = new ViewHolder();
             holder.sectionName = (TextView) convertView.findViewById(R.id.sectionName);
+            holder.currentLevel = (TextView) convertView.findViewById(R.id.currentLevel);
             holder.progressBar = (RoundCornerProgressBar) convertView.findViewById(R.id.levelProgress);
+            holder.progressBar.setMax(list.get(position).getNumberOfLevels() - 1);
+            Log.i("max bar", String.valueOf(holder.progressBar.getMax()));
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -44,26 +47,23 @@ public class LevelAdapter extends BaseAdapter {
         RaceConcept raceConcept = list.get(position);
         Log.d("race concept", raceConcept + "");
         holder.sectionName.setText(raceConcept.getName());
-        progressBarSetup(holder.progressBar,raceConcept);
+        setProgressBar(holder, raceConcept);
         return convertView;
     }
 
-    private void progressBarSetup(RoundCornerProgressBar progressBar, RaceConcept raceConcept) {
+    private void setProgressBar(ViewHolder holder, RaceConcept raceConcept) {
+        RoundCornerProgressBar progressBar = holder.progressBar;
+        TextView textCurrentLevel = holder.currentLevel;
         int currentLevel = raceConcept.getCurrentLevel();
+        textCurrentLevel.setText(String.valueOf(currentLevel));
+        currentLevel--; //progress bar starts at 0, level at 1
         progressBar.setProgress(currentLevel);
         progressBar.setSecondaryProgress(currentLevel + 1);
     }
 
-    private String buildLevelsString(int maxLevel) {
-        StringBuilder builder = new StringBuilder();
-        for (int i = 1; i <= maxLevel; i++) {
-            builder.append(i).append(" ");
-        }
-        return builder.toString();
-    }
-
     private class ViewHolder {
         TextView sectionName;
+        TextView currentLevel;
         RoundCornerProgressBar progressBar;
     }
 

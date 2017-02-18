@@ -6,6 +6,9 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,6 +22,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 public final class Utils {
 
+    private final static String JSON_CONCEPTS = "jsonConcepts";
 
     public static SharedPreferences getSharedPreferences(Context context) {
         return context.getSharedPreferences(Constant.SHARED_PREFS_FILE, MODE_PRIVATE);
@@ -73,11 +77,33 @@ public final class Utils {
     }
 
     /**
-     * Categories bundled into testable groups according to original website (first 6 categories).
+     * Gets categories with saved player's level state.
+     * Categories are bundled into testable groups, taken from original website (first 6 categories):
      *
      * @see <a href="https://www.umimecesky.cz/roboti">https://www.umimecesky.cz/roboti</a>
      */
-    public static List<RaceConcept> getWebConcepts() {
+    public static List<RaceConcept> getWebConcepts(Context context) {
+        List<RaceConcept> concepts;
+
+        SharedPreferences sharedPreferences = getSharedPreferences(context);
+        String jsonConcept = sharedPreferences.getString(JSON_CONCEPTS, null);
+
+        if (jsonConcept != null) {
+            concepts = new Gson().fromJson(jsonConcept, new TypeToken<List<RaceConcept>>(){}.getType());
+        } else {
+            concepts = initWebConcepts();
+            setWebConcepts(context, concepts);
+        }
+        return concepts;
+    }
+
+    public static void setWebConcepts(Context context, List<RaceConcept> concepts) {
+        SharedPreferences sharedPreferences = getSharedPreferences(context);
+        String json = new Gson().toJson(concepts);
+        sharedPreferences.edit().putString(JSON_CONCEPTS, json).apply();
+    }
+
+        private static List<RaceConcept> initWebConcepts() {
         List<RaceConcept> concepts = new ArrayList<>();
 
         concepts.add(
