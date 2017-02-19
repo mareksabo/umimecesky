@@ -12,7 +12,9 @@ import cn.refactor.lib.colordialog.PromptDialog;
 import cz.muni.fi.umimecesky.roboti.R;
 import cz.muni.fi.umimecesky.roboti.pojo.Bot;
 import cz.muni.fi.umimecesky.roboti.pojo.FillWord;
+import cz.muni.fi.umimecesky.roboti.pojo.RaceConcept;
 import cz.muni.fi.umimecesky.roboti.utils.CalculateDp;
+import cz.muni.fi.umimecesky.roboti.utils.Constant;
 import cz.muni.fi.umimecesky.roboti.utils.Global;
 import cz.muni.fi.umimecesky.roboti.utils.MoveLogic;
 import cz.muni.fi.umimecesky.roboti.utils.RobotDrawable;
@@ -25,10 +27,13 @@ public class RaceActivity extends BaseAbstractActivity {
     private MoveLogic moveLogic;
     private Bot usersBot;
 
+    private RaceConcept concept;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_race);
+        concept = (RaceConcept) getIntent().getExtras().getSerializable(Constant.RACE_CONCEPT_EXTRA);
 
         ImageView usersRobot = (ImageView) findViewById(R.id.usersRobot);
         CalculateDp calculateDp = new CalculateDp(usersRobot, 5);
@@ -76,7 +81,8 @@ public class RaceActivity extends BaseAbstractActivity {
         setButtonsDisabled();
         usersBot.moveForward();
         if (usersBot.isWinner()) {
-            showWinningDialog();
+            applyWin();
+            return;
         }
         button.postDelayed(new Runnable() {
             @Override
@@ -87,14 +93,19 @@ public class RaceActivity extends BaseAbstractActivity {
         }, RACE_NEW_WORD_DELAY);
     }
 
-    private void showWinningDialog() {
+    private void applyWin() {
         moveLogic.stopBots();
+        concept.increaseLevel(this);
+        showWinningDialog();
+    }
+
+    private void showWinningDialog() {
         final PromptDialog promptDialog = new PromptDialog(this);
         promptDialog
                 .setDialogType(PromptDialog.DIALOG_TYPE_SUCCESS)
-                .setAnimationEnable(true)
+                .setAnimationEnable(false)
                 .setTitleText(getString(R.string.congratulations))
-                .setContentText(getString(R.string.going_to_next_level))
+                .setContentText(createDialogText())
                 .setPositiveListener(getString(R.string.ok), new PromptDialog.OnPositiveListener() {
                     @Override
                     public void onClick(PromptDialog dialog) {
@@ -109,6 +120,21 @@ public class RaceActivity extends BaseAbstractActivity {
                     }
                 });
         promptDialog.show();
+    }
+
+    private String createDialogText() {
+        StringBuilder s = new StringBuilder();
+        if (concept.getCurrentLevel() < concept.getNumberOfLevels()) {
+            s.append("Jdete do levelu číslo ");
+            s.append(concept.getCurrentLevel());
+            s.append(" v kategorii ");
+            s.append(concept.getName());
+        } else {
+            s.append("Dosáhli jste maximálního levelu v kategorii ");
+            s.append(concept.getName());
+        }
+        s.append(".");
+        return s.toString();
     }
 
     @Override

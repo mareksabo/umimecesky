@@ -13,6 +13,7 @@ public final class Constant {
     public static final String LAST_FILLED_WORD = "lastWord";
     public static final String TICKED_CATEGORIES = "TICKED_CATEGORIES";
     public static final String IS_FILLED = "isFilled";
+    public static final String RACE_CONCEPT_EXTRA = "concept";
     static final String SHARED_PREFS_FILE = "shared_prefs";
 
 }

@@ -97,7 +97,14 @@ public final class Utils {
         return concepts;
     }
 
-    public static void setWebConcepts(Context context, List<RaceConcept> concepts) {
+    public static void updateConcept(Context context, RaceConcept concept) {
+        List<RaceConcept> list = getWebConcepts(context);
+        int index = list.indexOf(concept);
+        list.set(index, concept);
+        setWebConcepts(context, list);
+    }
+
+    private static void setWebConcepts(Context context, List<RaceConcept> concepts) {
         SharedPreferences sharedPreferences = getSharedPreferences(context);
         String json = new Gson().toJson(concepts);
         sharedPreferences.edit().putString(JSON_CONCEPTS, json).apply();

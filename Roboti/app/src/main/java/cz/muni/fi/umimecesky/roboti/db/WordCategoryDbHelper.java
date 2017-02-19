@@ -75,15 +75,13 @@ public class WordCategoryDbHelper extends SQLiteOpenHelper {
             categoryId = Integer.parseInt(cursor.getString(0));
         } else {
             Log.d("Category missing", String.valueOf(wordId));
-            categoryId = 46; // hotfix, because this category is not in conversion table
+            categoryId = -1;
         }
 
         cursor.close();
         db.close();
         return categoryId;
     }
-
-    //TODO: add to table conversion category 46 and remove hotfix
 
     private List<FillWord> storedWords = new ArrayList<>();
     private List<Category> storedCategories = new ArrayList<>();

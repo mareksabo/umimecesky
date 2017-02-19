@@ -1,8 +1,13 @@
 package cz.muni.fi.umimecesky.roboti.pojo;
 
+import android.content.Context;
+
+import java.io.Serializable;
 import java.util.List;
 
-public class RaceConcept {
+import cz.muni.fi.umimecesky.roboti.utils.Utils;
+
+public class RaceConcept implements Serializable {
 
     private String name;
     private List<Integer> categoryIds;
@@ -32,8 +37,15 @@ public class RaceConcept {
         return currentLevel;
     }
 
-    public void setCurrentLevel(int currentLevel) {
-        this.currentLevel = currentLevel;
+    private void setCurrentLevel(int currentLevel) {
+        if (currentLevel <= numberOfLevels) {
+            this.currentLevel = currentLevel;
+        }
+    }
+
+    public void increaseLevel(Context context) {
+        setCurrentLevel(currentLevel+1);
+        Utils.updateConcept(context, this);
     }
 
     @Override
@@ -53,18 +65,12 @@ public class RaceConcept {
 
         RaceConcept that = (RaceConcept) o;
 
-        if (numberOfLevels != that.numberOfLevels) return false;
-        if (currentLevel != that.currentLevel) return false;
-        if (!name.equals(that.name)) return false;
-        return categoryIds.equals(that.categoryIds);
+        return name.equals(that.name);
 
     }
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + categoryIds.hashCode();
-        result = 31 * result + numberOfLevels;
-        return result;
+        return name.hashCode();
     }
 }
