@@ -1,14 +1,16 @@
 package cz.muni.fi.umimecesky.roboti.activity;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import cn.refactor.lib.colordialog.PromptDialog;
 import cz.muni.fi.umimecesky.roboti.R;
+import cz.muni.fi.umimecesky.roboti.pojo.Bot;
 import cz.muni.fi.umimecesky.roboti.pojo.FillWord;
 import cz.muni.fi.umimecesky.roboti.utils.CalculateDp;
 import cz.muni.fi.umimecesky.roboti.utils.Global;
@@ -21,6 +23,7 @@ import static cz.muni.fi.umimecesky.roboti.utils.Constant.RACE_NEW_WORD_DELAY;
 public class RaceActivity extends BaseAbstractActivity {
 
     private MoveLogic moveLogic;
+    private Bot usersBot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,8 @@ public class RaceActivity extends BaseAbstractActivity {
         CalculateDp calculateDp = new CalculateDp(usersRobot, 5);
         calculateDp.setupFinishLine(findViewById(R.id.finishLine));
         Global.setCalculateDp(calculateDp);
+
+        usersBot = new Bot(usersRobot, null); //TODO: change bot to robot, maybe add inheritance?
 
         setUpRobotViews();
 
@@ -69,8 +74,8 @@ public class RaceActivity extends BaseAbstractActivity {
     protected void chosenCorrect(Button button) {
         button.setTextColor(DARK_GREEN);
         setButtonsDisabled();
-        moveLogic.getUsersRobot().moveForward();
-        if (moveLogic.getUsersRobot().isWinner()) {
+        usersBot.moveForward();
+        if (usersBot.isWinner()) {
             showWinningDialog();
         }
         button.postDelayed(new Runnable() {
@@ -84,14 +89,33 @@ public class RaceActivity extends BaseAbstractActivity {
 
     private void showWinningDialog() {
         moveLogic.stopBots();
-        Toast.makeText(this, "Vyhral si!", Toast.LENGTH_LONG).show();
+        final PromptDialog promptDialog = new PromptDialog(this);
+        promptDialog
+                .setDialogType(PromptDialog.DIALOG_TYPE_SUCCESS)
+                .setAnimationEnable(true)
+                .setTitleText(getString(R.string.congratulations))
+                .setContentText(getString(R.string.going_to_next_level))
+                .setPositiveListener(getString(R.string.ok), new PromptDialog.OnPositiveListener() {
+                    @Override
+                    public void onClick(PromptDialog dialog) {
+                        dialog.dismiss();
+                        RaceActivity.this.finish();
+                    }
+                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        dialog.dismiss();
+                        RaceActivity.this.finish();
+                    }
+                });
+        promptDialog.show();
     }
 
     @Override
     protected void chosenWrong(Button button) {
         button.setTextColor(Color.RED);
         button.setEnabled(false);
-        moveLogic.getUsersRobot().moveBackward();
+        usersBot.moveBackward();
     }
 
     @Override
@@ -100,5 +124,9 @@ public class RaceActivity extends BaseAbstractActivity {
         moveLogic.stopBots();
     }
 
-
+    @Override
+    protected void onStop() {
+        super.onStop();
+        this.finish();
+    }
 }

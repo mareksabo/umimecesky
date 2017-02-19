@@ -3,7 +3,6 @@ package cz.muni.fi.umimecesky.roboti.utils;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import java.lang.reflect.Field;
 import java.security.SecureRandom;
@@ -32,15 +31,11 @@ public class RobotDrawable {
         }
     }
 
-
     public Drawable removeRobotDrawable() {
 
         Resources resources = activity.getResources();
-        int num = RANDOM.nextInt(robotNames.size());
-        String randomDrawableName = robotNames.remove(num);
-        Log.v("num", String.valueOf(num));
-        Log.v("random", randomDrawableName);
-        Log.v("list", String.valueOf(robotNames));
+        int randomInt = RANDOM.nextInt(robotNames.size());
+        String randomDrawableName = robotNames.remove(randomInt);
         final int resourceId = resources.getIdentifier(randomDrawableName, "drawable",
                 activity.getPackageName());
         return resources.getDrawable(resourceId);

@@ -1,9 +1,9 @@
 package cz.muni.fi.umimecesky.roboti.utils;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.ImageView;
@@ -11,11 +11,12 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.refactor.lib.colordialog.PromptDialog;
+import cz.muni.fi.umimecesky.roboti.R;
 import cz.muni.fi.umimecesky.roboti.pojo.Bot;
 
 public class MoveLogic {
 
-    private Bot usersRobot; //TODO: change to robot
     private Bot bot1;
     private Bot bot2;
     private Bot bot3;
@@ -25,7 +26,6 @@ public class MoveLogic {
     public MoveLogic(Activity activity, ImageView usersRobot, ImageView botView1,
                      ImageView botView2, ImageView botView3) {
         this.activity = activity;
-        this.usersRobot = new Bot(usersRobot, null);
 
         bot1 = new Bot(botView1, new BotLogicQuick());
         bot2 = new Bot(botView2, new BotLogicSlow());
@@ -65,26 +65,32 @@ public class MoveLogic {
     }
 
     private void showLosingDialog() {
-        new AlertDialog.Builder(activity)
-                .setTitle("Roboti vyhráli")
-                .setMessage("Byl jsi poražen!")
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
+
+        PromptDialog promptDialog = new PromptDialog(activity);
+        promptDialog.setDialogType(PromptDialog.DIALOG_TYPE_WRONG)
+                .setAnimationEnable(true)
+                .setTitleText("Roboti vyhráli")
+                .setContentText("Byli jste poražen!")
+                .setPositiveListener(R.string.ok, new PromptDialog.OnPositiveListener() {
+                    @Override
+                    public void onClick(PromptDialog dialog) {
                         activity.finish();
                     }
                 })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        activity.finish();
+                    }
+                });
+        promptDialog.show();
     }
 
     public void stopBots() {
+        //TODO: fix by stopping first, animate second
+        SystemClock.sleep(300); // have enough time to animate move forward
         for (Handler handler : handlers) {
             handler.removeCallbacksAndMessages(null);
         }
-    }
-
-
-    public Bot getUsersRobot() { // todo: move to activity
-        return usersRobot;
     }
 }

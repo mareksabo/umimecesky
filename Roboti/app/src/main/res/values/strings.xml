@@ -8,4 +8,7 @@
     <string name="all">Všechny</string>
     <string name="next">Další</string>
     <string name="back">Zpět</string>
+    <string name="ok">OK</string>
+    <string name="congratulations">Gratuluji</string>
+    <string name="going_to_next_level">Jdete do dalšího levelu</string>
 </resources>

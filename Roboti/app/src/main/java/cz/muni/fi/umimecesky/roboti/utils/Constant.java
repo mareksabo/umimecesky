@@ -5,7 +5,7 @@ import android.graphics.Color;
 public final class Constant {
 
     public static final int TRAINING_NEW_WORD_DELAY = 800; //ms
-    public static final int RACE_NEW_WORD_DELAY = 300; //ms
+    public static final int RACE_NEW_WORD_DELAY = 200; //ms
 
     public static final int DEFAULT_COLOR = Color.BLACK;
     public static final int DARK_GREEN = Color.parseColor("#4C924C");
