@@ -3,11 +3,10 @@ package cz.muni.fi.umimecesky.roboti.pojo;
 import android.util.Log;
 import android.widget.ImageView;
 
+import cz.muni.fi.umimecesky.roboti.utils.CalculateDp;
+import cz.muni.fi.umimecesky.roboti.utils.Global;
 import cz.muni.fi.umimecesky.roboti.utils.RobotLogic;
 import cz.muni.fi.umimecesky.roboti.utils.Utils;
-
-import static cz.muni.fi.umimecesky.roboti.utils.Constant.ROBOT_MOVE;
-import static cz.muni.fi.umimecesky.roboti.utils.Constant.WINNING_X_COORDINATES;
 
 public class Bot {
 
@@ -15,10 +14,15 @@ public class Bot {
     private RobotLogic logic;
     private boolean isWrong;
 
+    private CalculateDp calculateDp;
+    private final float ROBOT_MOVE;
+
     public Bot(ImageView view, RobotLogic logic) {
         this.view = view;
         this.logic = logic;
         isWrong = false;
+        calculateDp = Global.getCalculateDp();
+        ROBOT_MOVE = calculateDp.calculateRobotMovePx();
     }
 
     public ImageView getView() {
@@ -71,7 +75,8 @@ public class Bot {
     }
 
     public boolean isWinner() {
-        return getView().getX() >= WINNING_X_COORDINATES;
+        Log.i("iswinner", String.valueOf(getView().getX()));
+        return calculateDp.isBeyondFinishLine(getView().getX());
     }
 
 }

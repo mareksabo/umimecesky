@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         importButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, LevelRaceActivity.class);
+                Intent intent = new Intent(MainActivity.this, RaceActivity.class);
                 startActivity(intent);
             }
         });

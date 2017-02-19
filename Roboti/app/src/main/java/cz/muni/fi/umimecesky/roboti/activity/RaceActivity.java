@@ -2,9 +2,7 @@ package cz.muni.fi.umimecesky.roboti.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,15 +10,15 @@ import android.widget.Toast;
 
 import cz.muni.fi.umimecesky.roboti.R;
 import cz.muni.fi.umimecesky.roboti.pojo.FillWord;
+import cz.muni.fi.umimecesky.roboti.utils.CalculateDp;
+import cz.muni.fi.umimecesky.roboti.utils.Global;
 import cz.muni.fi.umimecesky.roboti.utils.MoveLogic;
 import cz.muni.fi.umimecesky.roboti.utils.RobotDrawable;
 
 import static cz.muni.fi.umimecesky.roboti.utils.Constant.DARK_GREEN;
 import static cz.muni.fi.umimecesky.roboti.utils.Constant.RACE_NEW_WORD_DELAY;
-import static cz.muni.fi.umimecesky.roboti.utils.Constant.ROBOT_MOVE;
 
 public class RaceActivity extends BaseAbstractActivity {
-
 
     private MoveLogic moveLogic;
 
@@ -29,13 +27,10 @@ public class RaceActivity extends BaseAbstractActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_race);
 
-        View view = findViewById(R.id.finishLine);
-        final DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-        float finalLine = metrics.widthPixels -200 -ROBOT_MOVE;//-usersRobot.getDrawable().;
-        Log.e("finalLine", String.valueOf(finalLine));
-        view.setX(finalLine);
+        ImageView usersRobot = (ImageView) findViewById(R.id.usersRobot);
+        CalculateDp calculateDp = new CalculateDp(usersRobot, 5);
+        calculateDp.setupFinishLine(findViewById(R.id.finishLine));
+        Global.setCalculateDp(calculateDp);
 
         setUpRobotViews();
 
