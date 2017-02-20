@@ -11,9 +11,9 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
+import cz.muni.fi.umimecesky.roboti.pojo.Category;
 import cz.muni.fi.umimecesky.roboti.pojo.FillWord;
 import cz.muni.fi.umimecesky.roboti.pojo.FillWordBuilder;
 import cz.muni.fi.umimecesky.roboti.pojo.RaceConcept;
@@ -89,7 +89,8 @@ public final class Utils {
         String jsonConcept = sharedPreferences.getString(JSON_CONCEPTS, null);
 
         if (jsonConcept != null) {
-            concepts = new Gson().fromJson(jsonConcept, new TypeToken<List<RaceConcept>>(){}.getType());
+            concepts = new Gson().fromJson(jsonConcept, new TypeToken<List<RaceConcept>>() {
+            }.getType());
         } else {
             concepts = initWebConcepts();
             setWebConcepts(context, concepts);
@@ -110,41 +111,49 @@ public final class Utils {
         sharedPreferences.edit().putString(JSON_CONCEPTS, json).apply();
     }
 
-        private static List<RaceConcept> initWebConcepts() {
+    //TODO: add later more concepts - Zdvojené hlásky, Párové hlásky
+    private static List<RaceConcept> initWebConcepts() {
         List<RaceConcept> concepts = new ArrayList<>();
 
         concepts.add(
                 new RaceConcept("Koncovky Y/I",
-                        Arrays.asList(1, 2, 3, 4, 5, 6, 7),
-                        7)
-        );
-        concepts.add(
-                new RaceConcept("Vyjmenovaná slova",
                         Arrays.asList(8, 9, 10, 11, 12, 13, 14),
                         7)
         );
         concepts.add(
+                new RaceConcept("Vyjmenovaná slova",
+                        Arrays.asList(1, 2, 3, 4, 5, 6, 7),
+                        7)
+        );
+        concepts.add(
                 new RaceConcept("Přejatá slova, délka samohlásek",
-                        Arrays.asList(38, 39, 40, 41),
+                        Arrays.asList(26, 27, 28, 29),
                         7)
         );
         concepts.add(
                 new RaceConcept("Psaní ě",
-                        Arrays.asList(26, 27, 28, 29),
+                        Arrays.asList(15, 16, 17, 18),
                         6)
         );
         concepts.add(
                 new RaceConcept("Zkratky a typografie",
-                        Arrays.asList(15, 16, 17, 18),
+                        Arrays.asList(34, 35, 36, 37),
                         5)
         );
         concepts.add(
                 new RaceConcept("Velká písmena",
-                        Arrays.asList(34, 35, 36, 37),
+                        Arrays.asList(38, 39, 40, 41, 42, 43, 44, 45),
                         7)
         );
 
-        return Collections.unmodifiableList(concepts);
+        return concepts;
     }
 
+    public static List<Integer> convertCategoriesToIDs(List<Category> categories) {
+        List<Integer> ids = new ArrayList<>();
+        for (Category category : categories) {
+            ids.add(category.getId());
+        }
+        return ids;
+    }
 }

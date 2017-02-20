@@ -50,10 +50,7 @@ public class CalculateDp {
 
     private float getScreenWidthDp() {
         float density  = metrics.density;
-        float dpWidth  = metrics.widthPixels / density;
-
-        Log.e("dpWidth ", String.valueOf(dpWidth)); //360
-        return dpWidth;
+        return metrics.widthPixels / density;
     }
 
 }

@@ -2,6 +2,7 @@ package cz.muni.fi.umimecesky.roboti.db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -10,6 +11,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import cz.muni.fi.umimecesky.roboti.pojo.Category;
 import cz.muni.fi.umimecesky.roboti.pojo.FillWord;
@@ -84,17 +86,17 @@ public class WordCategoryDbHelper extends SQLiteOpenHelper {
     }
 
     private List<FillWord> storedWords = new ArrayList<>();
-    private List<Category> storedCategories = new ArrayList<>();
+    private List<Integer> storedCategories = new ArrayList<>(); // TODO: refactor variables?
     private final Random random = new Random();
 
 
-    public FillWord getRandomCategoryWord(List<Category> categories) {
+    public FillWord getRandomCategoryWord(List<Integer> categoryIDs) {
 
-        if (!storedWords.isEmpty() && !storedCategories.isEmpty() && categories.equals(storedCategories)) {
+        if (!storedWords.isEmpty() && !storedCategories.isEmpty() && categoryIDs.equals(storedCategories)) {
             return getRandomWord(storedWords);
         }
 
-        String categoryIds = getCategoryIds(categories);
+        String categoryIds = getCategoryIds(categoryIDs);
 
         final String QUERY = "SELECT " +
                 ALL_WORD_COLUMNS +
@@ -106,7 +108,7 @@ public class WordCategoryDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(QUERY, null);
 
-        storedCategories = categories;
+        storedCategories = categoryIDs;
         storedWords = new ArrayList<>();
 
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
@@ -115,6 +117,7 @@ public class WordCategoryDbHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
+        db.close();
         return getRandomWord(storedWords);
     }
 
@@ -125,12 +128,13 @@ public class WordCategoryDbHelper extends SQLiteOpenHelper {
         return storedWords.remove(index);
     }
 
-    private String getCategoryIds(List<Category> categoryList) {
+
+    private String getCategoryIds(List<Integer> categoryIdList) {
 
         StringBuilder builder = new StringBuilder("(");
         String delimiter = "";
-        for (Category category : categoryList) {
-            builder.append(delimiter).append(category.getId());
+        for (Integer integer : categoryIdList) {
+            builder.append(delimiter).append(integer);
             delimiter = ",";
         }
         builder.append(")");

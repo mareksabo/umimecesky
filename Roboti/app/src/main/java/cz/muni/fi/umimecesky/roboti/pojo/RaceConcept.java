@@ -10,13 +10,13 @@ import cz.muni.fi.umimecesky.roboti.utils.Utils;
 public class RaceConcept implements Serializable {
 
     private String name;
-    private List<Integer> categoryIds;
+    private List<Integer> categoryIDs;
     private int numberOfLevels;
     private int currentLevel;
 
-    public RaceConcept(String name, List<Integer> categoryIds, int numberOfLevels) {
+    public RaceConcept(String name, List<Integer> categoryIDs, int numberOfLevels) {
         this.name = name;
-        this.categoryIds = categoryIds;
+        this.categoryIDs = categoryIDs;
         this.numberOfLevels = numberOfLevels;
         currentLevel = 1;
     }
@@ -25,8 +25,8 @@ public class RaceConcept implements Serializable {
         return name;
     }
 
-    public List<Integer> getCategoryIds() {
-        return categoryIds;
+    public List<Integer> getCategoryIDs() {
+        return categoryIDs;
     }
 
     public int getNumberOfLevels() {
@@ -52,7 +52,7 @@ public class RaceConcept implements Serializable {
     public String toString() {
         return "RaceConcept{" +
                 "name='" + name + '\'' +
-                ", categoryIds=" + categoryIds +
+                ", categoryIDs=" + categoryIDs +
                 ", numberOfLevels=" + numberOfLevels +
                 ", currentLevel=" + currentLevel +
                 '}';

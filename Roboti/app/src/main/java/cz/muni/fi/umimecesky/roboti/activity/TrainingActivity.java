@@ -16,11 +16,12 @@ import java.util.List;
 import cz.muni.fi.umimecesky.roboti.R;
 import cz.muni.fi.umimecesky.roboti.pojo.Category;
 import cz.muni.fi.umimecesky.roboti.pojo.FillWord;
+import cz.muni.fi.umimecesky.roboti.utils.Utils;
 
 import static cz.muni.fi.umimecesky.roboti.utils.Constant.DARK_GREEN;
 import static cz.muni.fi.umimecesky.roboti.utils.Constant.DEFAULT_COLOR;
 import static cz.muni.fi.umimecesky.roboti.utils.Constant.LAST_FILLED_WORD;
-import static cz.muni.fi.umimecesky.roboti.utils.Constant.TICKED_CATEGORIES;
+import static cz.muni.fi.umimecesky.roboti.utils.Constant.TICKED_CATEGORIES_EXTRA;
 import static cz.muni.fi.umimecesky.roboti.utils.Constant.TRAINING_NEW_WORD_DELAY;
 
 public class TrainingActivity extends BaseAbstractActivity {
@@ -33,7 +34,7 @@ public class TrainingActivity extends BaseAbstractActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_training);
 
-        setCheckedCategories((List<Category>) getIntent().getSerializableExtra(TICKED_CATEGORIES));
+        setCheckedCategories((List<Category>) getIntent().getSerializableExtra(TICKED_CATEGORIES_EXTRA));
 
         setWordText((TextView) findViewById(R.id.word));
         setCategoryText((TextView) findViewById(R.id.category));
@@ -133,7 +134,8 @@ public class TrainingActivity extends BaseAbstractActivity {
         if (getCheckedCategories() == null || getCheckedCategories().isEmpty()) {
             word = getWordHelper().getRandomFilledWord();
         } else {
-            word = getWordCategoryHelper().getRandomCategoryWord(getCheckedCategories());
+            List<Integer> categoryIDs = Utils.convertCategoriesToIDs(getCheckedCategories());
+            word = getWordCategoryHelper().getRandomCategoryWord(categoryIDs);
         }
         Log.v("random word", String.valueOf(word));
         setWord(word);

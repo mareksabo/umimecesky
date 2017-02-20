@@ -74,12 +74,14 @@ public class MoveLogic {
                 .setPositiveListener(R.string.ok, new PromptDialog.OnPositiveListener() {
                     @Override
                     public void onClick(PromptDialog dialog) {
+                        dialog.dismiss();
                         activity.finish();
                     }
                 })
                 .setOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialog) {
+                        dialog.dismiss();
                         activity.finish();
                     }
                 });

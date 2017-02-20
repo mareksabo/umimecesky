@@ -8,6 +8,6 @@ class BotLogicSlow implements RobotLogic {
 
     @Override
     public double correctnessRatio() {
-        return 0.95;
+        return 0.75;
     }
 }

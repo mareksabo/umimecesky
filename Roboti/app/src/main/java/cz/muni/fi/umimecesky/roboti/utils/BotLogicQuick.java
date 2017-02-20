@@ -9,7 +9,7 @@ class BotLogicQuick implements RobotLogic {
 
     @Override
     public double correctnessRatio() {
-        return 0.75;
+        return 0.55;
     }
 
 }

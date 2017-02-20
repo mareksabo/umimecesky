@@ -70,7 +70,7 @@ public class RaceActivity extends BaseAbstractActivity {
     }
 
     protected void setNewRandomWord() {
-        FillWord word = getWordHelper().getRandomFilledWord();
+        FillWord word = getWordCategoryHelper().getRandomCategoryWord(concept.getCategoryIDs());
         Log.d("random word", String.valueOf(word));
         setWord(word);
     }
