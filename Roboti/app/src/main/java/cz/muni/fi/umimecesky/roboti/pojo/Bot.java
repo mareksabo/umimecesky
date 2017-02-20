@@ -14,6 +14,7 @@ public class Bot {
     private RobotLogic logic;
     private boolean isWrong;
 
+    private int remainingHopsToWin;
     private CalculateDp calculateDp;
     private final float ROBOT_MOVE;
 
@@ -22,6 +23,7 @@ public class Bot {
         this.logic = logic;
         isWrong = false;
         calculateDp = Global.getCalculateDp();
+        remainingHopsToWin = calculateDp.getWinMovesCount();
         ROBOT_MOVE = calculateDp.calculateRobotMovePx();
     }
 
@@ -52,16 +54,35 @@ public class Bot {
             isWrong = false;
             return;
         }
-        getView().animate().translationXBy(ROBOT_MOVE);
+        int hopsPerCorrect = (logic == null) ? 1 : logic.hopsPerCorrect(); //TODO: users logic is null, move somewhere else?
+        processMoveForward(hopsPerCorrect);
+    }
+
+    private void processMoveForward(int hopsPerCorrect) {
+        hopsPerCorrect = limitHopsWhenWon(hopsPerCorrect);
+        remainingHopsToWin -= hopsPerCorrect;
+        getView().animate().translationXBy(ROBOT_MOVE * hopsPerCorrect);
         Log.i("getX", String.valueOf(getView().getX()));
+    }
+
+    private int limitHopsWhenWon(int hopsBefore) {
+        if (remainingHopsToWin >= hopsBefore) {
+            return hopsBefore;
+        } else {
+            return remainingHopsToWin;
+        }
     }
 
     public void moveBackward() {
         Log.v("backward", String.valueOf(logic));
         isWrong = true;
-        if (getView().getX() - ROBOT_MOVE < 0) {
-            return;
+        if (remainingHopsToWin != calculateDp.getWinMovesCount()) {
+            processMoveBackward();
         }
+    }
+
+    private void processMoveBackward() {
+        remainingHopsToWin++;
         getView().animate().translationXBy(-ROBOT_MOVE);
     }
 
@@ -74,9 +95,13 @@ public class Bot {
                 '}';
     }
 
+    /**
+     * Checks if robot has won, after calling its move. Move can be still processed.
+     * @return true if robot is beyond finish line
+     */
     public boolean isWinner() {
         Log.i("iswinner", String.valueOf(getView().getX()));
-        return calculateDp.isBeyondFinishLine(getView().getX());
+        return remainingHopsToWin <= 0;
     }
 
 }

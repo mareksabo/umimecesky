@@ -48,6 +48,14 @@ public class RaceConcept implements Serializable {
         Utils.updateConcept(context, this);
     }
 
+    /**
+     * Number describing how far in terms of levels user is.
+     * @return  interval higher than 0, lower or equal to 1
+     */
+    public float levelProgress() {
+        return currentLevel / (float) numberOfLevels;
+    }
+
     @Override
     public String toString() {
         return "RaceConcept{" +

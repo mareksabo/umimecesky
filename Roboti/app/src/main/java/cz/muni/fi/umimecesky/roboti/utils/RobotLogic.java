@@ -6,7 +6,7 @@ public interface RobotLogic {
      * Returns how many miliseconds it takes to solve clue.
      * @return positive number
      */
-    int milisecondsPerSolution();
+    int millisecondsPerSolution();
 
     /**
      * Checks how often is robot correct.
@@ -14,4 +14,9 @@ public interface RobotLogic {
      */
     double correctnessRatio();
 
+    /**
+     * How many hops should robot do when correct.
+     * @return positive number, usually 1 or 2
+     */
+    int hopsPerCorrect();
 }

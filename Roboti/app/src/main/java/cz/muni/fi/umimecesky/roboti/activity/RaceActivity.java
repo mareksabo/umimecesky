@@ -21,6 +21,7 @@ import cz.muni.fi.umimecesky.roboti.utils.RobotDrawable;
 
 import static cz.muni.fi.umimecesky.roboti.utils.Constant.DARK_GREEN;
 import static cz.muni.fi.umimecesky.roboti.utils.Constant.RACE_NEW_WORD_DELAY;
+import static cz.muni.fi.umimecesky.roboti.utils.Constant.RAW_HOPS_TO_WIN;
 
 public class RaceActivity extends BaseAbstractActivity {
 
@@ -36,7 +37,8 @@ public class RaceActivity extends BaseAbstractActivity {
         concept = (RaceConcept) getIntent().getExtras().getSerializable(Constant.RACE_CONCEPT_EXTRA);
 
         ImageView usersRobot = (ImageView) findViewById(R.id.usersRobot);
-        CalculateDp calculateDp = new CalculateDp(usersRobot, 5);
+        int hopsToWin = RAW_HOPS_TO_WIN + concept.getCurrentLevel();
+        CalculateDp calculateDp = new CalculateDp(usersRobot, hopsToWin);
         calculateDp.setupFinishLine(findViewById(R.id.finishLine));
         Global.setCalculateDp(calculateDp);
 
@@ -66,7 +68,7 @@ public class RaceActivity extends BaseAbstractActivity {
         bot2.setImageDrawable(robotDrawable.removeRobotDrawable());
         bot3.setImageDrawable(robotDrawable.removeRobotDrawable());
 
-        moveLogic = new MoveLogic(this, usersRobot, bot1, bot2, bot3);
+        moveLogic = new MoveLogic(this, concept, bot1, bot2, bot3);
     }
 
     protected void setNewRandomWord() {
@@ -124,7 +126,7 @@ public class RaceActivity extends BaseAbstractActivity {
 
     private String createDialogText() {
         StringBuilder s = new StringBuilder();
-        if (concept.getCurrentLevel() < concept.getNumberOfLevels()) {
+        if (concept.getCurrentLevel() <= concept.getNumberOfLevels()) {
             s.append("Jdete do levelu číslo ");
             s.append(concept.getCurrentLevel());
             s.append(" v kategorii ");

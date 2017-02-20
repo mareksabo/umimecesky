@@ -149,11 +149,16 @@ public final class Utils {
         return concepts;
     }
 
+    //TODO: create a template?
     public static List<Integer> convertCategoriesToIDs(List<Category> categories) {
         List<Integer> ids = new ArrayList<>();
         for (Category category : categories) {
             ids.add(category.getId());
         }
         return ids;
+    }
+
+    public static float roundBy2(double numberToRound) {
+        return Math.round(numberToRound * 100) / 100;
     }
 }

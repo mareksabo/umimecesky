@@ -2,7 +2,6 @@ package cz.muni.fi.umimecesky.roboti.utils;
 
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -25,14 +24,6 @@ public class CalculateDp {
         metrics = Resources.getSystem().getDisplayMetrics();
     }
 
-    public boolean isBeyondFinishLine(float positionBeforePx) {
-        float positionDp = Utils.pixelsToDpi(positionBeforePx);
-        // 2x because it is calculated before animation
-        float winningPoint = getScreenWidthDp() - 2 * getRobotWidthDp();
-        Log.v("winning point-position", String.valueOf(winningPoint - positionDp));
-        return positionDp >= winningPoint;
-    }
-
     private float calculateRobotMoveDp() {
         float dpAmountToWin = getScreenWidthDp() - getRobotWidthDp();
         return dpAmountToWin / winMovesCount;
@@ -53,4 +44,7 @@ public class CalculateDp {
         return metrics.widthPixels / density;
     }
 
+    public int getWinMovesCount() {
+        return winMovesCount;
+    }
 }
