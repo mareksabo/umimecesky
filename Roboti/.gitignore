@@ -6,3 +6,6 @@
 /build
 /captures
 .externalNativeBuild
+
+# hide csv tables
+/app/src/main/assets/
