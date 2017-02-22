@@ -1,6 +1,7 @@
 package cz.muni.fi.umimecesky.utils;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.widget.ImageView;
@@ -10,6 +11,7 @@ import java.util.List;
 
 import cn.refactor.lib.colordialog.PromptDialog;
 import cz.muni.fi.umimecesky.R;
+import cz.muni.fi.umimecesky.activity.RaceActivity;
 import cz.muni.fi.umimecesky.pojo.Bot;
 import cz.muni.fi.umimecesky.pojo.RaceConcept;
 
@@ -36,7 +38,7 @@ public class MoveLogic {
         handler.postDelayed(new Runnable() {
             public void run() {
                 if (bot.processBotMove()) {
-                    stopBots();
+                    stopBots(); // TODO disable buttons
                     showLosingDialog();
                     return;
                 }
@@ -59,7 +61,12 @@ public class MoveLogic {
                         dialog.dismiss();
                         activity.finish();
                     }
-                });
+                }).setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                activity.finish();
+            }
+        });
         promptDialog.setCanceledOnTouchOutside(false);
         promptDialog.show();
     }

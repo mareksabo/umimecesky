@@ -81,7 +81,6 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
 
     void setCategoryChecked(int position, boolean isChecked) {
         checkedStates[position] = isChecked;
-        Log.i("checked", Arrays.toString(checkedStates));
         notifyDataSetChanged();
         checkTickAllText();
     }
