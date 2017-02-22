@@ -10,7 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    tools:context="cz.muni.fi.umimecesky.roboti.activity.MainActivity">
+    tools:context=".activity.MainActivity">
 
 
     <TextView

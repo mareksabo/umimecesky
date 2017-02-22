@@ -4,7 +4,7 @@
     android:id="@+id/activity_list_categories"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="cz.muni.fi.umimecesky.roboti.activity.ListCategoriesActivity">
+    tools:context=".activity.ListCategoriesActivity">
 
     <LinearLayout
         android:id="@+id/buttonLayout"
