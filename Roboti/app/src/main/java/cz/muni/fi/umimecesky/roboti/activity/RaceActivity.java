@@ -1,7 +1,6 @@
 package cz.muni.fi.umimecesky.roboti.activity;
 
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -19,7 +18,6 @@ import cz.muni.fi.umimecesky.roboti.utils.Global;
 import cz.muni.fi.umimecesky.roboti.utils.MoveLogic;
 import cz.muni.fi.umimecesky.roboti.utils.RobotDrawable;
 
-import static cz.muni.fi.umimecesky.roboti.utils.Constant.DARK_GREEN;
 import static cz.muni.fi.umimecesky.roboti.utils.Constant.RACE_NEW_WORD_DELAY;
 import static cz.muni.fi.umimecesky.roboti.utils.Constant.RAW_HOPS_TO_WIN;
 
@@ -79,7 +77,7 @@ public class RaceActivity extends BaseAbstractActivity {
 
     @Override
     protected void chosenCorrect(Button button) {
-        button.setTextColor(DARK_GREEN);
+        setCorrect(button);
         setButtonsDisabled();
         usersBot.moveForward();
         if (usersBot.isWinner()) {
@@ -141,8 +139,7 @@ public class RaceActivity extends BaseAbstractActivity {
 
     @Override
     protected void chosenWrong(Button button) {
-        button.setTextColor(Color.RED);
-        button.setEnabled(false);
+        setWrong(button);
         usersBot.moveBackward();
     }
 

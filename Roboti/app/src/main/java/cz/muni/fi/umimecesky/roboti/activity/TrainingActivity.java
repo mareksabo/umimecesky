@@ -1,7 +1,5 @@
 package cz.muni.fi.umimecesky.roboti.activity;
 
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -18,8 +16,6 @@ import cz.muni.fi.umimecesky.roboti.pojo.Category;
 import cz.muni.fi.umimecesky.roboti.pojo.FillWord;
 import cz.muni.fi.umimecesky.roboti.utils.Utils;
 
-import static cz.muni.fi.umimecesky.roboti.utils.Constant.DARK_GREEN;
-import static cz.muni.fi.umimecesky.roboti.utils.Constant.DEFAULT_COLOR;
 import static cz.muni.fi.umimecesky.roboti.utils.Constant.LAST_FILLED_WORD;
 import static cz.muni.fi.umimecesky.roboti.utils.Constant.TICKED_CATEGORIES_EXTRA;
 import static cz.muni.fi.umimecesky.roboti.utils.Constant.TRAINING_NEW_WORD_DELAY;
@@ -69,7 +65,7 @@ public class TrainingActivity extends BaseAbstractActivity {
 
     @Override
     protected void chosenWrong(Button button) {
-        setIncorrect(button);
+        setWrong(button);
         showExplanation();
     }
 
@@ -85,25 +81,6 @@ public class TrainingActivity extends BaseAbstractActivity {
             }
         }, TRAINING_NEW_WORD_DELAY);
 
-    }
-
-    private static final int STROKE_WIDTH = 7;
-
-    private void setIncorrect(Button button) {
-
-        button.setTextColor(Color.RED);
-
-        GradientDrawable gradientDrawable = (GradientDrawable) button.getBackground();
-        gradientDrawable.setStroke(STROKE_WIDTH, Color.RED);
-        button.setEnabled(false);
-    }
-
-    private void setCorrect(Button button) {
-        getWordText().setText(getCurrentWord().getWordFilled());
-        button.setTextColor(DARK_GREEN);
-        GradientDrawable gradientDrawable = (GradientDrawable) button.getBackground();
-        gradientDrawable.setStroke(STROKE_WIDTH, DARK_GREEN);
-        button.setEnabled(false);
     }
 
     private void showExplanation() {
@@ -146,8 +123,6 @@ public class TrainingActivity extends BaseAbstractActivity {
         super.setWord(word);
 
         hideExplanation();
-        ((GradientDrawable) getVariant1().getBackground()).setStroke(4, DEFAULT_COLOR);
-        ((GradientDrawable) getVariant2().getBackground()).setStroke(4, DEFAULT_COLOR);
         setCategoryName();
         setButtonsEnabled();
     }

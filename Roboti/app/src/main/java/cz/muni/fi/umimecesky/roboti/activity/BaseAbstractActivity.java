@@ -1,6 +1,8 @@
 package cz.muni.fi.umimecesky.roboti.activity;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -16,7 +18,10 @@ import cz.muni.fi.umimecesky.roboti.pojo.Category;
 import cz.muni.fi.umimecesky.roboti.pojo.FillWord;
 import cz.muni.fi.umimecesky.roboti.utils.Utils;
 
+import static cz.muni.fi.umimecesky.roboti.utils.Constant.CORRECT_COLOR;
 import static cz.muni.fi.umimecesky.roboti.utils.Constant.DEFAULT_COLOR;
+import static cz.muni.fi.umimecesky.roboti.utils.Constant.STROKE_WIDTH;
+import static cz.muni.fi.umimecesky.roboti.utils.Constant.WRONG_COLOR;
 
 /**
  * Activity containing major properties needed to show words with word puzzles and its answers.
@@ -98,6 +103,8 @@ public abstract class BaseAbstractActivity extends AppCompatActivity {
         variant2.setText(word.getVariant2());
         variant1.setTextColor(DEFAULT_COLOR);
         variant2.setTextColor(DEFAULT_COLOR);
+        ((GradientDrawable) variant1.getBackground()).setStroke(STROKE_WIDTH, DEFAULT_COLOR);
+        ((GradientDrawable) variant2.getBackground()).setStroke(STROKE_WIDTH, DEFAULT_COLOR);
 
         setButtonsEnabled();
     }
@@ -113,6 +120,22 @@ public abstract class BaseAbstractActivity extends AppCompatActivity {
         variant2.setEnabled(false);
     }
 
+    protected void setWrong(Button button) {
+
+        button.setTextColor(Color.RED);
+
+        GradientDrawable gradientDrawable = (GradientDrawable) button.getBackground();
+        gradientDrawable.setStroke(STROKE_WIDTH, WRONG_COLOR);
+        button.setEnabled(false);
+    }
+
+    protected void setCorrect(Button button) {
+        getWordText().setText(getCurrentWord().getWordFilled());
+        button.setTextColor(CORRECT_COLOR);
+        GradientDrawable gradientDrawable = (GradientDrawable) button.getBackground();
+        gradientDrawable.setStroke(STROKE_WIDTH, CORRECT_COLOR);
+        button.setEnabled(false);
+    }
 
     /// GETTERS & SETTERS ///
 
