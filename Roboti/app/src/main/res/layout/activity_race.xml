@@ -51,19 +51,20 @@
             android:src="@drawable/robot12"
             tools:ignore="ContentDescription" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:layout_below="@id/bot3"
-            android:background="@android:color/black" />
-
     </RelativeLayout>
+
+    <View
+        android:id="@+id/blackLine"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_below="@id/upper_layout"
+        android:background="@android:color/black" />
 
     <RelativeLayout
         android:id="@+id/lowerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/upper_layout">
+        android:layout_below="@id/blackLine">
 
         <TextView
             android:id="@+id/word"

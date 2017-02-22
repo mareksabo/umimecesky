@@ -10,7 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activity.MainActivity">
+            android:name=".activity.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,15 +20,19 @@
         </activity>
         <activity
             android:name=".activity.TrainingActivity"
+            android:screenOrientation="portrait"
             android:label="@string/action_bar_name" />
         <activity
             android:name=".activity.ListCategoriesActivity"
+            android:screenOrientation="portrait"
             android:label="@string/action_bar_name" />
         <activity
             android:name=".activity.RaceActivity"
+            android:screenOrientation="portrait"
             android:label="@string/action_bar_name" />
         <activity
             android:name=".activity.LevelRaceActivity"
+            android:screenOrientation="portrait"
             android:label="@string/action_bar_name" />
     </application>
 
