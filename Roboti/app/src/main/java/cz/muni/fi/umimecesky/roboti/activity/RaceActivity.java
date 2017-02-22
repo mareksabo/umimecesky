@@ -112,13 +112,8 @@ public class RaceActivity extends BaseAbstractActivity {
                         dialog.dismiss();
                         RaceActivity.this.finish();
                     }
-                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        dialog.dismiss();
-                        RaceActivity.this.finish();
-                    }
                 });
+        promptDialog.setCanceledOnTouchOutside(false);
         promptDialog.show();
     }
 

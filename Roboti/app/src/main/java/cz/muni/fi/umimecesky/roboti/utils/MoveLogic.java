@@ -60,14 +60,8 @@ public class MoveLogic {
                         dialog.dismiss();
                         activity.finish();
                     }
-                })
-                .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        dialog.dismiss();
-                        activity.finish();
-                    }
                 });
+        promptDialog.setCanceledOnTouchOutside(false);
         promptDialog.show();
     }
 
