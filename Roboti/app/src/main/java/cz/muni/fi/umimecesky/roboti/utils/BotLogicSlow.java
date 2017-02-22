@@ -16,7 +16,7 @@ class BotLogicSlow implements RobotLogic {
 
     @Override
     public int millisecondsPerSolution() {
-        return 4500 - (int) (2000 * concept.levelProgress());
+        return 3500 - (int) (1500 * concept.levelProgress());
     }
 
     @Override

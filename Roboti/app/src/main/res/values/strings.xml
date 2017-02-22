@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Umíme česky</string>
+    <string name="action_bar_name">Umíme česky - roboti</string>
     <string name="action_settings">Nastavení</string>
 
     <string name="train_button_name">Procvičovat</string>

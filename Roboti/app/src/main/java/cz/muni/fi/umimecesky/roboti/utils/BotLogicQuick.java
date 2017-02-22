@@ -12,7 +12,7 @@ class BotLogicQuick implements RobotLogic {
 
     @Override
     public int millisecondsPerSolution() {
-        return 3500 - (int) (2000 * concept.levelProgress());
+        return 3000 - (int) (1800 * concept.levelProgress());
     }
 
     @Override

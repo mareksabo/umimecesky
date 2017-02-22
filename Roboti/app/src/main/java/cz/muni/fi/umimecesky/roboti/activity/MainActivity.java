@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // TODO: solve slow start
         SharedPreferences sharedPref = Utils.getSharedPreferences(this);
         setButtons();
 

@@ -9,17 +9,27 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MainActivity">
+        <activity
+            android:name=".activity.MainActivity"
+            android:label="@string/action_bar_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.TrainingActivity" />
-        <activity android:name=".activity.ListCategoriesActivity" />
-        <activity android:name=".activity.RaceActivity" />
-        <activity android:name=".activity.LevelRaceActivity" />
+        <activity
+            android:name=".activity.TrainingActivity"
+            android:label="@string/action_bar_name" />
+        <activity
+            android:name=".activity.ListCategoriesActivity"
+            android:label="@string/action_bar_name" />
+        <activity
+            android:name=".activity.RaceActivity"
+            android:label="@string/action_bar_name" />
+        <activity
+            android:name=".activity.LevelRaceActivity"
+            android:label="@string/action_bar_name" />
     </application>
 
 </manifest>

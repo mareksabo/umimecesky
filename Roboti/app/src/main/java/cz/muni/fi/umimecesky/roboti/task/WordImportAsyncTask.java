@@ -186,9 +186,6 @@ public class WordImportAsyncTask extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         SharedPreferences prefs = Utils.getSharedPreferences(activity);
         prefs.edit().putBoolean(IS_FILLED, true).apply();
-
-        Toast.makeText(activity.getApplicationContext(), "Words inserted: " + importedSize,
-                Toast.LENGTH_LONG).show();
     }
 
 }
