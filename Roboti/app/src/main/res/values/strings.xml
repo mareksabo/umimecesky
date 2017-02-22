@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">Roboti</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">Umíme česky</string>
+    <string name="action_settings">Nastavení</string>
 
     <string name="train_button_name">Procvičovat</string>
     <string name="race_button_name">Závodit</string>
