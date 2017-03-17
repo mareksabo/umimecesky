@@ -11,4 +11,5 @@
     <string name="back">Zpět</string>
     <string name="ok">OK</string>
     <string name="congratulations">Gratuluji!</string>
+    <string name="image_showing_robot">Image showing robot</string>
 </resources>
