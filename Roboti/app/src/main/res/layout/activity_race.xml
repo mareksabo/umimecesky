@@ -5,21 +5,24 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/upper_layout"
+        android:id="@+id/movementLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/blackLine">
 
-        <View
-            android:id="@+id/finishLine"
-            android:layout_width="4dp"
-            android:layout_height="320dp"
-            android:background="@android:color/holo_red_light" />
+    <LinearLayout
+        android:id="@+id/robots_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="4"
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/usersRobot"
             android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:padding="10dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="@dimen/robot_padding"
             android:src="@drawable/greenrobot0"
             tools:ignore="ContentDescription" />
 
@@ -27,8 +30,9 @@
         <ImageView
             android:id="@+id/bot1"
             android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:padding="10dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="@dimen/robot_padding"
             android:layout_below="@id/usersRobot"
             android:src="@drawable/robot2"
             tools:ignore="ContentDescription" />
@@ -36,8 +40,9 @@
         <ImageView
             android:id="@+id/bot2"
             android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:padding="10dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="@dimen/robot_padding"
             android:layout_below="@id/bot1"
             android:src="@drawable/robot5"
             tools:ignore="ContentDescription" />
@@ -45,11 +50,19 @@
         <ImageView
             android:id="@+id/bot3"
             android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:padding="10dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="@dimen/robot_padding"
             android:layout_below="@id/bot2"
             android:src="@drawable/robot12"
             tools:ignore="ContentDescription" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/finishLine"
+        android:layout_width="3dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_red_light" />
 
     </RelativeLayout>
 
@@ -57,22 +70,24 @@
         android:id="@+id/blackLine"
         android:layout_width="match_parent"
         android:layout_height="3dp"
-        android:layout_below="@id/upper_layout"
+        android:layout_above="@+id/word_layout"
         android:background="@android:color/black" />
 
     <RelativeLayout
-        android:id="@+id/lowerLayout"
+        android:id="@+id/word_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/blackLine">
+        android:layout_alignParentBottom="true">
 
         <TextView
             android:id="@+id/word"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/buttonLayout"
-            android:padding="@dimen/text_padding"
+            android:layout_height="wrap_content"
+            android:padding="2dp"
             android:gravity="center"
+            android:text="Vědecké výzkumy přinesl_ překvapivé výsledky."
+            android:minLines="3"
+            android:maxLines="3"
             android:textSize="@dimen/text_size" />
 
         <LinearLayout
@@ -80,7 +95,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/word"
+            android:padding="3dp"
             android:orientation="horizontal">
 
             <Button
@@ -91,6 +107,7 @@
                 android:background="@drawable/button2"
                 android:layout_margin="5dp"
                 android:textAllCaps="false"
+                android:text="konkurenceschopná"
                 android:textSize="@dimen/button_text_size" />
 
 
@@ -99,6 +116,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+
+                android:text="konkurence schopná"
                 android:background="@drawable/button2"
                 android:layout_margin="5dp"
                 android:textAllCaps="false"

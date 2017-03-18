@@ -6,11 +6,12 @@
     <dimen name="fab_margin">60sp</dimen>
     <dimen name="box_size">80sp</dimen>
     <dimen name="button_text_size">30sp</dimen>
-    <dimen name="text_size">28sp</dimen>
+    <dimen name="text_size">32sp</dimen>
     <dimen name="category_text_size">22sp</dimen>
     <dimen name="hint_text_size">16sp</dimen>
     <dimen name="text_padding">15sp</dimen>
     <dimen name="title_padding">10sp</dimen>
     <dimen name="level_text_size">20sp</dimen>
     <dimen name="main_buttons_padding">40dp</dimen>
+    <dimen name="robot_padding">3dp</dimen>
 </resources>

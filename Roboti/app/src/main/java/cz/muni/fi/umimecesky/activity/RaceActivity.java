@@ -18,6 +18,7 @@ import cz.muni.fi.umimecesky.utils.Constant;
 import cz.muni.fi.umimecesky.utils.Global;
 import cz.muni.fi.umimecesky.utils.MoveLogic;
 import cz.muni.fi.umimecesky.utils.RobotDrawable;
+import cz.muni.fi.umimecesky.utils.Utils;
 
 import static cz.muni.fi.umimecesky.utils.Constant.RACE_NEW_WORD_DELAY;
 import static cz.muni.fi.umimecesky.utils.Constant.RAW_HOPS_TO_WIN;
@@ -115,7 +116,7 @@ public class RaceActivity extends BaseAbstractActivity {
                     }
                 });
         promptDialog.setCanceledOnTouchOutside(false);
-        promptDialog.show();
+        Utils.showDialogImmersive(promptDialog, this);
     }
 
     private String createDialogText() {
@@ -154,11 +155,7 @@ public class RaceActivity extends BaseAbstractActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        int flags =
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION; // hides nav bar (buttons)
+        int flags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             flags |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         }

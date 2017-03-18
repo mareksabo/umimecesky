@@ -1,10 +1,12 @@
 package cz.muni.fi.umimecesky.utils;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.view.WindowManager;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import cn.refactor.lib.colordialog.PromptDialog;
 import cz.muni.fi.umimecesky.pojo.Category;
 import cz.muni.fi.umimecesky.pojo.FillWord;
 import cz.muni.fi.umimecesky.pojo.FillWordBuilder;
@@ -160,5 +163,25 @@ public final class Utils {
 
     public static float roundBy2(double numberToRound) {
         return Math.round(numberToRound * 100) / 100;
+    }
+
+    /**
+     * When activity is in immersive fullscreen mode, f.e. navigation bar is hidden. Dialog show
+     * action will display the bar. This method is used to avoid displaying hidden bar.
+     *
+     * @param promptDialog dialog which is shown
+     * @param activity     which activity is currently running
+     */
+    public static void showDialogImmersive(PromptDialog promptDialog, Activity activity) {
+        promptDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+
+        promptDialog.show();
+
+        //Set the promptDialog to immersive
+        promptDialog.getWindow().getDecorView().setSystemUiVisibility(
+                activity.getWindow().getDecorView().getSystemUiVisibility());
+        //Clear the not focusable flag from the window
+        promptDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
     }
 }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.util.Log;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
@@ -11,7 +12,6 @@ import java.util.List;
 
 import cn.refactor.lib.colordialog.PromptDialog;
 import cz.muni.fi.umimecesky.R;
-import cz.muni.fi.umimecesky.activity.RaceActivity;
 import cz.muni.fi.umimecesky.pojo.Bot;
 import cz.muni.fi.umimecesky.pojo.RaceConcept;
 
@@ -20,7 +20,7 @@ public class MoveLogic {
     private List<Handler> handlers = new ArrayList<>();
     private Activity activity;
 
-    private static final int ROBOT_START_DELAY_MS = 500;
+    private static final int ROBOT_START_DELAY_MS = 200;
 
     public MoveLogic(Activity activity, RaceConcept concept, ImageView botView1,
                      ImageView botView2, ImageView botView3) {
@@ -44,9 +44,10 @@ public class MoveLogic {
                     showLosingDialog();
                     return;
                 }
+                Log.d("robot logic", logic.toString());
                 handler.postDelayed(this, logic.millisecondsPerSolution());
             }
-        }, Math.round(Math.random() * 3000 + ROBOT_START_DELAY_MS));
+        }, (long) (Math.random() * 2000 + ROBOT_START_DELAY_MS));
         handlers.add(handler);
     }
 
@@ -70,7 +71,7 @@ public class MoveLogic {
             }
         });
         promptDialog.setCanceledOnTouchOutside(false);
-        promptDialog.show();
+        Utils.showDialogImmersive(promptDialog, activity);
     }
 
     public void stopBots() {
