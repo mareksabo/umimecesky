@@ -1,5 +1,6 @@
 package cz.muni.fi.umimecesky.activity;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -139,4 +140,15 @@ public class TrainingActivity extends BaseAbstractActivity {
         String json = new Gson().toJson(getCurrentWord());
         getSharedPref().edit().putString(LAST_FILLED_WORD, json).apply();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        int flags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION; // hides nav bar (buttons)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            flags |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        }
+        getWindow().getDecorView().setSystemUiVisibility(flags);
+    }
+
 }

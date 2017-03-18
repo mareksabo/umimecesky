@@ -1,7 +1,9 @@
 package cz.muni.fi.umimecesky.activity;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -147,5 +149,19 @@ public class RaceActivity extends BaseAbstractActivity {
     protected void onStop() {
         super.onStop();
         this.finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        int flags =
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION; // hides nav bar (buttons)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            flags |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        }
+        getWindow().getDecorView().setSystemUiVisibility(flags);
     }
 }

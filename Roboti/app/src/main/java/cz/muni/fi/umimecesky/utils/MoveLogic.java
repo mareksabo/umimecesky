@@ -20,6 +20,8 @@ public class MoveLogic {
     private List<Handler> handlers = new ArrayList<>();
     private Activity activity;
 
+    private static final int ROBOT_START_DELAY_MS = 500;
+
     public MoveLogic(Activity activity, RaceConcept concept, ImageView botView1,
                      ImageView botView2, ImageView botView3) {
         this.activity = activity;
@@ -44,7 +46,7 @@ public class MoveLogic {
                 }
                 handler.postDelayed(this, logic.millisecondsPerSolution());
             }
-        }, Math.round(Math.random() * 3000));
+        }, Math.round(Math.random() * 3000 + ROBOT_START_DELAY_MS));
         handlers.add(handler);
     }
 
