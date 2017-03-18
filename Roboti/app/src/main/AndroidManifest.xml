@@ -21,19 +21,23 @@
         <activity
             android:name=".activity.TrainingActivity"
             android:screenOrientation="portrait"
-            android:label="@string/action_bar_name" />
+            android:label="@string/action_bar_name"
+            android:parentActivityName=".activity.ListCategoriesActivity"/>
         <activity
             android:name=".activity.ListCategoriesActivity"
             android:screenOrientation="portrait"
-            android:label="@string/action_bar_name" />
+            android:label="@string/action_bar_name"
+            android:parentActivityName=".activity.MainActivity"/>
         <activity
             android:name=".activity.RaceActivity"
             android:screenOrientation="portrait"
-            android:label="@string/action_bar_name" />
+            android:label="@string/action_bar_name"
+            android:parentActivityName=".activity.LevelRaceActivity"/>
         <activity
             android:name=".activity.LevelRaceActivity"
             android:screenOrientation="portrait"
-            android:label="@string/action_bar_name" />
+            android:label="@string/action_bar_name"
+            android:parentActivityName=".activity.MainActivity"/>
     </application>
 
 </manifest>
