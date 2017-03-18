@@ -7,6 +7,10 @@ import java.util.List;
 
 import cz.muni.fi.umimecesky.utils.Utils;
 
+/**
+ * Represents concept/category with current state.
+ * F.e. pisanie i/y_
+ */
 public class RaceConcept implements Serializable {
 
     private String name;
@@ -43,9 +47,16 @@ public class RaceConcept implements Serializable {
         }
     }
 
-    public void increaseLevel(Context context) {
+    /**
+     * Increases the current level.
+     * @param context current context
+     * @return true if level was increased
+     */
+    public boolean increaseLevel(Context context) {
+        int oldLevel = currentLevel;
         setCurrentLevel(currentLevel+1);
         Utils.updateConcept(context, this);
+        return oldLevel != currentLevel;
     }
 
     /**

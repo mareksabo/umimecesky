@@ -44,7 +44,6 @@ public class LevelRaceActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
                 List<RaceConcept> conceptList = Utils.getWebConcepts(LevelRaceActivity.this);
                 RaceConcept raceConcept = conceptList.get(position);
-                Log.v("race concept", String.valueOf(raceConcept));
 
                 Intent intent = new Intent(LevelRaceActivity.this, RaceActivity.class);
                 intent.putExtra(Constant.RACE_CONCEPT_EXTRA, raceConcept);

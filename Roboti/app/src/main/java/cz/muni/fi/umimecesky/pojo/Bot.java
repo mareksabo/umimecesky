@@ -62,7 +62,6 @@ public class Bot {
         hopsPerCorrect = limitHopsWhenWon(hopsPerCorrect);
         remainingHopsToWin -= hopsPerCorrect;
         getView().animate().translationXBy(ROBOT_MOVE * hopsPerCorrect);
-        Log.i("getX", String.valueOf(getView().getX()));
     }
 
     private int limitHopsWhenWon(int hopsBefore) {
@@ -74,7 +73,6 @@ public class Bot {
     }
 
     public void moveBackward() {
-        Log.v("backward", String.valueOf(logic));
         isWrong = true;
         if (remainingHopsToWin != calculateDp.getWinMovesCount()) {
             processMoveBackward();

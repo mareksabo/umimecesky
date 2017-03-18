@@ -4,7 +4,7 @@ import android.util.Log;
 
 import cz.muni.fi.umimecesky.pojo.RaceConcept;
 
-class BotLogicSlow implements RobotLogic {
+public class BotLogicSlow implements RobotLogic {
 
     private RaceConcept concept;
 
@@ -21,7 +21,7 @@ class BotLogicSlow implements RobotLogic {
 
     @Override
     public double correctnessRatio() {
-        double addition = isBeforeHalf() ? Utils.roundBy2(0.4 * concept.levelProgress()) :
+        double addition = isBeforeHalf() ? Utils.roundBy2places(0.4 * concept.levelProgress()) :
                 0.1 * concept.levelProgress();
         return 0.75 + addition;
     }

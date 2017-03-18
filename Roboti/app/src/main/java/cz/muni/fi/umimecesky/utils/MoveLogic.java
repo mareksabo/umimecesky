@@ -1,37 +1,31 @@
 package cz.muni.fi.umimecesky.utils;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
-import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.refactor.lib.colordialog.PromptDialog;
 import cz.muni.fi.umimecesky.R;
+import cz.muni.fi.umimecesky.activity.RaceActivity;
 import cz.muni.fi.umimecesky.pojo.Bot;
-import cz.muni.fi.umimecesky.pojo.RaceConcept;
 
 public class MoveLogic {
 
     private List<Handler> handlers = new ArrayList<>();
-    private Activity activity;
+    private RaceActivity raceActivity;
 
     private static final int ROBOT_START_DELAY_MS = 200;
 
-    public MoveLogic(Activity activity, RaceConcept concept, ImageView botView1,
-                     ImageView botView2, ImageView botView3) {
-        this.activity = activity;
+    public MoveLogic(RaceActivity raceActivity, Bot[] bots) {
+        this.raceActivity = raceActivity;
 
-        Bot bot1 = new Bot(botView1, new BotLogicQuick(concept));
-        Bot bot2 = new Bot(botView2,  new BotLogicSlow(concept));
-        Bot bot3 = new Bot(botView3, new BotLogicQuick(concept));
-        setupBot(bot1);
-        setupBot(bot2);
-        setupBot(bot3);
+        for (Bot bot : bots) {
+            setupBot(bot);
+        }
     }
 
     private void setupBot(final Bot bot) {
@@ -39,39 +33,46 @@ public class MoveLogic {
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
-                if (bot.processBotMove()) {
-                    stopBots(); // TODO disable buttons
-                    showLosingDialog();
-                    return;
-                }
+                boolean shouldContinue = moveAndEvaluate(bot);
                 Log.d("robot logic", logic.toString());
-                handler.postDelayed(this, logic.millisecondsPerSolution());
+                if (shouldContinue) {
+                    handler.postDelayed(this, logic.millisecondsPerSolution());
+                }
             }
         }, (long) (Math.random() * 2000 + ROBOT_START_DELAY_MS));
         handlers.add(handler);
     }
 
-    private void showLosingDialog() {
+    private boolean moveAndEvaluate(Bot bot) {
+        if (bot.processBotMove()) {
+            stopBots();
+            raceActivity.disableButtons();
+            showLosingDialog();
+            return false;
+        }
+        return true;
+    }
 
-        PromptDialog promptDialog = new PromptDialog(activity);
+    private void showLosingDialog() {
+        PromptDialog promptDialog = new PromptDialog(raceActivity);
         promptDialog.setDialogType(PromptDialog.DIALOG_TYPE_WRONG)
                 .setAnimationEnable(true)
                 .setTitleText("Roboti vyhráli")
-                .setContentText("Byli jste poražen!")
+                .setContentText("Byl jsi poražen!")
                 .setPositiveListener(R.string.ok, new PromptDialog.OnPositiveListener() {
                     @Override
                     public void onClick(PromptDialog dialog) {
                         dialog.dismiss();
-                        activity.finish();
+                        raceActivity.finish();
                     }
                 }).setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
-                activity.finish();
+                raceActivity.finish();
             }
         });
         promptDialog.setCanceledOnTouchOutside(false);
-        Utils.showDialogImmersive(promptDialog, activity);
+        Utils.showDialogImmersive(promptDialog, raceActivity);
     }
 
     public void stopBots() {

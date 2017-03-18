@@ -161,7 +161,7 @@ public final class Utils {
         return ids;
     }
 
-    public static float roundBy2(double numberToRound) {
+    public static float roundBy2places(double numberToRound) {
         return Math.round(numberToRound * 100) / 100;
     }
 
