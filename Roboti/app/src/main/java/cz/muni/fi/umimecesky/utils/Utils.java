@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.os.Build;
+import android.view.View;
 import android.view.WindowManager;
 
 import com.google.gson.Gson;
@@ -182,5 +184,13 @@ public final class Utils {
                 activity.getWindow().getDecorView().getSystemUiVisibility());
         //Clear the not focusable flag from the window
         promptDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+    }
+
+    public static void hideNavigationBar(Activity activity) {
+        int flags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION; // hides nav bar (buttons)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            flags |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        }
+        activity.getWindow().getDecorView().setSystemUiVisibility(flags);
     }
 }
