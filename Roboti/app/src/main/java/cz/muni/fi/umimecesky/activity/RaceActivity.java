@@ -36,6 +36,8 @@ public class RaceActivity extends BaseAbstractActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_race);
+        initUi();
+
         concept = (RaceConcept) getIntent().getExtras().getSerializable(Constant.RACE_CONCEPT_EXTRA);
 
         ImageView usersRobot = (ImageView) findViewById(R.id.usersRobot);
@@ -45,13 +47,16 @@ public class RaceActivity extends BaseAbstractActivity {
 
         setUpRobotViews();
 
-        setWordText((TextView) findViewById(R.id.word));
-        setVariant1((Button) findViewById(R.id.firstButton));
-        setVariant2((Button) findViewById(R.id.secondButton));
-
-        super.init();
         setNewRandomWord();
+    }
 
+    private void initUi() {
+        UiViewHelper viewHelper = new UiViewHelper();
+        viewHelper.wordText = (TextView) findViewById(R.id.word);
+        viewHelper.variant1 = (Button) findViewById(R.id.firstButton);
+        viewHelper.variant2 = (Button) findViewById(R.id.secondButton);
+
+        super.init(viewHelper);
     }
 
     private void createRaceTrack(ImageView usersRobot) {

@@ -30,15 +30,12 @@ public class TrainingActivity extends BaseAbstractActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_training);
+        initUi();
 
         setCheckedCategories((List<Category>) getIntent().getSerializableExtra(TICKED_CATEGORIES_EXTRA));
 
-        setWordText((TextView) findViewById(R.id.word));
         setCategoryText((TextView) findViewById(R.id.category));
         explanationText = (TextView) findViewById(R.id.explanationText);
-        setVariant1((Button) findViewById(R.id.firstButton));
-        setVariant2((Button) findViewById(R.id.secondButton));
-        super.init();
 
         setLastUsedWord();
 
@@ -63,6 +60,16 @@ public class TrainingActivity extends BaseAbstractActivity {
         getVariant2().setOnTouchListener(touchListener);
 
     }
+
+    private void initUi() {
+        UiViewHelper viewHelper = new UiViewHelper();
+        viewHelper.wordText = (TextView) findViewById(R.id.word);
+        viewHelper.variant1 = (Button) findViewById(R.id.firstButton);
+        viewHelper.variant2 = (Button) findViewById(R.id.secondButton);
+
+        super.init(viewHelper);
+    }
+
 
     @Override
     protected void chosenWrong(Button button) {

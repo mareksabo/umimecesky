@@ -104,7 +104,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/button2"
+                android:background="@drawable/button"
                 android:layout_margin="5dp"
                 android:textAllCaps="false"
                 android:text="konkurenceschopná"
@@ -118,7 +118,7 @@
                 android:layout_weight="1"
 
                 android:text="konkurence schopná"
-                android:background="@drawable/button2"
+                android:background="@drawable/button"
                 android:layout_margin="5dp"
                 android:textAllCaps="false"
                 android:textSize="@dimen/button_text_size" />

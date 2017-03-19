@@ -26,7 +26,7 @@ import static cz.muni.fi.umimecesky.utils.Constant.WRONG_COLOR;
 /**
  * Activity containing major properties needed to show words with word puzzles and its answers.
  * <p>
- * Method {@link #init()} must be called in {@link #onCreate(Bundle)}.
+ * Method {@link #init(UiViewHelper)} must be called in {@link #onCreate(Bundle)}.
  */
 public abstract class BaseAbstractActivity extends AppCompatActivity {
 
@@ -44,12 +44,6 @@ public abstract class BaseAbstractActivity extends AppCompatActivity {
     private List<Category> checkedCategories;
     private SharedPreferences sharedPref;
 
-    // TODO: solve init to avoid accessing null reference (f.e. variant1)
-    protected void init() {
-        initButtonClickListeners();
-        setHelpers();
-    }
-
     /**
      * Represents behaviour when incorrect button is pressed.
      * @param button button with {@link #getVariant1()}
@@ -62,11 +56,19 @@ public abstract class BaseAbstractActivity extends AppCompatActivity {
      */
     protected abstract void chosenCorrect(Button button);
 
+    protected void init(UiViewHelper viewHelper) {
+        wordText = viewHelper.wordText;
+        variant1 = viewHelper.variant1;
+        variant2 = viewHelper.variant2;
+
+        setHelpers();
+        initButtonClickListeners();
+    }
+
     private void setHelpers() {
         wordHelper = new WordDbHelper(this);
         wordCategoryHelper = new WordCategoryDbHelper(this);
         categoryHelper = new CategoryDbHelper(this);
-
         sharedPref = Utils.getSharedPreferences(this);
     }
 
@@ -101,14 +103,23 @@ public abstract class BaseAbstractActivity extends AppCompatActivity {
         wordText.setText(word.getWordMissing());
         variant1.setText(word.getVariant1());
         variant2.setText(word.getVariant2());
-        variant1.setTextColor(DEFAULT_COLOR);
-        variant2.setTextColor(DEFAULT_COLOR);
-        ((GradientDrawable) variant1.getBackground()).setStroke(STROKE_WIDTH, DEFAULT_COLOR);
-        ((GradientDrawable) variant2.getBackground()).setStroke(STROKE_WIDTH, DEFAULT_COLOR);
+        setDefaultButtonsColor();
 
         setButtonsEnabled();
     }
 
+    private void setDefaultButtonsColor() {
+        variant1.setTextColor(DEFAULT_COLOR);
+        variant2.setTextColor(DEFAULT_COLOR);
+        ((GradientDrawable) variant1.getBackground()).setStroke(STROKE_WIDTH, DEFAULT_COLOR);
+        ((GradientDrawable) variant2.getBackground()).setStroke(STROKE_WIDTH, DEFAULT_COLOR);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        setDefaultButtonsColor(); // to avoid colorful buttons in other activities
+    }
 
     protected void setButtonsEnabled() {
         variant1.setEnabled(true);
@@ -137,8 +148,7 @@ public abstract class BaseAbstractActivity extends AppCompatActivity {
         button.setEnabled(false);
     }
 
-    /// GETTERS & SETTERS ///
-
+    /// GETTERS ///
 
     public WordDbHelper getWordHelper() {
         return wordHelper;
@@ -164,36 +174,26 @@ public abstract class BaseAbstractActivity extends AppCompatActivity {
         return wordText;
     }
 
-    public void setWordText(TextView wordText) {
-        this.wordText = wordText;
-    }
-
-    public TextView getCategoryText() {
-        return categoryText;
-    }
-
-    public void setCategoryText(TextView categoryText) {
-        this.categoryText = categoryText;
-    }
     public Button getVariant1() {
         return variant1;
-    }
-
-    public void setVariant1(Button variant1) {
-        this.variant1 = variant1;
     }
 
     public Button getVariant2() {
         return variant2;
     }
 
-    public void setVariant2(Button variant2) {
-        this.variant2 = variant2;
+    public TextView getCategoryText() {
+        return categoryText;
     }
-
 
     public List<Category> getCheckedCategories() {
         return checkedCategories;
+    }
+
+    /// SETTERS ///
+
+    public void setCategoryText(TextView categoryText) {
+        this.categoryText = categoryText;
     }
 
     public void setCheckedCategories(List<Category> checkedCategories) {

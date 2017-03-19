@@ -152,7 +152,6 @@ public final class Utils {
         return concepts;
     }
 
-    //TODO: create a template?
     public static List<Integer> convertCategoriesToIDs(List<Category> categories) {
         List<Integer> ids = new ArrayList<>();
         for (Category category : categories) {

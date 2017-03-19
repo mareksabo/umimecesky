@@ -54,7 +54,7 @@ public class Bot {
             isWrong = false;
             return;
         }
-        int hopsPerCorrect = (logic == null) ? 1 : logic.hopsPerCorrect(); //TODO: users logic is null, move somewhere else?
+        int hopsPerCorrect = (logic == null) ? 1 : logic.hopsPerCorrect();
         processMoveForward(hopsPerCorrect);
     }
 
