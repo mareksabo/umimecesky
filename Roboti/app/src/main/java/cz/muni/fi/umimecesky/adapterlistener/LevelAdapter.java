@@ -1,7 +1,6 @@
 package cz.muni.fi.umimecesky.adapterlistener;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,14 +37,12 @@ public class LevelAdapter extends BaseAdapter {
             holder.currentLevel = (TextView) convertView.findViewById(R.id.currentLevel);
             holder.progressBar = (RoundCornerProgressBar) convertView.findViewById(R.id.levelProgress);
             holder.progressBar.setMax(list.get(position).getNumberOfLevels() - 1);
-            Log.i("max bar", String.valueOf(holder.progressBar.getMax()));
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
         RaceConcept raceConcept = list.get(position);
-        Log.d("race concept", raceConcept + "");
         holder.sectionName.setText(raceConcept.getName());
         setProgressBar(holder, raceConcept);
         return convertView;

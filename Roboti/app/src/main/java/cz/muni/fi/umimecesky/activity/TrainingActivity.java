@@ -18,7 +18,7 @@ import cz.muni.fi.umimecesky.utils.Utils;
 
 import static cz.muni.fi.umimecesky.utils.Constant.LAST_FILLED_WORD;
 import static cz.muni.fi.umimecesky.utils.Constant.TICKED_CATEGORIES_EXTRA;
-import static cz.muni.fi.umimecesky.utils.Constant.TRAINING_NEW_WORD_DELAY;
+import static cz.muni.fi.umimecesky.utils.Constant.TRAINING_NEW_WORD_DELAY_MS;
 
 public class TrainingActivity extends BaseAbstractActivity {
 
@@ -86,7 +86,7 @@ public class TrainingActivity extends BaseAbstractActivity {
                 setButtonsEnabled();
                 setNewRandomWord();
             }
-        }, TRAINING_NEW_WORD_DELAY);
+        }, TRAINING_NEW_WORD_DELAY_MS);
 
     }
 

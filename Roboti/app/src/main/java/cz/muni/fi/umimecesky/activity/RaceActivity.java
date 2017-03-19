@@ -6,11 +6,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import cn.refactor.lib.colordialog.PromptDialog;
 import cz.muni.fi.umimecesky.R;
 import cz.muni.fi.umimecesky.pojo.Bot;
 import cz.muni.fi.umimecesky.pojo.FillWord;
 import cz.muni.fi.umimecesky.pojo.RaceConcept;
+import cz.muni.fi.umimecesky.pojo.UsersRobot;
 import cz.muni.fi.umimecesky.utils.BotLogicQuick;
 import cz.muni.fi.umimecesky.utils.BotLogicSlow;
 import cz.muni.fi.umimecesky.utils.CalculateDp;
@@ -20,13 +20,12 @@ import cz.muni.fi.umimecesky.utils.MoveLogic;
 import cz.muni.fi.umimecesky.utils.RobotDrawable;
 import cz.muni.fi.umimecesky.utils.Utils;
 
-import static cz.muni.fi.umimecesky.utils.Constant.RACE_NEW_WORD_DELAY;
+import static cz.muni.fi.umimecesky.utils.Constant.RACE_NEW_WORD_DELAY_MS;
 import static cz.muni.fi.umimecesky.utils.Constant.RAW_HOPS_TO_WIN;
 
 public class RaceActivity extends BaseAbstractActivity {
 
     private MoveLogic moveLogic;
-    private Bot usersBot;
 
     private RaceConcept concept;
 
@@ -38,12 +37,10 @@ public class RaceActivity extends BaseAbstractActivity {
 
         concept = (RaceConcept) getIntent().getExtras().getSerializable(Constant.RACE_CONCEPT_EXTRA);
 
-        ImageView usersRobot = (ImageView) findViewById(R.id.usersRobot);
-        createRaceTrack(usersRobot);
+        ImageView usersRobotView = (ImageView) findViewById(R.id.usersRobot);
+        createRaceTrack(usersRobotView);
 
-        usersBot = new Bot(usersRobot, null); //TODO: change bot to robot, maybe add inheritance?
-
-        setUpRobotViews();
+        setupRobotViews(usersRobotView);
 
         setNewRandomWord();
     }
@@ -57,32 +54,44 @@ public class RaceActivity extends BaseAbstractActivity {
         super.init(viewHelper);
     }
 
-    private void createRaceTrack(ImageView usersRobot) {
+    private void createRaceTrack(ImageView usersRobotView) {
         int hopsToWin = RAW_HOPS_TO_WIN + concept.getCurrentLevel();
-        CalculateDp calculateDp = new CalculateDp(usersRobot, hopsToWin);
+        CalculateDp calculateDp = new CalculateDp(usersRobotView, hopsToWin);
         calculateDp.setupFinishLine(findViewById(R.id.finishLine));
         Global.setCalculateDp(calculateDp);
     }
 
-    private void setUpRobotViews() {
+    private void setupRobotViews(ImageView usersRobotView) {
+        ImageView[] botViews = createBotViews();
 
-        RobotDrawable robotDrawable = new RobotDrawable(this);
+        setupRandomDrawables(botViews);
 
+        Bot[] bots = createBots(botViews);
+
+        moveLogic = new MoveLogic(this, bots,  new UsersRobot(usersRobotView));
+    }
+
+    private ImageView[] createBotViews() {
         ImageView botView1 = (ImageView) findViewById(R.id.bot1);
         ImageView botView2 = (ImageView) findViewById(R.id.bot2);
         ImageView botView3 = (ImageView) findViewById(R.id.bot3);
-        ImageView[] botViews = new ImageView[] {botView1, botView2, botView3};
+        return new ImageView[] {botView1, botView2, botView3};
+    }
+
+    private ImageView[] setupRandomDrawables(ImageView[] botViews){
+        final RobotDrawable robotDrawable = new RobotDrawable(this);
 
         for (ImageView botView : botViews) {
             botView.setImageDrawable(robotDrawable.removeRobotDrawable());
         }
+        return botViews;
+    }
 
-        Bot bot1 = new Bot(botView1, new BotLogicQuick(concept));
-        Bot bot2 = new Bot(botView2, new BotLogicSlow(concept));
-        Bot bot3 = new Bot(botView3, new BotLogicQuick(concept));
-        Bot[] bots = new Bot[] {bot1, bot2, bot3};
-
-        moveLogic = new MoveLogic(this, bots);
+    private Bot[] createBots(ImageView[] botViews) {
+        Bot bot1 = new Bot(botViews[0], new BotLogicQuick(concept));
+        Bot bot2 = new Bot(botViews[1], new BotLogicSlow(concept));
+        Bot bot3 = new Bot(botViews[2], new BotLogicQuick(concept));
+        return new Bot[] {bot1, bot2, bot3};
     }
 
     protected void setNewRandomWord() {
@@ -95,68 +104,31 @@ public class RaceActivity extends BaseAbstractActivity {
     protected void chosenCorrect(Button button) {
         setCorrect(button);
         setButtonsDisabled();
-        usersBot.moveForward();
-        if (usersBot.isWinner()) {
-            applyWin();
-            return;
+        boolean shouldContinue = moveLogic.applyCorrect(concept);
+        if (shouldContinue) {
+            delayNewWord(button);
         }
+    }
+    
+    private void delayNewWord(Button button) {
         button.postDelayed(new Runnable() {
             @Override
             public void run() {
                 setButtonsEnabled();
                 setNewRandomWord();
             }
-        }, RACE_NEW_WORD_DELAY);
+        }, RACE_NEW_WORD_DELAY_MS);
     }
 
     public void disableButtons() {
         setButtonsDisabled();
     }
 
-    private void applyWin() {
-        moveLogic.stopBots();
-        boolean hasIncreased = concept.increaseLevel(this);
-        String dialogText = createDialogText(hasIncreased);
-        showWinningDialog(dialogText);
-    }
-
-    private void showWinningDialog(String dialogText) {
-        final PromptDialog promptDialog = new PromptDialog(this);
-        promptDialog
-                .setDialogType(PromptDialog.DIALOG_TYPE_SUCCESS)
-                .setAnimationEnable(false)
-                .setTitleText(getString(R.string.congratulations))
-                .setContentText(dialogText)
-                .setPositiveListener(getString(R.string.ok), new PromptDialog.OnPositiveListener() {
-                    @Override
-                    public void onClick(PromptDialog dialog) {
-                        dialog.dismiss();
-                        RaceActivity.this.finish();
-                    }
-                });
-        promptDialog.setCanceledOnTouchOutside(false);
-        Utils.showDialogImmersive(promptDialog, this);
-    }
-
-    private String createDialogText(boolean levelHasIncreased) {
-        StringBuilder s = new StringBuilder();
-        if (levelHasIncreased) {
-            s.append("Jdeš do levelu číslo ");
-            s.append(concept.getCurrentLevel());
-            s.append(" v kategorii ");
-            s.append(concept.getName());
-        } else {
-            s.append("Dosáhl jsi maximálního levelu v kategorii ");
-            s.append(concept.getName());
-        }
-        s.append(".");
-        return s.toString();
-    }
 
     @Override
     protected void chosenWrong(Button button) {
         setWrong(button);
-        usersBot.moveBackward();
+        moveLogic.applyIncorrect();
     }
 
     @Override

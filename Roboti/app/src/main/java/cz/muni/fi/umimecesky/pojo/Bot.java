@@ -98,7 +98,6 @@ public class Bot {
      * @return true if robot is beyond finish line
      */
     public boolean isWinner() {
-        Log.i("iswinner", String.valueOf(getView().getX()));
         return remainingHopsToWin <= 0;
     }
 

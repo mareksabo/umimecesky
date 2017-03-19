@@ -1,6 +1,5 @@
 package cz.muni.fi.umimecesky.utils;
 
-import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
@@ -12,16 +11,19 @@ import cn.refactor.lib.colordialog.PromptDialog;
 import cz.muni.fi.umimecesky.R;
 import cz.muni.fi.umimecesky.activity.RaceActivity;
 import cz.muni.fi.umimecesky.pojo.Bot;
+import cz.muni.fi.umimecesky.pojo.RaceConcept;
+import cz.muni.fi.umimecesky.pojo.UsersRobot;
 
 public class MoveLogic {
 
     private List<Handler> handlers = new ArrayList<>();
     private RaceActivity raceActivity;
 
-    private static final int ROBOT_START_DELAY_MS = 200;
+    private UsersRobot usersRobot;
 
-    public MoveLogic(RaceActivity raceActivity, Bot[] bots) {
+    public MoveLogic(RaceActivity raceActivity, Bot[] bots, UsersRobot usersRobot) {
         this.raceActivity = raceActivity;
+        this.usersRobot = usersRobot;
 
         for (Bot bot : bots) {
             setupBot(bot);
@@ -35,11 +37,13 @@ public class MoveLogic {
             public void run() {
                 boolean shouldContinue = moveAndEvaluate(bot);
                 Log.d("robot logic", logic.toString());
+                Log.v("handlers", String.valueOf(handlers));
                 if (shouldContinue) {
-                    handler.postDelayed(this, logic.millisecondsPerSolution());
+                    boolean hasRun = handler.postDelayed(this, logic.millisecondsPerSolution());
+                    if (!hasRun) Log.e("handler", handler.obtainMessage() + "couldnt start");
                 }
             }
-        }, (long) (Math.random() * 2000 + ROBOT_START_DELAY_MS));
+        }, (long) (Math.random() * 2000 + Constant.ROBOT_START_DELAY_MS));
         handlers.add(handler);
     }
 
@@ -53,33 +57,75 @@ public class MoveLogic {
         return true;
     }
 
-    private void showLosingDialog() {
-        PromptDialog promptDialog = new PromptDialog(raceActivity);
-        promptDialog.setDialogType(PromptDialog.DIALOG_TYPE_WRONG)
-                .setAnimationEnable(true)
-                .setTitleText("Roboti vyhráli")
-                .setContentText("Byl jsi poražen!")
-                .setPositiveListener(R.string.ok, new PromptDialog.OnPositiveListener() {
-                    @Override
-                    public void onClick(PromptDialog dialog) {
-                        dialog.dismiss();
-                        raceActivity.finish();
-                    }
-                }).setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                raceActivity.finish();
-            }
-        });
-        promptDialog.setCanceledOnTouchOutside(false);
-        Utils.showDialogImmersive(promptDialog, raceActivity);
-    }
-
     public void stopBots() {
         //TODO: fix by stopping first, animate second
         SystemClock.sleep(300); // have enough time to animate move forward
         for (Handler handler : handlers) {
             handler.removeCallbacksAndMessages(null);
         }
+    }
+
+    private void showLosingDialog() {
+        PromptDialog promptDialog = new PromptDialog(raceActivity);
+        promptDialog.setDialogType(PromptDialog.DIALOG_TYPE_WRONG)
+                .setTitleText("Roboti vyhráli")
+                .setContentText("Byl jsi poražen!")
+                .setPositiveListener(R.string.ok, onClickFinishListener)
+                .setCanceledOnTouchOutside(false);
+        Utils.showDialogImmersive(promptDialog, raceActivity);
+    }
+
+    private final PromptDialog.OnPositiveListener onClickFinishListener = new PromptDialog.OnPositiveListener() {
+        @Override
+        public void onClick(PromptDialog dialog) {
+            dialog.dismiss();
+            raceActivity.finish();
+        }
+    };
+
+    public boolean applyCorrect(RaceConcept concept) {
+        usersRobot.moveForward();
+        if (usersRobot.isWinner()) {
+            applyWin(concept);
+            return false;
+        }
+        return true;
+    }
+
+    private void applyWin(RaceConcept concept) {
+        stopBots();
+        boolean hasIncreased = concept.increaseLevel(raceActivity);
+        String dialogText = createDialogText(hasIncreased, concept);
+        showWinningDialog(dialogText);
+    }
+
+    private void showWinningDialog(String dialogText) {
+        final PromptDialog promptDialog = new PromptDialog(raceActivity);
+        promptDialog
+                .setDialogType(PromptDialog.DIALOG_TYPE_SUCCESS)
+                .setTitleText(raceActivity.getString(R.string.congratulations))
+                .setContentText(dialogText)
+                .setPositiveListener(R.string.ok, onClickFinishListener)
+                .setCanceledOnTouchOutside(false);
+        Utils.showDialogImmersive(promptDialog, raceActivity);
+    }
+
+    private String createDialogText(boolean levelHasIncreased, RaceConcept concept) {
+        StringBuilder s = new StringBuilder();
+        if (levelHasIncreased) {
+            s.append("Jdeš do levelu číslo ");
+            s.append(concept.getCurrentLevel());
+            s.append(" v kategorii ");
+            s.append(concept.getName());
+        } else {
+            s.append("Dosáhl jsi maximálního levelu v kategorii ");
+            s.append(concept.getName());
+        }
+        s.append(".");
+        return s.toString();
+    }
+
+    public void applyIncorrect() {
+        usersRobot.moveBackward();
     }
 }
