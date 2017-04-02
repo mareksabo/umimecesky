@@ -22,7 +22,7 @@ import static cz.muni.fi.umimecesky.db.DbContract.WordColumn.VARIANT2;
 import static cz.muni.fi.umimecesky.db.DbContract.WordColumn.WORD_FILLED;
 import static cz.muni.fi.umimecesky.db.DbContract.WordColumn.WORD_ID;
 import static cz.muni.fi.umimecesky.db.DbContract.WordColumn.WORD_MISSING;
-import static cz.muni.fi.umimecesky.utils.Utils.convertCursorToFillWord;
+import static cz.muni.fi.umimecesky.utils.Conversion.convertCursorToFillWord;
 
 public class WordDbHelper extends SQLiteOpenHelper {
 

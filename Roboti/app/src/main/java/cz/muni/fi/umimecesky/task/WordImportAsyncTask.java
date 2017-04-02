@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import cz.muni.fi.umimecesky.db.CategoryDbHelper;
 import cz.muni.fi.umimecesky.db.WordCategoryDbHelper;
 import cz.muni.fi.umimecesky.db.WordDbHelper;
+import cz.muni.fi.umimecesky.utils.Conversion;
 import cz.muni.fi.umimecesky.utils.Utils;
 
 import static cz.muni.fi.umimecesky.utils.Constant.IS_FILLED;
@@ -164,7 +165,7 @@ public class WordImportAsyncTask extends AsyncTask<Void, Void, Void> {
                         columns[5].trim(),
                         columns[6].trim(),
                         Integer.parseInt(columns[7].trim()),
-                        Utils.stringNumberToBoolean(columns[8].trim())
+                        Conversion.stringNumberToBoolean(columns[8].trim())
                 );
             }
 

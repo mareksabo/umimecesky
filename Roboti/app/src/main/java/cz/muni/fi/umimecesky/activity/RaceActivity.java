@@ -18,7 +18,7 @@ import cz.muni.fi.umimecesky.utils.Constant;
 import cz.muni.fi.umimecesky.utils.Global;
 import cz.muni.fi.umimecesky.utils.MoveLogic;
 import cz.muni.fi.umimecesky.utils.RobotDrawable;
-import cz.muni.fi.umimecesky.utils.Utils;
+import cz.muni.fi.umimecesky.utils.GuiUtil;
 
 import static cz.muni.fi.umimecesky.utils.Constant.RACE_NEW_WORD_DELAY_MS;
 import static cz.muni.fi.umimecesky.utils.Constant.RAW_HOPS_TO_WIN;
@@ -146,6 +146,6 @@ public class RaceActivity extends BaseAbstractActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Utils.hideNavigationBar(this);
+        GuiUtil.hideNavigationBar(this);
     }
 }

@@ -14,9 +14,10 @@ import cz.muni.fi.umimecesky.R;
 import cz.muni.fi.umimecesky.adapterlistener.LevelAdapter;
 import cz.muni.fi.umimecesky.pojo.RaceConcept;
 import cz.muni.fi.umimecesky.utils.Constant;
-import cz.muni.fi.umimecesky.utils.Utils;
+import cz.muni.fi.umimecesky.utils.GuiUtil;
+import cz.muni.fi.umimecesky.utils.WebUtil;
 
-import static cz.muni.fi.umimecesky.utils.Utils.getWebConcepts;
+import static cz.muni.fi.umimecesky.utils.WebUtil.getWebConcepts;
 
 public class LevelRaceActivity extends AppCompatActivity {
 
@@ -40,7 +41,7 @@ public class LevelRaceActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-                List<RaceConcept> conceptList = Utils.getWebConcepts(LevelRaceActivity.this);
+                List<RaceConcept> conceptList = WebUtil.getWebConcepts(LevelRaceActivity.this);
                 RaceConcept raceConcept = conceptList.get(position);
 
                 Intent intent = new Intent(LevelRaceActivity.this, RaceActivity.class);
@@ -53,7 +54,7 @@ public class LevelRaceActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Utils.hideNavigationBar(this);
+        GuiUtil.hideNavigationBar(this);
     }
 
 }

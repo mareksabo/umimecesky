@@ -11,7 +11,7 @@ import android.widget.ImageView;
 public class CalculateDp {
 
     public float calculateRobotMovePx() {
-        return Utils.dpiToPixels(calculateRobotMoveDp());
+        return CalculateDp.dpiToPixels(calculateRobotMoveDp());
     }
 
     private final DisplayMetrics metrics;
@@ -32,11 +32,11 @@ public class CalculateDp {
     public void setupFinishLine(View finishLine) {
         final int LINE_THICKNESS_DP = 4;
         float finalLineDp = getScreenWidthDp() - getRobotWidthDp() - LINE_THICKNESS_DP / 2;
-        finishLine.setX(Utils.dpiToPixels(finalLineDp));
+        finishLine.setX(CalculateDp.dpiToPixels(finalLineDp));
     }
 
     private float getRobotWidthDp() {
-        return Utils.pixelsToDpi(robot.getLayoutParams().width);
+        return CalculateDp.pixelsToDpi(robot.getLayoutParams().width);
     }
 
     private float getScreenWidthDp() {
@@ -46,5 +46,15 @@ public class CalculateDp {
 
     public int getWinMovesCount() {
         return winMovesCount;
+    }
+
+    public static float dpiToPixels(float dpi) {
+        float density = Resources.getSystem().getDisplayMetrics().density;
+        return dpi * density;
+    }
+
+    public static float pixelsToDpi(float px) {
+        float density = Resources.getSystem().getDisplayMetrics().density;
+        return px / density;
     }
 }

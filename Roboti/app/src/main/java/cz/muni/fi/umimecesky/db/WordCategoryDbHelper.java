@@ -24,7 +24,7 @@ import static cz.muni.fi.umimecesky.db.DbContract.JoinColumn.JOIN_CATEGORY_ID;
 import static cz.muni.fi.umimecesky.db.DbContract.JoinColumn.JOIN_WORD_ID;
 import static cz.muni.fi.umimecesky.db.DbContract.WORD_TABLE;
 import static cz.muni.fi.umimecesky.db.DbContract.WordColumn.WORD_ID;
-import static cz.muni.fi.umimecesky.utils.Utils.convertCursorToFillWord;
+import static cz.muni.fi.umimecesky.utils.Conversion.convertCursorToFillWord;
 
 
 public class WordCategoryDbHelper extends SQLiteOpenHelper {

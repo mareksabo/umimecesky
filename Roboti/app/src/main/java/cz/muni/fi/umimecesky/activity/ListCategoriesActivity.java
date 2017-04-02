@@ -17,6 +17,7 @@ import cz.muni.fi.umimecesky.R;
 import cz.muni.fi.umimecesky.adapterlistener.CategoryAdapter;
 import cz.muni.fi.umimecesky.db.CategoryDbHelper;
 import cz.muni.fi.umimecesky.pojo.Category;
+import cz.muni.fi.umimecesky.utils.GuiUtil;
 import cz.muni.fi.umimecesky.utils.Utils;
 
 import static cz.muni.fi.umimecesky.utils.Constant.LAST_FILLED_WORD;
@@ -100,7 +101,7 @@ public class ListCategoriesActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Utils.hideNavigationBar(this);
+        GuiUtil.hideNavigationBar(this);
     }
 
 }

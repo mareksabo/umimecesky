@@ -72,7 +72,7 @@ public class MoveLogic {
                 .setContentText("Byl jsi poražen!")
                 .setPositiveListener(R.string.ok, onClickFinishListener)
                 .setCanceledOnTouchOutside(false);
-        Utils.showDialogImmersive(promptDialog, raceActivity);
+        GuiUtil.showDialogImmersive(promptDialog, raceActivity);
     }
 
     private final PromptDialog.OnPositiveListener onClickFinishListener = new PromptDialog.OnPositiveListener() {
@@ -107,7 +107,7 @@ public class MoveLogic {
                 .setContentText(dialogText)
                 .setPositiveListener(R.string.ok, onClickFinishListener)
                 .setCanceledOnTouchOutside(false);
-        Utils.showDialogImmersive(promptDialog, raceActivity);
+        GuiUtil.showDialogImmersive(promptDialog, raceActivity);
     }
 
     private String createDialogText(boolean levelHasIncreased, RaceConcept concept) {

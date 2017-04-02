@@ -14,7 +14,8 @@ import java.util.List;
 import cz.muni.fi.umimecesky.R;
 import cz.muni.fi.umimecesky.pojo.Category;
 import cz.muni.fi.umimecesky.pojo.FillWord;
-import cz.muni.fi.umimecesky.utils.Utils;
+import cz.muni.fi.umimecesky.utils.Conversion;
+import cz.muni.fi.umimecesky.utils.GuiUtil;
 
 import static cz.muni.fi.umimecesky.utils.Constant.LAST_FILLED_WORD;
 import static cz.muni.fi.umimecesky.utils.Constant.TICKED_CATEGORIES_EXTRA;
@@ -118,7 +119,7 @@ public class TrainingActivity extends BaseAbstractActivity {
         if (getCheckedCategories() == null || getCheckedCategories().isEmpty()) {
             word = getWordHelper().getRandomFilledWord();
         } else {
-            List<Integer> categoryIDs = Utils.convertCategoriesToIDs(getCheckedCategories());
+            List<Integer> categoryIDs = Conversion.convertCategoriesToIDs(getCheckedCategories());
             word = getWordCategoryHelper().getRandomCategoryWord(categoryIDs);
         }
         Log.v("random word", String.valueOf(word));
@@ -150,7 +151,7 @@ public class TrainingActivity extends BaseAbstractActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Utils.hideNavigationBar(this);
+        GuiUtil.hideNavigationBar(this);
     }
 
 }

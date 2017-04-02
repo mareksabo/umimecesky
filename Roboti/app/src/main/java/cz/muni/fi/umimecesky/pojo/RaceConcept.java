@@ -5,7 +5,7 @@ import android.content.Context;
 import java.io.Serializable;
 import java.util.List;
 
-import cz.muni.fi.umimecesky.utils.Utils;
+import cz.muni.fi.umimecesky.utils.WebUtil;
 
 /**
  * Represents concept/category with current state.
@@ -55,7 +55,7 @@ public class RaceConcept implements Serializable {
     public boolean increaseLevel(Context context) {
         int oldLevel = currentLevel;
         setCurrentLevel(currentLevel+1);
-        Utils.updateConcept(context, this);
+        WebUtil.updateConcept(context, this);
         return oldLevel != currentLevel;
     }
 

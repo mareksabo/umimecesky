@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import cz.muni.fi.umimecesky.R;
 import cz.muni.fi.umimecesky.task.WordImportAsyncTask;
+import cz.muni.fi.umimecesky.utils.GuiUtil;
 import cz.muni.fi.umimecesky.utils.Utils;
 
 import static cz.muni.fi.umimecesky.utils.Constant.IS_FILLED;
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupTrainingButton() {
         Button trainingButton = (Button) findViewById(R.id.trainingButton);
-        Utils.setDefaultColor(trainingButton);
+        GuiUtil.setDefaultColor(trainingButton);
         trainingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Utils.setDefaultColor(raceButton);
+        GuiUtil.setDefaultColor(raceButton);
     }
 
 }
