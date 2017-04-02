@@ -1,8 +1,9 @@
-package cz.muni.fi.umimecesky.utils;
+package cz.muni.fi.umimecesky.logic;
 
 import android.util.Log;
 
 import cz.muni.fi.umimecesky.pojo.RaceConcept;
+import cz.muni.fi.umimecesky.utils.Util;
 
 public class BotLogicSlow implements RobotLogic {
 

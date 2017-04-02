@@ -11,12 +11,12 @@ import cz.muni.fi.umimecesky.pojo.Bot;
 import cz.muni.fi.umimecesky.pojo.FillWord;
 import cz.muni.fi.umimecesky.pojo.RaceConcept;
 import cz.muni.fi.umimecesky.pojo.UsersRobot;
-import cz.muni.fi.umimecesky.utils.BotLogicQuick;
-import cz.muni.fi.umimecesky.utils.BotLogicSlow;
+import cz.muni.fi.umimecesky.logic.BotLogicQuick;
+import cz.muni.fi.umimecesky.logic.BotLogicSlow;
 import cz.muni.fi.umimecesky.utils.CalculateDp;
 import cz.muni.fi.umimecesky.utils.Constant;
 import cz.muni.fi.umimecesky.utils.Global;
-import cz.muni.fi.umimecesky.utils.MoveLogic;
+import cz.muni.fi.umimecesky.logic.MoveLogic;
 import cz.muni.fi.umimecesky.utils.RobotDrawable;
 import cz.muni.fi.umimecesky.utils.GuiUtil;
 

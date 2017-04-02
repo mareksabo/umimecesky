@@ -1,6 +1,7 @@
-package cz.muni.fi.umimecesky.utils;
+package cz.muni.fi.umimecesky.logic;
 
 import cz.muni.fi.umimecesky.pojo.RaceConcept;
+import cz.muni.fi.umimecesky.utils.Util;
 
 public class BotLogicQuick implements RobotLogic {
 

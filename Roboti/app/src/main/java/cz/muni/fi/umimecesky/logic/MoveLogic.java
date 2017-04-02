@@ -1,4 +1,4 @@
-package cz.muni.fi.umimecesky.utils;
+package cz.muni.fi.umimecesky.logic;
 
 import android.os.Handler;
 import android.os.SystemClock;
@@ -13,6 +13,8 @@ import cz.muni.fi.umimecesky.activity.RaceActivity;
 import cz.muni.fi.umimecesky.pojo.Bot;
 import cz.muni.fi.umimecesky.pojo.RaceConcept;
 import cz.muni.fi.umimecesky.pojo.UsersRobot;
+import cz.muni.fi.umimecesky.utils.Constant;
+import cz.muni.fi.umimecesky.utils.GuiUtil;
 
 public class MoveLogic {
 

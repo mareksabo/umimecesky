@@ -1,4 +1,4 @@
-package cz.muni.fi.umimecesky.utils;
+package cz.muni.fi.umimecesky.logic;
 
 public interface RobotLogic {
 

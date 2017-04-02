@@ -5,7 +5,7 @@ import android.widget.ImageView;
 
 import cz.muni.fi.umimecesky.utils.CalculateDp;
 import cz.muni.fi.umimecesky.utils.Global;
-import cz.muni.fi.umimecesky.utils.RobotLogic;
+import cz.muni.fi.umimecesky.logic.RobotLogic;
 import cz.muni.fi.umimecesky.utils.Util;
 
 public class Bot {
