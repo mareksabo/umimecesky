@@ -30,7 +30,7 @@ public class WebUtil {
     public static List<RaceConcept> getWebConcepts(Context context) {
         List<RaceConcept> concepts;
 
-        SharedPreferences sharedPreferences = Utils.getSharedPreferences(context);
+        SharedPreferences sharedPreferences = Util.getSharedPreferences(context);
         String jsonConcept = sharedPreferences.getString(JSON_CONCEPTS, null);
 
         if (jsonConcept != null) {
@@ -51,7 +51,7 @@ public class WebUtil {
     }
 
     private static void setWebConcepts(Context context, List<RaceConcept> concepts) {
-        SharedPreferences sharedPreferences = Utils.getSharedPreferences(context);
+        SharedPreferences sharedPreferences = Util.getSharedPreferences(context);
         String json = new Gson().toJson(concepts);
         sharedPreferences.edit().putString(JSON_CONCEPTS, json).apply();
     }

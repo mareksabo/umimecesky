@@ -18,7 +18,7 @@ import cz.muni.fi.umimecesky.adapterlistener.CategoryAdapter;
 import cz.muni.fi.umimecesky.db.CategoryDbHelper;
 import cz.muni.fi.umimecesky.pojo.Category;
 import cz.muni.fi.umimecesky.utils.GuiUtil;
-import cz.muni.fi.umimecesky.utils.Utils;
+import cz.muni.fi.umimecesky.utils.Util;
 
 import static cz.muni.fi.umimecesky.utils.Constant.LAST_FILLED_WORD;
 import static cz.muni.fi.umimecesky.utils.Constant.TICKED_CATEGORIES_EXTRA;
@@ -70,7 +70,7 @@ public class ListCategoriesActivity extends AppCompatActivity {
                 Intent intent = new Intent(getBaseContext(), TrainingActivity.class);
                 intent.putExtra(TICKED_CATEGORIES_EXTRA, (Serializable) selectedCategories);
 
-                SharedPreferences sharedPref = Utils.getSharedPreferences(getBaseContext());
+                SharedPreferences sharedPref = Util.getSharedPreferences(getBaseContext());
                 sharedPref.edit().putString(LAST_FILLED_WORD, null).apply();
                 startActivity(intent);
 

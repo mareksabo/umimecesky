@@ -16,7 +16,7 @@ import cz.muni.fi.umimecesky.db.CategoryDbHelper;
 import cz.muni.fi.umimecesky.db.WordCategoryDbHelper;
 import cz.muni.fi.umimecesky.db.WordDbHelper;
 import cz.muni.fi.umimecesky.utils.Conversion;
-import cz.muni.fi.umimecesky.utils.Utils;
+import cz.muni.fi.umimecesky.utils.Util;
 
 import static cz.muni.fi.umimecesky.utils.Constant.IS_FILLED;
 
@@ -184,7 +184,7 @@ public class WordImportAsyncTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        SharedPreferences prefs = Utils.getSharedPreferences(activity);
+        SharedPreferences prefs = Util.getSharedPreferences(activity);
         prefs.edit().putBoolean(IS_FILLED, true).apply();
     }
 

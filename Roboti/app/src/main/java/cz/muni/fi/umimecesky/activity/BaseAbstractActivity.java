@@ -16,7 +16,7 @@ import cz.muni.fi.umimecesky.db.WordCategoryDbHelper;
 import cz.muni.fi.umimecesky.db.WordDbHelper;
 import cz.muni.fi.umimecesky.pojo.Category;
 import cz.muni.fi.umimecesky.pojo.FillWord;
-import cz.muni.fi.umimecesky.utils.Utils;
+import cz.muni.fi.umimecesky.utils.Util;
 
 import static cz.muni.fi.umimecesky.utils.Constant.CORRECT_COLOR;
 import static cz.muni.fi.umimecesky.utils.Constant.DEFAULT_COLOR;
@@ -69,7 +69,7 @@ public abstract class BaseAbstractActivity extends AppCompatActivity {
         wordHelper = new WordDbHelper(this);
         wordCategoryHelper = new WordCategoryDbHelper(this);
         categoryHelper = new CategoryDbHelper(this);
-        sharedPref = Utils.getSharedPreferences(this);
+        sharedPref = Util.getSharedPreferences(this);
     }
 
     private void initButtonClickListeners() {

@@ -10,7 +10,7 @@ import android.widget.Button;
 import cz.muni.fi.umimecesky.R;
 import cz.muni.fi.umimecesky.task.WordImportAsyncTask;
 import cz.muni.fi.umimecesky.utils.GuiUtil;
-import cz.muni.fi.umimecesky.utils.Utils;
+import cz.muni.fi.umimecesky.utils.Util;
 
 import static cz.muni.fi.umimecesky.utils.Constant.IS_FILLED;
 
@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPreferences sharedPref = Utils.getSharedPreferences(this);
+        SharedPreferences sharedPref = Util.getSharedPreferences(this);
         setupButtons();
 
         if (!sharedPref.getBoolean(IS_FILLED, false)) {

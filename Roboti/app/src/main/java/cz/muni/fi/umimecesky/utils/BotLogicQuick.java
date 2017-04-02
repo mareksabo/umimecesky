@@ -17,7 +17,7 @@ public class BotLogicQuick implements RobotLogic {
 
     @Override
     public double correctnessRatio() {
-        return 0.65 + Utils.roundBy2places(0.3 * concept.levelProgress());
+        return 0.65 + Util.roundBy2places(0.3 * concept.levelProgress());
     }
 
     @Override

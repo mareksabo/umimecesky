@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public final class Utils {
+public final class Util {
 
     public static SharedPreferences getSharedPreferences(Context context) {
         return context.getSharedPreferences(Constant.SHARED_PREFS_FILE, MODE_PRIVATE);
