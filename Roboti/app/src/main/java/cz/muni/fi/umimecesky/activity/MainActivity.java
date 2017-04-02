@@ -21,15 +21,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         SharedPreferences sharedPref = Utils.getSharedPreferences(this);
-        setButtons();
+        setupButtons();
 
         if (!sharedPref.getBoolean(IS_FILLED, false)) {
             new WordImportAsyncTask(MainActivity.this).execute();
         }
     }
 
-    private void setButtons() {
+    private void setupButtons() {
+        setupTrainingButton();
+        setupRaceButton();
+    }
+
+    private void setupTrainingButton() {
         Button trainingButton = (Button) findViewById(R.id.trainingButton);
+        Utils.setDefaultColor(trainingButton);
         trainingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -37,16 +43,19 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
 
-        Button importButton = (Button) findViewById(R.id.raceButton);
-        importButton.setOnClickListener(new View.OnClickListener() {
+    private void setupRaceButton() {
+        Button raceButton = (Button) findViewById(R.id.raceButton);
+        raceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, LevelRaceActivity.class);
                 startActivity(intent);
             }
         });
-    }
 
+        Utils.setDefaultColor(raceButton);
+    }
 
 }

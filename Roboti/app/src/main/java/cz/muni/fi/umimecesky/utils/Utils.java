@@ -6,9 +6,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -24,6 +26,8 @@ import cz.muni.fi.umimecesky.pojo.FillWordBuilder;
 import cz.muni.fi.umimecesky.pojo.RaceConcept;
 
 import static android.content.Context.MODE_PRIVATE;
+import static cz.muni.fi.umimecesky.utils.Constant.DEFAULT_COLOR;
+import static cz.muni.fi.umimecesky.utils.Constant.STROKE_WIDTH;
 
 public final class Utils {
 
@@ -192,5 +196,10 @@ public final class Utils {
             flags |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         }
         activity.getWindow().getDecorView().setSystemUiVisibility(flags);
+    }
+
+    public static void setDefaultColor(Button button) {
+        button.setTextColor(DEFAULT_COLOR);
+        ((GradientDrawable) button.getBackground()).setStroke(STROKE_WIDTH, DEFAULT_COLOR);
     }
 }
