@@ -18,7 +18,7 @@ public final class Constant {
     public static final String IS_FILLED = "isFilled";
     public static final String TICKED_CATEGORIES_EXTRA = "ticked_categories";
     public static final String RACE_CONCEPT_EXTRA = "concept";
-    static final String SHARED_PREFS_FILE = "shared_prefs";
+    public static final String SHARED_PREFS_FILE = "shared_prefs";
 
     public static final int ROBOT_START_DELAY_MS = 200;
 }

@@ -54,14 +54,13 @@ public class Bot {
             isWrong = false;
             return;
         }
-        int hopsPerCorrect = (logic == null) ? 1 : logic.hopsPerCorrect();
-        processMoveForward(hopsPerCorrect);
+        processMoveForward(logic.hopsPerCorrect());
     }
 
-    private void processMoveForward(int hopsPerCorrect) {
+    protected void processMoveForward(int hopsPerCorrect) {
         hopsPerCorrect = limitHopsWhenWon(hopsPerCorrect);
         remainingHopsToWin -= hopsPerCorrect;
-        getView().animate().translationXBy(ROBOT_MOVE * hopsPerCorrect);
+        animateForward(hopsPerCorrect);
     }
 
     private int limitHopsWhenWon(int hopsBefore) {
@@ -70,6 +69,10 @@ public class Bot {
         } else {
             return remainingHopsToWin;
         }
+    }
+
+    private void animateForward(int hopsPerCorrect) {
+        getView().animate().translationXBy(ROBOT_MOVE * hopsPerCorrect);
     }
 
     public void moveBackward() {
@@ -81,6 +84,10 @@ public class Bot {
 
     private void processMoveBackward() {
         remainingHopsToWin++;
+        animateBackward();
+    }
+
+    private void animateBackward() {
         getView().animate().translationXBy(-ROBOT_MOVE);
     }
 
@@ -101,4 +108,7 @@ public class Bot {
         return remainingHopsToWin <= 0;
     }
 
+    public int getRemainingHopsToWin() {
+        return remainingHopsToWin;
+    }
 }

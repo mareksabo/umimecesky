@@ -12,13 +12,13 @@ public final class Util {
         return context.getSharedPreferences(Constant.SHARED_PREFS_FILE, MODE_PRIVATE);
     }
 
-    public static boolean probabilityTrue(double probabilityRatio) {
-        return Math.random() >= 1.0 - probabilityRatio;
+    public static boolean probabilityTrue(double probabilityToReturnTrue) {
+        return Math.random() >= 1.0 - probabilityToReturnTrue;
     }
 
 
-    public static float roundBy2places(double numberToRound) {
-        return Math.round(numberToRound * 100) / 100;
+    public static double roundBy2places(double numberToRound) {
+        return (double) Math.round(numberToRound * 100) / 100;
     }
 
 }

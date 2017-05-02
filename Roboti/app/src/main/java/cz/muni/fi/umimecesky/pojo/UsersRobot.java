@@ -7,4 +7,10 @@ public class UsersRobot extends Bot {
     public UsersRobot(ImageView view) {
         super(view, null);
     }
+
+    @Override
+    public void moveForward() {
+        processMoveForward(1);
+    }
+
 }
