@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#ff99bc00</color>
-    <color name="colorPrimaryDark">@android:color/holo_green_dark</color>
-    <color name="darkGreen">#006400</color>
+    <color name="color_primary">#ff99bc00</color>
+    <color name="color_primary_dark">@android:color/holo_green_dark</color>
+    <color name="dark_green">#006400</color>
 
-    <color name="colorAccent">#C6A900</color>
-    <color name="backgroundWhite">#fffafafa</color>
+    <color name="color_accent">#C6A900</color>
+    <color name="background_white">#fffafafa</color>
+    <color name="color_accent_transient">#17C6A900</color>
+
+    <color name="progress_red_progress">#ffff4444</color>
+    <color name="progress_red_progress_half">#7fff4444</color>
+    <color name="progress_orange_progress">#ffff8800</color>
+    <color name="progress_orange_progress_half">#7fff8800</color>
+    <color name="color_primary_half">#7f669900</color>
+
+    <color name="progress_bar_grey">#a17f7f7f</color>
+
 </resources>

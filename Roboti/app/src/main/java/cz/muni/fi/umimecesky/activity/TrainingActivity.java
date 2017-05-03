@@ -7,29 +7,27 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.google.gson.Gson;
 
 import java.util.List;
 
-import cn.refactor.lib.colordialog.PromptDialog;
 import cz.muni.fi.umimecesky.R;
 import cz.muni.fi.umimecesky.pojo.Category;
 import cz.muni.fi.umimecesky.pojo.FillWord;
-import cz.muni.fi.umimecesky.utils.Constant;
 import cz.muni.fi.umimecesky.utils.Conversion;
 import cz.muni.fi.umimecesky.utils.GuiUtil;
-import cz.muni.fi.umimecesky.utils.Util;
+import cz.muni.fi.umimecesky.utils.TrainingProgressBar;
 
+import static cz.muni.fi.umimecesky.R.id.seriesProgressBar;
 import static cz.muni.fi.umimecesky.utils.Constant.LAST_FILLED_WORD;
-import static cz.muni.fi.umimecesky.utils.Constant.REMAINING_WORDS;
 import static cz.muni.fi.umimecesky.utils.Constant.TICKED_CATEGORIES_EXTRA;
 import static cz.muni.fi.umimecesky.utils.Constant.TRAINING_NEW_WORD_DELAY_MS;
 
 public class TrainingActivity extends BaseAbstractActivity {
 
     private TextView explanationText;
-    private int passedWords = 0;
-    private int incorrectAttempts = 0;
+    private TrainingProgressBar trainingProgressBar;
 
     @Override
     @SuppressWarnings("unchecked assignment")
@@ -45,6 +43,8 @@ public class TrainingActivity extends BaseAbstractActivity {
 
         setLastUsedWord();
 
+        RoundCornerProgressBar progressBar = (RoundCornerProgressBar) findViewById(seriesProgressBar);
+        trainingProgressBar = new TrainingProgressBar(this, progressBar);
 
         View.OnTouchListener touchListener = new View.OnTouchListener() {
             @Override
@@ -76,28 +76,18 @@ public class TrainingActivity extends BaseAbstractActivity {
         super.init(viewHelper);
     }
 
-    private int seriesLength() {
-        String seriesLength = Util.getSharedPreferences(this).getString(Constant.LAST_SPINNER_VALUE, Constant.INFINITY);
-        if (Constant.INFINITY.equals(seriesLength)) {
-            return Integer.MAX_VALUE;
-        }
-        return Integer.parseInt(seriesLength);
-    }
 
     @Override
     protected void chosenWrong(Button button) {
         setWrong(button);
         showExplanation();
-        incorrectAttempts++;
+        trainingProgressBar.incrementIncorrectAttemptsCounter();
     }
 
     @Override
     protected void chosenCorrect(Button button) {
         setCorrect(button);
-        passedWords++;
-        if (passedWords == seriesLength()) {
-            showSeriesFinishedDialog();
-        }
+        trainingProgressBar.processCorrectResult();
 
         button.postDelayed(new Runnable() {
             @Override
@@ -107,33 +97,6 @@ public class TrainingActivity extends BaseAbstractActivity {
             }
         }, TRAINING_NEW_WORD_DELAY_MS);
 
-    }
-
-    private void showSeriesFinishedDialog() {
-        final PromptDialog promptDialog = new PromptDialog(this);
-        promptDialog
-                .setDialogType(PromptDialog.DIALOG_TYPE_HELP)
-                .setTitleText("Série je u konce")
-                .setContentText("Tvá úspešnost je " + calculateSuccessPercentage() + "%.\n"
-                        + dialogSuccessMessage())
-                .setPositiveListener(R.string.ok, GuiUtil.createFinishListener(this))
-                .setCanceledOnTouchOutside(false);
-        GuiUtil.showDialogImmersive(promptDialog, this);
-    }
-
-    private int calculateSuccessPercentage() {
-        return ((passedWords - incorrectAttempts) * 100) / passedWords;
-    }
-
-    private String dialogSuccessMessage() {
-        int percentage = calculateSuccessPercentage();
-        if (percentage >= 80) {
-            return "Skvělá práce!";
-        } else if (percentage >= 60) {
-            return "Ješte to ujde.";
-        } else {
-            return "Máš co zlepšovat.";
-        }
     }
 
     private void showExplanation() {
@@ -191,7 +154,6 @@ public class TrainingActivity extends BaseAbstractActivity {
         super.onPause();
         String json = new Gson().toJson(getCurrentWord());
         getSharedPref().edit().putString(LAST_FILLED_WORD, json).apply();
-        getSharedPref().edit().putInt(REMAINING_WORDS, passedWords).apply();
     }
 
     @Override

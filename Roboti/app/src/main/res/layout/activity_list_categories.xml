@@ -23,7 +23,7 @@
             android:layout_centerVertical="true"
             android:text="Počet otázek na sérii:"
             android:clickable="false"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/color_accent"
             />
         <com.jaredrummler.materialspinner.MaterialSpinner
             android:id="@+id/roundsSpinner"
@@ -32,7 +32,7 @@
             android:layout_centerVertical="true"
             android:dropDownWidth="wrap_content"
             android:spinnerMode="dropdown"
-            app:ms_background_color="@color/backgroundWhite"
+            app:ms_background_color="@color/background_white"
             android:layout_toRightOf="@+id/spinnerText"
             android:layout_toEndOf="@+id/spinnerText"/>
     </RelativeLayout>
