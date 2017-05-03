@@ -50,4 +50,14 @@ public class GuiUtil {
         button.setTextColor(DEFAULT_COLOR);
         ((GradientDrawable) button.getBackground()).setStroke(STROKE_WIDTH, DEFAULT_COLOR);
     }
+
+    public static PromptDialog.OnPositiveListener createFinishListener(final Activity activity) {
+        return new PromptDialog.OnPositiveListener() {
+            @Override
+            public void onClick(PromptDialog dialog) {
+                dialog.dismiss();
+                activity.finish();
+            }
+        };
+    }
 }

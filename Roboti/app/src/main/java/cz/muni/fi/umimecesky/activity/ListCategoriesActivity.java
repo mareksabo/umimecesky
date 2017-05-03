@@ -1,5 +1,6 @@
 package cz.muni.fi.umimecesky.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,6 +11,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.jaredrummler.materialspinner.MaterialSpinner;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -17,10 +20,12 @@ import cz.muni.fi.umimecesky.R;
 import cz.muni.fi.umimecesky.adapterlistener.CategoryAdapter;
 import cz.muni.fi.umimecesky.db.CategoryDbHelper;
 import cz.muni.fi.umimecesky.pojo.Category;
+import cz.muni.fi.umimecesky.utils.Constant;
 import cz.muni.fi.umimecesky.utils.GuiUtil;
 import cz.muni.fi.umimecesky.utils.Util;
 
 import static cz.muni.fi.umimecesky.utils.Constant.LAST_FILLED_WORD;
+import static cz.muni.fi.umimecesky.utils.Constant.LAST_SPINNER_VALUE;
 import static cz.muni.fi.umimecesky.utils.Constant.TICKED_CATEGORIES_EXTRA;
 
 public class ListCategoriesActivity extends AppCompatActivity {
@@ -29,6 +34,7 @@ public class ListCategoriesActivity extends AppCompatActivity {
     private CategoryAdapter dataAdapter;
 
     private Button tickAllButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +45,31 @@ public class ListCategoriesActivity extends AppCompatActivity {
 
         tickAllButton = (Button) findViewById(R.id.tickAll);
 
+        setSpinner();
         displayListView();
         setButtonClick();
+    }
+
+    private void setSpinner() {
+        List<String> spinnerValues = Constant.ROUND_POSSIBILITIES;
+        String lastValue = Util.getSharedPreferences(this)
+                .getString(LAST_SPINNER_VALUE, Constant.INFINITY);
+
+        MaterialSpinner spinner = (MaterialSpinner)  findViewById(R.id.roundsSpinner);
+        spinner.setItems(spinnerValues);
+        spinner.setSelectedIndex(spinnerValues.indexOf(lastValue));
+        spinner.setOnItemSelectedListener(createSpinnerListener());
+    }
+
+    private MaterialSpinner.OnItemSelectedListener<String> createSpinnerListener() {
+        final Activity activity = ListCategoriesActivity.this;
+        return new MaterialSpinner.OnItemSelectedListener<String>() {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                Util.getSharedPreferences(activity).edit().putString(LAST_SPINNER_VALUE, item).apply();
+                GuiUtil.hideNavigationBar(activity);
+            }
+        };
     }
 
     private void displayListView() {

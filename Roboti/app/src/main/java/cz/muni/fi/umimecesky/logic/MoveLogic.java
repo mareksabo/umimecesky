@@ -72,18 +72,11 @@ public class MoveLogic {
         promptDialog.setDialogType(PromptDialog.DIALOG_TYPE_WRONG)
                 .setTitleText("Roboti vyhráli")
                 .setContentText("Byl jsi poražen!")
-                .setPositiveListener(R.string.ok, onClickFinishListener)
+                .setPositiveListener(R.string.ok, GuiUtil.createFinishListener(raceActivity))
                 .setCanceledOnTouchOutside(false);
         GuiUtil.showDialogImmersive(promptDialog, raceActivity);
     }
 
-    private final PromptDialog.OnPositiveListener onClickFinishListener = new PromptDialog.OnPositiveListener() {
-        @Override
-        public void onClick(PromptDialog dialog) {
-            dialog.dismiss();
-            raceActivity.finish();
-        }
-    };
 
     public boolean applyCorrect(RaceConcept concept) {
         usersRobot.moveForward();
@@ -107,7 +100,7 @@ public class MoveLogic {
                 .setDialogType(PromptDialog.DIALOG_TYPE_SUCCESS)
                 .setTitleText(raceActivity.getString(R.string.congratulations))
                 .setContentText(dialogText)
-                .setPositiveListener(R.string.ok, onClickFinishListener)
+                .setPositiveListener(R.string.ok, GuiUtil.createFinishListener(raceActivity))
                 .setCanceledOnTouchOutside(false);
         GuiUtil.showDialogImmersive(promptDialog, raceActivity);
     }

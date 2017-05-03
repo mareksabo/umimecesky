@@ -5,4 +5,5 @@
     <color name="darkGreen">#006400</color>
 
     <color name="colorAccent">#C6A900</color>
+    <color name="backgroundWhite">#fffafafa</color>
 </resources>
