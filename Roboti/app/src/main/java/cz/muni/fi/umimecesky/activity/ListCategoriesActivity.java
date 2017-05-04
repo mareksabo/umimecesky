@@ -91,7 +91,7 @@ public class ListCategoriesActivity extends AppCompatActivity {
 
                 List<Category> selectedCategories = dataAdapter.getSelectedCategories();
                 if (selectedCategories.isEmpty()) {
-                    Toast.makeText(ListCategoriesActivity.this, "Zvolte alespoň jednu kategorii",
+                    Toast.makeText(ListCategoriesActivity.this, R.string.choose_at_least_one_category,
                             Toast.LENGTH_LONG).show();
                     return;
                 }

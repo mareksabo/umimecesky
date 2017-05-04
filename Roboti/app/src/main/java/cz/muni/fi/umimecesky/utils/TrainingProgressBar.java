@@ -87,23 +87,25 @@ public class TrainingProgressBar {
 
     private void updateProgressBarColors(int currentProgressPercentage) {
         if (currentProgressPercentage <= 30) {
-            progressBar.setProgressColor(ContextCompat.getColor(activity, R.color.progress_red_progress));
-            progressBar.setSecondaryProgressColor(ContextCompat.getColor(activity, R.color.progress_red_progress_half));
+            updateColors(R.color.progress_red_progress, R.color.progress_red_progress_half);
         } else if (currentProgressPercentage <= 65) {
-            progressBar.setProgressColor(ContextCompat.getColor(activity, R.color.progress_orange_progress));
-            progressBar.setSecondaryProgressColor(ContextCompat.getColor(activity, R.color.progress_orange_progress_half));
+            updateColors(R.color.progress_orange_progress, R.color.progress_orange_progress_half);
         } else {
-            progressBar.setProgressColor(ContextCompat.getColor(activity, R.color.color_primary));
-            progressBar.setSecondaryProgressColor(ContextCompat.getColor(activity, R.color.color_primary_half));
+            updateColors(R.color.color_primary, R.color.color_primary_half);
         }
+    }
+
+    private void updateColors(int colorReference, int secondaryColorReference) {
+        progressBar.setProgressColor(ContextCompat.getColor(activity, colorReference));
+        progressBar.setSecondaryProgressColor(ContextCompat.getColor(activity, secondaryColorReference));
     }
 
     private void showSeriesFinishedDialog() {
         final PromptDialog promptDialog = new PromptDialog(activity);
         promptDialog
                 .setDialogType(PromptDialog.DIALOG_TYPE_HELP)
-                .setTitleText("Série je u konce")
-                .setContentText("Tvá úspešnost je " + calculateSuccessPercentage() + "%.\n"
+                .setTitleText(activity.getString(R.string.series_finished))
+                .setContentText(activity.getString(R.string.success_rate) + calculateSuccessPercentage() + "%.\n"
                         + dialogSuccessMessage())
                 .setPositiveListener(R.string.ok, GuiUtil.createFinishListener(activity))
                 .setCanceledOnTouchOutside(false);
@@ -113,11 +115,11 @@ public class TrainingProgressBar {
     private String dialogSuccessMessage() {
         int percentage = calculateSuccessPercentage();
         if (percentage >= 80) {
-            return "Skvělá práce!";
+            return activity.getString(R.string.great_job);
         } else if (percentage >= 60) {
-            return "Ješte to ujde.";
+            return activity.getString(R.string.its_ok);
         } else {
-            return "Máš co zlepšovat.";
+            return activity.getString(R.string.you_need_to_improve);
         }
     }
 

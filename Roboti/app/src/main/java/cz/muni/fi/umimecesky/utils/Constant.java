@@ -22,7 +22,6 @@ public final class Constant {
     public static final String TICKED_CATEGORIES_EXTRA = "ticked_categories";
     public static final String RACE_CONCEPT_EXTRA = "concept";
     public static final String LAST_SPINNER_VALUE = "last_spinner_value";
-    public static final String REMAINING_WORDS = "remaining_words";
     public static final String SHARED_PREFS_FILE = "shared_prefs";
 
     public static final String INFINITY = "Nekonečno";

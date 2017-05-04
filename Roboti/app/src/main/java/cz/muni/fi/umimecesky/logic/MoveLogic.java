@@ -70,8 +70,8 @@ public class MoveLogic {
     private void showLosingDialog() {
         PromptDialog promptDialog = new PromptDialog(raceActivity);
         promptDialog.setDialogType(PromptDialog.DIALOG_TYPE_WRONG)
-                .setTitleText("Roboti vyhráli")
-                .setContentText("Byl jsi poražen!")
+                .setTitleText(raceActivity.getString(R.string.robots_won))
+                .setContentText(raceActivity.getString(R.string.win_next_time))
                 .setPositiveListener(R.string.ok, GuiUtil.createFinishListener(raceActivity))
                 .setCanceledOnTouchOutside(false);
         GuiUtil.showDialogImmersive(promptDialog, raceActivity);
@@ -108,12 +108,12 @@ public class MoveLogic {
     private String createDialogText(boolean levelHasIncreased, RaceConcept concept) {
         StringBuilder s = new StringBuilder();
         if (levelHasIncreased) {
-            s.append("Jdeš do levelu číslo ");
+            s.append(raceActivity.getString(R.string.your_next_level));
             s.append(concept.getCurrentLevel());
-            s.append(" v kategorii ");
+            s.append(raceActivity.getString(R.string.in_category));
             s.append(concept.getName());
         } else {
-            s.append("Dosáhl jsi maximálního levelu v kategorii ");
+            s.append(raceActivity.getString(R.string.u_r_at_max_level));
             s.append(concept.getName());
         }
         s.append(".");

@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_centerVertical="true"
-            android:text="Počet otázek na sérii:"
+            android:text="@string/questions_per_series"
             android:clickable="false"
             android:textColor="@color/color_accent"
             />
