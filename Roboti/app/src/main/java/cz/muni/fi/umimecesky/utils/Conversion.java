@@ -8,6 +8,7 @@ import java.util.List;
 import cz.muni.fi.umimecesky.pojo.Category;
 import cz.muni.fi.umimecesky.pojo.FillWord;
 import cz.muni.fi.umimecesky.pojo.FillWordBuilder;
+import cz.muni.fi.umimecesky.pojo.RaceConcept;
 
 /**
  * Class representing static conversion methods.
@@ -54,5 +55,13 @@ public class Conversion {
             ids.add(category.getId());
         }
         return ids;
+    }
+
+    public static List<String> conceptToNames(List<RaceConcept> conceptList) {
+        List<String> names = new ArrayList<>();
+        for(RaceConcept concept : conceptList) {
+            names.add(concept.getName());
+        }
+        return names;
     }
 }

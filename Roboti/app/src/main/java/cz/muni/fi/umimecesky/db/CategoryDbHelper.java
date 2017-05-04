@@ -9,8 +9,12 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import cz.muni.fi.umimecesky.pojo.Category;
+import cz.muni.fi.umimecesky.pojo.RaceConcept;
+import cz.muni.fi.umimecesky.utils.WebUtil;
 
 import static cz.muni.fi.umimecesky.db.DbContract.CATEGORY_TABLE;
 import static cz.muni.fi.umimecesky.db.DbContract.COMMA_SEP;
@@ -89,6 +93,20 @@ public class CategoryDbHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return categoryList;
+    }
+
+    public Map<String,List<String>> getAllCategoryNames() {
+        Map<String,List<String>> map = new TreeMap<>();
+        List<RaceConcept> raceConceptList = WebUtil.initWebConcepts();
+
+        for (RaceConcept raceConcept : raceConceptList) {
+            List<String> subcategories = new ArrayList<>();
+            for (int id : raceConcept.getCategoryIDs()) {
+                subcategories.add(findCategory(id).getName());
+            }
+            map.put(raceConcept.getName(), subcategories);
+        }
+        return map;
     }
 
     private Category cursorToCategory(Cursor cursor) {

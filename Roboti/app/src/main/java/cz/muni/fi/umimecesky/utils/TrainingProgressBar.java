@@ -105,11 +105,20 @@ public class TrainingProgressBar {
         promptDialog
                 .setDialogType(PromptDialog.DIALOG_TYPE_HELP)
                 .setTitleText(activity.getString(R.string.series_finished))
-                .setContentText(activity.getString(R.string.success_rate) + calculateSuccessPercentage() + "%.\n"
-                        + dialogSuccessMessage())
+                .setContentText(createDialogContent())
                 .setPositiveListener(R.string.ok, GuiUtil.createFinishListener(activity))
                 .setCanceledOnTouchOutside(false);
         GuiUtil.showDialogImmersive(promptDialog, activity);
+    }
+
+    private String createDialogContent() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(activity.getString(R.string.success_rate));
+        stringBuilder.append(" ");
+        stringBuilder.append(calculateSuccessPercentage()).append("%.");
+        stringBuilder.append("\n");
+        stringBuilder.append(dialogSuccessMessage());
+        return stringBuilder.toString();
     }
 
     private String dialogSuccessMessage() {

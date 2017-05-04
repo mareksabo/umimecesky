@@ -1,6 +1,7 @@
 package cz.muni.fi.umimecesky.pojo;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 import java.util.List;
@@ -11,7 +12,7 @@ import cz.muni.fi.umimecesky.utils.WebUtil;
  * Represents concept/category with current state.
  * F.e. pisanie i/y_
  */
-public class RaceConcept implements Serializable {
+public class RaceConcept implements Serializable, Comparable<RaceConcept> {
 
     private String name;
     private List<Integer> categoryIDs;
@@ -91,5 +92,10 @@ public class RaceConcept implements Serializable {
     @Override
     public int hashCode() {
         return name.hashCode();
+    }
+
+    @Override
+    public int compareTo(@NonNull RaceConcept o) {
+        return this.getName().compareTo(o.getName());
     }
 }

@@ -109,11 +109,15 @@ public class MoveLogic {
         StringBuilder s = new StringBuilder();
         if (levelHasIncreased) {
             s.append(raceActivity.getString(R.string.your_next_level));
+            s.append(" ");
             s.append(concept.getCurrentLevel());
+            s.append(" ");
             s.append(raceActivity.getString(R.string.in_category));
+            s.append(" ");
             s.append(concept.getName());
         } else {
             s.append(raceActivity.getString(R.string.u_r_at_max_level));
+            s.append(" ");
             s.append(concept.getName());
         }
         s.append(".");
