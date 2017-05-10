@@ -57,6 +57,13 @@ public class WebUtil {
                 oldConcepts.add(raceConcept);
             }
         }
+
+        for (RaceConcept raceConcept : oldConcepts) {
+            if(raceConcept.getName().equals("Velká písmena")) {
+                oldConcepts.remove(raceConcept);
+                break;
+            }
+        }
         return oldConcepts;
     }
 
@@ -118,9 +125,14 @@ public class WebUtil {
                         5)
         );
         concepts.add(
-                new RaceConcept("Velká písmena",
-                        Arrays.asList(38, 39, 40, 41, 42, 43, 44, 45),
+                new RaceConcept("Velká písmena – lidé, skupiny, organizace, čas",
+                        Arrays.asList(38, 39, 40, 41),
                         7)
+        );
+        concepts.add(
+                new RaceConcept("Velká písmena – místa",
+                        Arrays.asList(42, 43, 44, 45),
+                        5)
         );
 
         return concepts;
