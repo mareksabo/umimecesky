@@ -36,12 +36,8 @@ public class TrainingProgressBar {
             isInfinite = false;
             progressBar.setVisibility(View.VISIBLE);
             seriesLength = Integer.parseInt(seriesLengthString);
-            updateProgressBar(calculateFinishedPercentage());
+            updateProgressBar();
         }
-    }
-
-    private int calculateFinishedPercentage() {
-        return passedWords * 100 / seriesLength;
     }
 
     public void incrementIncorrectAttemptsCounter() {
@@ -52,7 +48,7 @@ public class TrainingProgressBar {
         passedWords++;
 
         if (!isInfinite) {
-            updateProgressBar(calculateFinishedPercentage());
+            updateProgressBar();
 
             if (passedWords == seriesLength) {
                 showSeriesFinishedDialog();
@@ -60,8 +56,8 @@ public class TrainingProgressBar {
         }
     }
 
-
-    private void updateProgressBar(int currentProgressPercentage) {
+    private void updateProgressBar() {
+        int currentProgressPercentage = calculateFinishedPercentage();
         float currentProgress = currentProgressPercentage / 100.0f;
 
         animate(currentProgress);
@@ -69,7 +65,11 @@ public class TrainingProgressBar {
         progressBar.setProgress(currentProgress);
         progressBar.setSecondaryProgress(progressBar.getProgress() + SECONDARY_PROGRESS_SHIFT);
 
-        updateProgressBarColors(currentProgressPercentage);
+        updateProgressBarColors();
+    }
+
+    private int calculateFinishedPercentage() {
+        return passedWords * 100 / seriesLength;
     }
 
     private void animate(float to) {
@@ -85,7 +85,8 @@ public class TrainingProgressBar {
 
     }
 
-    private void updateProgressBarColors(int currentProgressPercentage) {
+    private void updateProgressBarColors() {
+        int currentProgressPercentage = calculateFinishedPercentage();
         if (currentProgressPercentage <= 30) {
             updateColors(R.color.progress_red_progress, R.color.progress_red_progress_half);
         } else if (currentProgressPercentage <= 65) {
@@ -112,13 +113,11 @@ public class TrainingProgressBar {
     }
 
     private String createDialogContent() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(activity.getString(R.string.success_rate));
-        stringBuilder.append(" ");
-        stringBuilder.append(calculateSuccessPercentage()).append("%.");
-        stringBuilder.append("\n");
-        stringBuilder.append(dialogSuccessMessage());
-        return stringBuilder.toString();
+        return activity.getString(R.string.success_rate) +
+                " " +
+                calculateSuccessPercentage() + "%." +
+                "\n" +
+                dialogSuccessMessage();
     }
 
     private String dialogSuccessMessage() {
