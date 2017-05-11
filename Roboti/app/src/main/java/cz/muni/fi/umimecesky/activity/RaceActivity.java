@@ -7,18 +7,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import cz.muni.fi.umimecesky.R;
-import cz.muni.fi.umimecesky.pojo.Bot;
+import cz.muni.fi.umimecesky.logic.MoveLogic;
 import cz.muni.fi.umimecesky.pojo.FillWord;
 import cz.muni.fi.umimecesky.pojo.RaceConcept;
-import cz.muni.fi.umimecesky.pojo.UsersRobot;
-import cz.muni.fi.umimecesky.logic.BotLogicQuick;
-import cz.muni.fi.umimecesky.logic.BotLogicSlow;
+import cz.muni.fi.umimecesky.pojo.RobotImages;
 import cz.muni.fi.umimecesky.utils.CalculateDp;
 import cz.muni.fi.umimecesky.utils.Constant;
 import cz.muni.fi.umimecesky.utils.Global;
-import cz.muni.fi.umimecesky.logic.MoveLogic;
-import cz.muni.fi.umimecesky.utils.RobotDrawable;
 import cz.muni.fi.umimecesky.utils.GuiUtil;
+import cz.muni.fi.umimecesky.utils.RobotDrawable;
 
 import static cz.muni.fi.umimecesky.utils.Constant.RACE_NEW_WORD_DELAY_MS;
 import static cz.muni.fi.umimecesky.utils.Constant.RAW_HOPS_TO_WIN;
@@ -62,20 +59,20 @@ public class RaceActivity extends BaseAbstractActivity {
     }
 
     private void setupRobotViews(ImageView usersRobotView) {
-        ImageView[] botViews = createBotViews();
 
-        setupRandomDrawables(botViews);
+        RobotImages robotImages = new RobotImages();
+        robotImages.botViews = createBotViews();
+        robotImages.usersView = usersRobotView;
 
-        Bot[] bots = createBots(botViews);
-
-        moveLogic = new MoveLogic(this, bots,  new UsersRobot(usersRobotView));
+        moveLogic = new MoveLogic(this, robotImages);
     }
 
     private ImageView[] createBotViews() {
         ImageView botView1 = (ImageView) findViewById(R.id.bot1);
         ImageView botView2 = (ImageView) findViewById(R.id.bot2);
         ImageView botView3 = (ImageView) findViewById(R.id.bot3);
-        return new ImageView[] {botView1, botView2, botView3};
+        ImageView[] botViews = new ImageView[] {botView1, botView2, botView3};
+        return setupRandomDrawables(botViews);
     }
 
     private ImageView[] setupRandomDrawables(ImageView[] botViews){
@@ -86,14 +83,6 @@ public class RaceActivity extends BaseAbstractActivity {
         }
         return botViews;
     }
-
-    private Bot[] createBots(ImageView[] botViews) {
-        Bot bot1 = new Bot(botViews[0], new BotLogicQuick(concept));
-        Bot bot2 = new Bot(botViews[1], new BotLogicSlow(concept));
-        Bot bot3 = new Bot(botViews[2], new BotLogicQuick(concept));
-        return new Bot[] {bot1, bot2, bot3};
-    }
-
     protected void setNewRandomWord() {
         FillWord word = getWordCategoryHelper().getRandomCategoryWord(concept.getCategoryIDs());
         Log.d("random word", String.valueOf(word));
@@ -104,7 +93,7 @@ public class RaceActivity extends BaseAbstractActivity {
     protected void chosenCorrect(Button button) {
         setCorrect(button);
         setButtonsDisabled();
-        boolean shouldContinue = moveLogic.applyCorrect(concept);
+        boolean shouldContinue = moveLogic.applyCorrect();
         if (shouldContinue) {
             delayNewWord(button);
         }
@@ -134,7 +123,7 @@ public class RaceActivity extends BaseAbstractActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        moveLogic.stopBots();
+        moveLogic.stopBotsAndInput();
     }
 
     @Override

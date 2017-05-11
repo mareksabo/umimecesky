@@ -119,8 +119,6 @@ public class WordCategoryDbHelper extends SQLiteOpenHelper {
     }
 
     private FillWord getRandomWord(List<FillWord> storedWords) {
-        Log.i("words count", String.valueOf(storedWords.size()));
-        Log.i("words", String.valueOf(storedWords));
         int index = random.nextInt(storedWords.size());
         return storedWords.remove(index);
     }

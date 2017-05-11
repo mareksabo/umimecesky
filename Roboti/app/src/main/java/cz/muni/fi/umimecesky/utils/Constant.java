@@ -9,6 +9,7 @@ public final class Constant {
 
     public static final int TRAINING_NEW_WORD_DELAY_MS = 800;
     public static final int RACE_NEW_WORD_DELAY_MS = 200;
+    public static final int ANIMATION_DURATION = 320;
 
     public static final int RAW_HOPS_TO_WIN = 5;
     public static final int STROKE_WIDTH = 8;
