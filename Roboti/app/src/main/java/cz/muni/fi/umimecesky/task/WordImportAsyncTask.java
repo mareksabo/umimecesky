@@ -1,84 +1,93 @@
 package cz.muni.fi.umimecesky.task;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.NoSuchPaddingException;
 
 import cz.muni.fi.umimecesky.db.CategoryDbHelper;
 import cz.muni.fi.umimecesky.db.WordCategoryDbHelper;
 import cz.muni.fi.umimecesky.db.WordDbHelper;
 import cz.muni.fi.umimecesky.utils.Conversion;
+import cz.muni.fi.umimecesky.utils.Security;
 import cz.muni.fi.umimecesky.utils.Util;
 
 import static cz.muni.fi.umimecesky.utils.Constant.IS_FILLED;
 
 public class WordImportAsyncTask extends AsyncTask<Void, Void, Void> {
 
-    private Activity activity;
-    private int importedSize;
+    private Context context;
+    private AssetManager manager;
 
     public WordImportAsyncTask(Activity activity) {
-        this.activity = activity;
+        this.context = activity;
+        this.manager = activity.getAssets();
     }
 
     @Override
     protected Void doInBackground(Void... params) {
 
-        importCategories();
-        importConversions();
-        importWords();
+        try {
+            importCategories();
+            importConversions();
+            importWords();
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | InvalidKeyException | IOException e) {
+            e.printStackTrace();
+        }
 
         return null;
     }
 
-    private void importCategories() {
-        CategoryDbHelper dbHelper = new CategoryDbHelper(activity.getApplicationContext());
+    private void importCategories() throws IOException {
+        CategoryDbHelper dbHelper = new CategoryDbHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+        dbHelper.onUpgrade(db, 1, 2);
 
         //id;name;
         //id;name;name2; - "&ndash;" problem
 
-        try {
-            InputStream inStream = activity.getAssets().open("concepts.csv");
-            BufferedReader buffer = new BufferedReader(new InputStreamReader(inStream));
-            String line;
-            buffer.readLine(); // column names
+        BufferedReader buffer = openFileIgnoreFirstLine("concepts.csv");
 
-            db.beginTransaction();
+        db.beginTransaction();
 
-            int insertedCount = 0;
-            final int MAX_INSERT = 1_000_000;
+        String line;
 
-            while ((line = buffer.readLine()) != null && insertedCount < MAX_INSERT) {
-                insertedCount++;
-                String[] columns = line.split(";");
+        while ((line = buffer.readLine()) != null) {
+            String[] columns = line.split(";");
 
-                if (columns.length == 3) {
-                    columns[1] = columns[1].trim() + " - " + columns[2].trim();
-                }
-
-                int id = Integer.parseInt(columns[0].trim());
-                if (id == 46) continue;
-                dbHelper.addCategory(db, id, columns[1].trim());
+            if (columns.length == 3) {
+                columns[1] = columns[1].trim() + " - " + columns[2].trim();
             }
 
-            db.setTransactionSuccessful();
-            db.endTransaction();
-
-            db.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
+            int id = Integer.parseInt(columns[0].trim());
+            if (id == 46) continue;
+            dbHelper.addCategory(db, id, columns[1].trim());
         }
 
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        db.close();
+    }
+
+    private BufferedReader openFileIgnoreFirstLine(String fileName) throws IOException {
+
+        InputStream inStream = manager.open(fileName);
+        BufferedReader buffer = new BufferedReader(new InputStreamReader(inStream));
+        buffer.readLine(); // column names
+
+        return buffer;
     }
 
     /**
@@ -86,43 +95,29 @@ public class WordImportAsyncTask extends AsyncTask<Void, Void, Void> {
      * concept - category id
      * word - fill word id
      */
-    private void importConversions() {
-        WordCategoryDbHelper dbHelper = new WordCategoryDbHelper(activity.getApplicationContext());
+    private void importConversions() throws IOException {
+        WordCategoryDbHelper dbHelper = new WordCategoryDbHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         dbHelper.onUpgrade(db, 1, 2);
 
-        try {
-            InputStream inStream = activity.getAssets().open("doplnovacka_concept_word.csv");
-            BufferedReader buffer = new BufferedReader(new InputStreamReader(inStream));
-            String line;
+        BufferedReader buffer = openFileIgnoreFirstLine("doplnovacka_concept_word.csv");
 
-            buffer.readLine(); // column names
+        db.beginTransaction();
 
-            db.beginTransaction();
+        String line;
 
-            int insertedCount = 0;
-            final int MAX_INSERT = 1_000_000;
+        while ((line = buffer.readLine()) != null) {
+            String[] columns = line.split(";");
 
-            while ((line = buffer.readLine()) != null && insertedCount < MAX_INSERT) {
-                insertedCount++;
-                String[] columns = line.split(";");
-
-                dbHelper.addConversion(db,
-                        Integer.parseInt(columns[0].trim()),
-                        Long.parseLong(columns[1].trim())
-                );
-            }
-
-            db.setTransactionSuccessful();
-            db.endTransaction();
-
-            db.close();
-            Log.d("conversions", dbHelper.getCategoryId(1).toString());
-
-        } catch (IOException e) {
-            e.printStackTrace();
+            dbHelper.addConversion(db,
+                    Integer.parseInt(columns[0].trim()),
+                    Long.parseLong(columns[1].trim())
+            );
         }
 
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        db.close();
     }
 
     /**
@@ -133,58 +128,44 @@ public class WordImportAsyncTask extends AsyncTask<Void, Void, Void> {
      * grade - word clue complexity
      * visible - 0 / 1 - if this word can be used or not
      */
-    private void importWords() {
-        WordDbHelper dbHelper = new WordDbHelper(activity.getApplicationContext());
+    private void importWords() throws NoSuchPaddingException, NoSuchAlgorithmException,
+            InvalidAlgorithmParameterException, InvalidKeyException, IOException {
+
+        WordDbHelper dbHelper = new WordDbHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         dbHelper.onUpgrade(db, 1, 2);
 
-        final String WORD_CSV_FILENAME = "doplnovacka_word.csv";
-        AssetManager manager = activity.getAssets();
+        BufferedReader buffer = Security.getCipheredReader(manager);
 
-        try {
-            InputStream inStream = manager.open(WORD_CSV_FILENAME);
-            BufferedReader buffer = new BufferedReader(new InputStreamReader(inStream));
-            String line;
+        String line;
 
-            buffer.readLine(); // column names ignored
+        buffer.readLine(); // column names are ignored
 
-            db.beginTransaction();
+        db.beginTransaction();
 
-            int insertedCount = 0;
-            final int MAX_INSERT = 1_000_000;
+        while ((line = buffer.readLine()) != null) {
+            String[] columns = line.split(";");
 
-            while ((line = buffer.readLine()) != null && insertedCount < MAX_INSERT) {
-                insertedCount++;
-                String[] columns = line.split(";");
-
-                dbHelper.addFilledWord(db, Long.parseLong(columns[0].trim()),
-                        columns[1].trim(),
-                        columns[2].trim(),
-                        columns[3].trim(),
-                        columns[4].trim(),
-                        columns[5].trim(),
-                        columns[6].trim(),
-                        Integer.parseInt(columns[7].trim()),
-                        Conversion.stringNumberToBoolean(columns[8].trim())
-                );
-            }
-
-            importedSize = insertedCount;
-
-            db.setTransactionSuccessful();
-            db.endTransaction();
-
-            db.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
+            dbHelper.addFilledWord(db, Long.parseLong(columns[0].trim()),
+                    columns[1].trim(),
+                    columns[2].trim(),
+                    columns[3].trim(),
+                    columns[4].trim(),
+                    columns[5].trim(),
+                    columns[6].trim(),
+                    Integer.parseInt(columns[7].trim()),
+                    Conversion.stringNumberToBoolean(columns[8].trim())
+            );
         }
 
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        db.close();
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        SharedPreferences prefs = Util.getSharedPreferences(activity);
+        SharedPreferences prefs = Util.getSharedPreferences(context);
         prefs.edit().putBoolean(IS_FILLED, true).apply();
     }
 

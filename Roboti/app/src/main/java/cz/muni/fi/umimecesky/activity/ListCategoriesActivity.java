@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
 import cz.muni.fi.umimecesky.R;
@@ -24,6 +25,7 @@ import cz.muni.fi.umimecesky.utils.Constant;
 import cz.muni.fi.umimecesky.utils.GuiUtil;
 import cz.muni.fi.umimecesky.utils.Util;
 
+import static cz.muni.fi.umimecesky.utils.Constant.CHECKED_STATES;
 import static cz.muni.fi.umimecesky.utils.Constant.LAST_FILLED_WORD;
 import static cz.muni.fi.umimecesky.utils.Constant.LAST_SPINNER_VALUE;
 import static cz.muni.fi.umimecesky.utils.Constant.TICKED_CATEGORIES_EXTRA;
@@ -128,8 +130,16 @@ public class ListCategoriesActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        Util.saveArray(this, dataAdapter.getCheckedStates(), CHECKED_STATES);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+        boolean[] statesArray = Util.loadArray(this, CHECKED_STATES);
+        if (statesArray.length > 0) dataAdapter.setCheckedStates(statesArray);
         GuiUtil.hideNavigationBar(this);
     }
 

@@ -108,6 +108,16 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
         return selectedCategories;
     }
 
+    public boolean[] getCheckedStates() {
+        return checkedStates;
+    }
+
+    public void setCheckedStates(boolean[] checkedStates) {
+        this.checkedStates = checkedStates;
+        notifyDataSetChanged();
+        checkTickAllText();
+    }
+
     public void checkTickAllText() {
         if (areAllChecked()) {
             tickAll.setText(R.string.none);
