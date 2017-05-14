@@ -14,7 +14,6 @@ import android.widget.Toast;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.List;
 
 import cz.muni.fi.umimecesky.R;
@@ -57,7 +56,7 @@ public class ListCategoriesActivity extends AppCompatActivity {
         String lastValue = Util.getSharedPreferences(this)
                 .getString(LAST_SPINNER_VALUE, Constant.INFINITY);
 
-        MaterialSpinner spinner = (MaterialSpinner)  findViewById(R.id.roundsSpinner);
+        MaterialSpinner spinner = (MaterialSpinner) findViewById(R.id.roundsSpinner);
         spinner.setItems(spinnerValues);
         spinner.setSelectedIndex(spinnerValues.indexOf(lastValue));
         spinner.setOnItemSelectedListener(createSpinnerListener());
@@ -69,7 +68,6 @@ public class ListCategoriesActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
                 Util.getSharedPreferences(activity).edit().putString(LAST_SPINNER_VALUE, item).apply();
-                GuiUtil.hideNavigationBar(activity);
             }
         };
     }
@@ -140,7 +138,11 @@ public class ListCategoriesActivity extends AppCompatActivity {
         super.onResume();
         boolean[] statesArray = Util.loadArray(this, CHECKED_STATES);
         if (statesArray.length > 0) dataAdapter.setCheckedStates(statesArray);
-        GuiUtil.hideNavigationBar(this);
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) GuiUtil.hideNavigationBar(this);
+    }
 }

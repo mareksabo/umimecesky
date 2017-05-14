@@ -16,7 +16,6 @@ import cz.muni.fi.umimecesky.R;
 import cz.muni.fi.umimecesky.pojo.Category;
 import cz.muni.fi.umimecesky.pojo.FillWord;
 import cz.muni.fi.umimecesky.utils.Conversion;
-import cz.muni.fi.umimecesky.utils.GuiUtil;
 import cz.muni.fi.umimecesky.utils.TrainingProgressBar;
 
 import static cz.muni.fi.umimecesky.R.id.seriesProgressBar;
@@ -159,7 +158,6 @@ public class TrainingActivity extends BaseAbstractActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        GuiUtil.hideNavigationBar(this);
     }
 
 }

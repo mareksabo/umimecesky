@@ -16,6 +16,7 @@ import cz.muni.fi.umimecesky.db.WordCategoryDbHelper;
 import cz.muni.fi.umimecesky.db.WordDbHelper;
 import cz.muni.fi.umimecesky.pojo.Category;
 import cz.muni.fi.umimecesky.pojo.FillWord;
+import cz.muni.fi.umimecesky.utils.GuiUtil;
 import cz.muni.fi.umimecesky.utils.Util;
 
 import static cz.muni.fi.umimecesky.utils.Constant.CORRECT_COLOR;
@@ -148,6 +149,11 @@ public abstract class BaseAbstractActivity extends AppCompatActivity {
         button.setEnabled(false);
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) GuiUtil.hideNavigationBar(this);
+    }
     /// GETTERS ///
 
     public WordDbHelper getWordHelper() {

@@ -54,7 +54,12 @@ public class LevelRaceActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        GuiUtil.hideNavigationBar(this);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) GuiUtil.hideNavigationBar(this);
     }
 
 }

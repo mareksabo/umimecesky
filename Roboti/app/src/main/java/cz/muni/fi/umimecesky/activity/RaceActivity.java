@@ -14,7 +14,6 @@ import cz.muni.fi.umimecesky.pojo.RobotImages;
 import cz.muni.fi.umimecesky.utils.CalculateDp;
 import cz.muni.fi.umimecesky.utils.Constant;
 import cz.muni.fi.umimecesky.utils.Global;
-import cz.muni.fi.umimecesky.utils.GuiUtil;
 import cz.muni.fi.umimecesky.utils.RobotDrawable;
 
 import static cz.muni.fi.umimecesky.utils.Constant.RACE_NEW_WORD_DELAY_MS;
@@ -135,6 +134,5 @@ public class RaceActivity extends BaseAbstractActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        GuiUtil.hideNavigationBar(this);
     }
 }
