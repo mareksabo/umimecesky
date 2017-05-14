@@ -9,6 +9,12 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <!-- for huge displays -->
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.1" />
+
         <activity
             android:name=".activity.MainActivity"
             android:screenOrientation="portrait">
@@ -20,24 +26,24 @@
         </activity>
         <activity
             android:name=".activity.TrainingActivity"
-            android:screenOrientation="portrait"
             android:label="@string/action_bar_name"
-            android:parentActivityName=".activity.ListCategoriesActivity"/>
+            android:parentActivityName=".activity.ListCategoriesActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ListCategoriesActivity"
-            android:screenOrientation="portrait"
             android:label="@string/action_bar_name"
-            android:parentActivityName=".activity.MainActivity"/>
+            android:parentActivityName=".activity.MainActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.RaceActivity"
-            android:screenOrientation="portrait"
             android:label="@string/action_bar_name"
-            android:parentActivityName=".activity.LevelRaceActivity"/>
+            android:parentActivityName=".activity.LevelRaceActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.LevelRaceActivity"
-            android:screenOrientation="portrait"
             android:label="@string/action_bar_name"
-            android:parentActivityName=".activity.MainActivity"/>
+            android:parentActivityName=".activity.MainActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
