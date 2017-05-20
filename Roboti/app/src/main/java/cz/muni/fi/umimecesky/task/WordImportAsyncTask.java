@@ -11,17 +11,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-
-import javax.crypto.NoSuchPaddingException;
 
 import cz.muni.fi.umimecesky.db.CategoryDbHelper;
 import cz.muni.fi.umimecesky.db.WordCategoryDbHelper;
 import cz.muni.fi.umimecesky.db.WordDbHelper;
 import cz.muni.fi.umimecesky.utils.Conversion;
-import cz.muni.fi.umimecesky.utils.Security;
 import cz.muni.fi.umimecesky.utils.Util;
 
 import static cz.muni.fi.umimecesky.utils.Constant.IS_FILLED;
@@ -43,7 +37,7 @@ public class WordImportAsyncTask extends AsyncTask<Void, Void, Void> {
             importCategories();
             importConversions();
             importWords();
-        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | InvalidKeyException | IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -128,14 +122,16 @@ public class WordImportAsyncTask extends AsyncTask<Void, Void, Void> {
      * grade - word clue complexity
      * visible - 0 / 1 - if this word can be used or not
      */
-    private void importWords() throws NoSuchPaddingException, NoSuchAlgorithmException,
-            InvalidAlgorithmParameterException, InvalidKeyException, IOException {
+    private void importWords() throws IOException {
+
+        final String WORD_CSV_FILENAME = "doplnovacka_word.csv";
 
         WordDbHelper dbHelper = new WordDbHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         dbHelper.onUpgrade(db, 1, 2);
 
-        BufferedReader buffer = Security.getCipheredReader(manager);
+        InputStream inStream = manager.open(WORD_CSV_FILENAME);
+        BufferedReader buffer = new BufferedReader(new InputStreamReader(inStream));
 
         String line;
 

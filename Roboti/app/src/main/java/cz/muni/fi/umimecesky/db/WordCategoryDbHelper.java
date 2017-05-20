@@ -29,6 +29,7 @@ import static cz.muni.fi.umimecesky.utils.Conversion.convertCursorToFillWord;
 
 public class WordCategoryDbHelper extends SQLiteOpenHelper {
 
+    private Context context;
 
     private static final String SQL_CREATE_ENTRIES = "CREATE TABLE " + JOIN_TABLE + " ( " +
             JOIN_WORD_ID + " LONG PRIMARY KEY NOT NULL " + COMMA_SEP +
@@ -39,6 +40,7 @@ public class WordCategoryDbHelper extends SQLiteOpenHelper {
 
     public WordCategoryDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
     }
 
     @Override
@@ -119,6 +121,9 @@ public class WordCategoryDbHelper extends SQLiteOpenHelper {
     }
 
     private FillWord getRandomWord(List<FillWord> storedWords) {
+        if (storedWords.isEmpty()) {
+            return new WordDbHelper(context).getRandomFilledWord();
+        }
         int index = random.nextInt(storedWords.size());
         return storedWords.remove(index);
     }

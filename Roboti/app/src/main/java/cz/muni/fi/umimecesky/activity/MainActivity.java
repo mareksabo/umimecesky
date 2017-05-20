@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (!sharedPref.getBoolean(IS_FILLED, false)) {
             new WordImportAsyncTask(MainActivity.this).execute();
-        }
+        } // TODO: create loading screen with importing data progress
     }
 
     private void setupButtons() {
