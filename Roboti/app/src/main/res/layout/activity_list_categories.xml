@@ -5,7 +5,7 @@
     android:id="@+id/activity_list_categories"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.ListCategoriesActivity">
+    tools:activity=".activity.ListCategoriesActivity">
 
     <RelativeLayout
         android:id="@+id/roundsLayout"
