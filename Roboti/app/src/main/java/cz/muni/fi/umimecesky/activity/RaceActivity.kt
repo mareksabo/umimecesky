@@ -29,9 +29,7 @@ class RaceActivity : BaseAbstractActivity() {
 
         concept = intent.extras.getSerializable(Constant.RACE_CONCEPT_EXTRA) as RaceConcept
 
-        val usersRobotView = findViewById(R.id.usersRobot) as ImageView
         createRaceTrack(usersRobotView)
-
         setupRobotViews(usersRobotView)
 
         setNewRandomWord()
@@ -46,7 +44,7 @@ class RaceActivity : BaseAbstractActivity() {
     private fun createRaceTrack(usersRobotView: ImageView) {
         val hopsToWin = RAW_HOPS_TO_WIN + concept!!.getCurrentLevel()
         val calculateDp = CalculateDp(usersRobotView, hopsToWin)
-        calculateDp.setupFinishLine(findViewById(R.id.finishLine))
+        calculateDp.setupFinishLine(finishLine)
         Global.calculateDp = calculateDp
     }
 
@@ -58,9 +56,6 @@ class RaceActivity : BaseAbstractActivity() {
     }
 
     private fun createBotViews(): Array<ImageView> {
-        val botView1 = findViewById(R.id.bot1) as ImageView
-        val botView2 = findViewById(R.id.bot2) as ImageView
-        val botView3 = findViewById(R.id.bot3) as ImageView
         val botViews = arrayOf(botView1, botView2, botView3)
         return setupRandomDrawables(botViews)
     }

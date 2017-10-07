@@ -19,8 +19,7 @@ import kotlinx.android.synthetic.main.activity_training.*
 
 class TrainingActivity : BaseAbstractActivity() {
 
-    private var explanationText: TextView? = null
-    private var trainingProgressBar: TrainingProgressBar? = null
+    lateinit var trainingProgressBar: TrainingProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +28,7 @@ class TrainingActivity : BaseAbstractActivity() {
 
         checkedCategories = intent.getSerializableExtra(TICKED_CATEGORIES_EXTRA) as List<Category>
 
-        categoryText = findViewById(R.id.category) as TextView
-        explanationText = findViewById(R.id.explanationText) as TextView
+        categoryText = findViewById(R.id.categoryText) as TextView
 
         setLastUsedWord()
 
@@ -66,12 +64,12 @@ class TrainingActivity : BaseAbstractActivity() {
     override fun chosenWrong(button: Button) {
         setWrong(button)
         showExplanation()
-        trainingProgressBar!!.incrementIncorrectAttemptsCounter()
+        trainingProgressBar.incrementIncorrectAttemptsCounter()
     }
 
     override fun chosenCorrect(button: Button) {
         setCorrect(button)
-        trainingProgressBar!!.processCorrectResult()
+        trainingProgressBar.processCorrectResult()
 
         button.postDelayed({
             setButtonsEnabled()
@@ -83,13 +81,13 @@ class TrainingActivity : BaseAbstractActivity() {
     private fun showExplanation() {
         val explanation = currentWord.explanation
         if (!explanation.isEmpty()) {
-            explanationText!!.text = explanation
-            explanationText!!.visibility = View.VISIBLE
+            explanationText.text = explanation
+            explanationText.visibility = View.VISIBLE
         }
     }
 
     private fun hideExplanation() {
-        explanationText!!.visibility = View.INVISIBLE
+        explanationText.visibility = View.INVISIBLE
     }
 
     private fun setLastUsedWord() {
@@ -106,7 +104,7 @@ class TrainingActivity : BaseAbstractActivity() {
     private fun setNewRandomWord() {
         val word: FillWord
         if (checkedCategories.isEmpty()) {
-            word = wordHelper.randomFilledWord!!
+            word = wordHelper.randomFilledWord
         } else {
             val categoryIDs = Conversion.convertCategoriesToIDs(checkedCategories)
             word = wordCategoryHelper.getRandomCategoryWord(categoryIDs)
@@ -124,8 +122,8 @@ class TrainingActivity : BaseAbstractActivity() {
     }
 
     private fun setCategoryName() {
-        val categoryId = wordCategoryHelper.getCategoryId(currentWord.id)!!
-        val category = categoryHelper.findCategory(categoryId.toLong())
+        val categoryId = wordCategoryHelper.getCategoryId(currentWord.id)
+        val category = categoryHelper.findCategory(categoryId!!.toLong())
         categoryText.text = category?.name
     }
 

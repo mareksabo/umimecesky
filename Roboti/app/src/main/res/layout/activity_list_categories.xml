@@ -51,7 +51,7 @@
         android:layout_alignParentBottom="true">
 
         <Button
-            android:id="@+id/back"
+            android:id="@+id/backButton"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
             android:text="@string/all" />
 
         <Button
-            android:id="@+id/next"
+            android:id="@+id/nextButton"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

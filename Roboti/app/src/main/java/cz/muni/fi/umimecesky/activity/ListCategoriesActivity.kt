@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.ListView
 import android.widget.Toast
 import com.jaredrummler.materialspinner.MaterialSpinner
 import cz.muni.fi.umimecesky.R
@@ -44,10 +42,9 @@ class ListCategoriesActivity : AppCompatActivity() {
         val lastValue = Util.getSharedPreferences(this)
                 .getString(LAST_SPINNER_VALUE, Constant.INFINITY)
 
-        val spinner = findViewById(R.id.roundsSpinner) as MaterialSpinner
-        spinner.setItems(spinnerValues)
-        spinner.selectedIndex = spinnerValues.indexOf(lastValue)
-        spinner.setOnItemSelectedListener(createSpinnerListener())
+        roundsSpinner.setItems(spinnerValues)
+        roundsSpinner.selectedIndex = spinnerValues.indexOf(lastValue)
+        roundsSpinner.setOnItemSelectedListener(createSpinnerListener())
     }
 
     private fun createSpinnerListener(): MaterialSpinner.OnItemSelectedListener<String> {
@@ -59,14 +56,12 @@ class ListCategoriesActivity : AppCompatActivity() {
         val categories = categoryHelper!!.allCategories
 
         dataAdapter = CategoryAdapter(this, this, R.layout.category_info, categories, tickAll)
-        val listView = findViewById(R.id.listView) as ListView
         listView.adapter = dataAdapter
     }
 
 
     private fun setButtonClick() {
 
-        val nextButton = findViewById(R.id.next) as Button
         nextButton.setOnClickListener(View.OnClickListener {
             val selectedCategories = dataAdapter!!.selectedCategories
             if (selectedCategories.isEmpty()) {
@@ -84,13 +79,12 @@ class ListCategoriesActivity : AppCompatActivity() {
         })
 
 
-        tickAll!!.setOnClickListener {
+        tickAll.setOnClickListener {
             val allChecked = dataAdapter!!.areAllChecked()
             Log.v("allChecked", allChecked.toString())
             dataAdapter!!.setAll(!allChecked)
         }
 
-        val backButton = findViewById(R.id.back) as Button
         backButton.setOnClickListener { finish() }
 
     }

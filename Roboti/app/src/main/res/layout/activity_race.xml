@@ -18,7 +18,7 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/usersRobot"
+            android:id="@+id/usersRobotView"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -28,32 +28,32 @@
 
 
         <ImageView
-            android:id="@+id/bot1"
+            android:id="@+id/botView1"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="@dimen/robot_padding"
-            android:layout_below="@id/usersRobot"
+            android:layout_below="@id/usersRobotView"
             android:src="@drawable/robot2"
             tools:ignore="ContentDescription" />
 
         <ImageView
-            android:id="@+id/bot2"
+            android:id="@+id/botView2"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="@dimen/robot_padding"
-            android:layout_below="@id/bot1"
+            android:layout_below="@id/botView1"
             android:src="@drawable/robot5"
             tools:ignore="ContentDescription" />
 
         <ImageView
-            android:id="@+id/bot3"
+            android:id="@+id/botView3"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="@dimen/robot_padding"
-            android:layout_below="@id/bot2"
+            android:layout_below="@id/botView2"
             android:src="@drawable/robot12"
             tools:ignore="ContentDescription" />
     </LinearLayout>

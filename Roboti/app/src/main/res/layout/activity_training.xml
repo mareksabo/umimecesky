@@ -39,7 +39,7 @@
         android:layout_above="@+id/explanationText">
 
         <TextView
-            android:id="@+id/category"
+            android:id="@+id/categoryText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
