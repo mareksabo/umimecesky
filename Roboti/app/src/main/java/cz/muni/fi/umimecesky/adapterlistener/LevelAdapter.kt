@@ -22,9 +22,9 @@ class LevelAdapter(private val activity: Activity, private val list: List<RaceCo
             returnView = LayoutInflater.from(activity).inflate(R.layout.column_category_race, parent, false)
 
             holder = ViewHolder()
-            holder.sectionName = returnView!!.findViewById(R.id.sectionName) as TextView
-            holder.currentLevel = returnView.findViewById(R.id.currentLevel) as TextView
-            holder.progressBar = returnView.findViewById(R.id.levelProgress) as RoundCornerProgressBar
+            holder.sectionName = returnView!!.findViewById<TextView>(R.id.sectionName)
+            holder.currentLevel = returnView.findViewById<TextView>(R.id.currentLevel)
+            holder.progressBar = returnView.findViewById<RoundCornerProgressBar>(R.id.levelProgress)
             holder.progressBar!!.max = (list[position].numberOfLevels - 1).toFloat()
             returnView.tag = holder
         } else {

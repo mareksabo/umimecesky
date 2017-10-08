@@ -35,8 +35,8 @@ class CategoryAdapter(private val activity: Activity, context: Context, textView
             val vi = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             returnView = vi.inflate(R.layout.category_info, parent, false)
 
-            holder = ViewHolder(returnView.findViewById(R.id.categoryName) as TextView,
-                                returnView.findViewById(checkBox) as CheckBox)
+            holder = ViewHolder(returnView.findViewById<TextView>(R.id.categoryName),
+                                returnView.findViewById<CheckBox>(checkBox))
             holder.checkBox.tag = position
             returnView.tag = holder
 
