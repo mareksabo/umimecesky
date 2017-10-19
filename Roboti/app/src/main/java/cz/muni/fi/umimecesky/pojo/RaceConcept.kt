@@ -15,9 +15,7 @@ class RaceConcept(val name: String, val categoryIDs: List<Int>, val numberOfLeve
         currentLevel = 1
     }
 
-    fun getCurrentLevel(): Int {
-        return currentLevel
-    }
+    fun getCurrentLevel(): Int = currentLevel
 
     private fun setCurrentLevel(currentLevel: Int) {
         if (currentLevel <= numberOfLevels) {

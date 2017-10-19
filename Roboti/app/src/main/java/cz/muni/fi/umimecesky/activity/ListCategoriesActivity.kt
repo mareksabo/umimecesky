@@ -17,7 +17,11 @@ import cz.muni.fi.umimecesky.utils.Constant.LAST_SPINNER_VALUE
 import cz.muni.fi.umimecesky.utils.Constant.TICKED_CATEGORIES_EXTRA
 import cz.muni.fi.umimecesky.utils.GuiUtil
 import cz.muni.fi.umimecesky.utils.Util
-import kotlinx.android.synthetic.main.activity_list_categories.*
+import kotlinx.android.synthetic.main.activity_list_categories.backButton
+import kotlinx.android.synthetic.main.activity_list_categories.listView
+import kotlinx.android.synthetic.main.activity_list_categories.nextButton
+import kotlinx.android.synthetic.main.activity_list_categories.roundsSpinner
+import kotlinx.android.synthetic.main.activity_list_categories.tickAll
 import java.io.Serializable
 
 
@@ -49,7 +53,7 @@ class ListCategoriesActivity : AppCompatActivity() {
 
     private fun createSpinnerListener(): MaterialSpinner.OnItemSelectedListener<String> {
         val activity = this@ListCategoriesActivity
-        return MaterialSpinner.OnItemSelectedListener<String> { view, position, id, item -> Util.getSharedPreferences(activity).edit().putString(LAST_SPINNER_VALUE, item).apply() }
+        return MaterialSpinner.OnItemSelectedListener<String> { _, _, _, item -> Util.getSharedPreferences(activity).edit().putString(LAST_SPINNER_VALUE, item).apply() }
     }
 
     private fun displayListView() {

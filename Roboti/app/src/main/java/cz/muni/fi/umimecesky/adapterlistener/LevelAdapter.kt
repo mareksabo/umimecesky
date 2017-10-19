@@ -1,68 +1,42 @@
 package cz.muni.fi.umimecesky.adapterlistener
 
-import android.app.Activity
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
 import android.widget.TextView
-
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
-
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.pojo.RaceConcept
 
-class LevelAdapter(private val activity: Activity, private val list: List<RaceConcept>) : BaseAdapter() {
+class LevelAdapter(val items: List<RaceConcept>, val listener: (RaceConcept) -> Unit) :
+        RecyclerView.Adapter<LevelAdapter.ViewHolder>() {
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        var returnView = convertView
-        val holder: ViewHolder
+    fun ViewGroup.inflate(layoutRes: Int): View =
+            LayoutInflater.from(context).inflate(layoutRes, this, false)
 
-        if (returnView == null) {
-            returnView = LayoutInflater.from(activity).inflate(R.layout.column_category_race, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(parent.inflate(R.layout.column_category_race))
 
-            holder = ViewHolder()
-            holder.sectionName = returnView!!.findViewById<TextView>(R.id.sectionName)
-            holder.currentLevel = returnView.findViewById<TextView>(R.id.currentLevel)
-            holder.progressBar = returnView.findViewById<RoundCornerProgressBar>(R.id.levelProgress)
-            holder.progressBar!!.max = (list[position].numberOfLevels - 1).toFloat()
-            returnView.tag = holder
-        } else {
-            holder = returnView.tag as ViewHolder
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(items[position], listener)
+
+    override fun getItemCount(): Int = items.size
+
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        private val sectionName = itemView.findViewById<TextView>(R.id.sectionName)
+        private val currentLevel = itemView.findViewById<TextView>(R.id.currentLevel)
+        private val progressBar = itemView.findViewById<RoundCornerProgressBar>(R.id.levelProgress)
+
+        fun bind(item: RaceConcept, listener: (RaceConcept) -> Unit) = with(itemView) {
+            sectionName.text = item.name
+            val currentLevelNumber = item.getCurrentLevel()
+            currentLevel.text = currentLevelNumber.toString()
+            progressBar.max = (item.numberOfLevels - 1).toFloat()
+            progressBar.progress = (currentLevelNumber - 1).toFloat()
+            progressBar.secondaryProgress = currentLevelNumber.toFloat()
+            setOnClickListener { listener(item) }
         }
-
-        val raceConcept = list[position]
-        holder.sectionName!!.text = raceConcept.name
-        setProgressBar(holder, raceConcept)
-        return returnView
     }
 
-    private fun setProgressBar(holder: ViewHolder, raceConcept: RaceConcept) {
-        val progressBar = holder.progressBar
-        val textCurrentLevel = holder.currentLevel
-        var currentLevel = raceConcept.getCurrentLevel()
-        textCurrentLevel!!.text = currentLevel.toString()
-        currentLevel-- //progress bar starts at 0, level at 1
-        progressBar!!.progress = currentLevel.toFloat()
-        progressBar.secondaryProgress = (currentLevel + 1).toFloat()
-    }
-
-    private inner class ViewHolder {
-        internal var sectionName: TextView? = null
-        internal var currentLevel: TextView? = null
-        internal var progressBar: RoundCornerProgressBar? = null
-    }
-
-    override fun getCount(): Int {
-        return list.size
-    }
-
-    override fun getItem(position: Int): Any {
-        return list[position]
-    }
-
-    override fun getItemId(position: Int): Long {
-        return 0
-    }
 }
 

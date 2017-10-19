@@ -36,7 +36,7 @@ abstract class AbstractRobot(view: ImageView, val hopsPerCorrect: Int) {
         lastWasCorrect = true
         if (isOneStepToWin) {
             decideAnimationForward()
-        } else if (noWinnerYet!!.get()) {
+        } else if (noWinnerYet.get()) {
             decideAnimationForward()
         }
     }
