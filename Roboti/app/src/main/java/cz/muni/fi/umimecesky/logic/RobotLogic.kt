@@ -3,7 +3,7 @@ package cz.muni.fi.umimecesky.logic
 interface RobotLogic {
 
     /**
-     * Returns how many miliseconds it takes to solve clue.
+     * Returns how many milliseconds it takes to solve clue.
      * @return positive number
      */
     fun millisecondsPerSolution(): Int

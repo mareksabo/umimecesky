@@ -1,27 +1,23 @@
 package cz.muni.fi.umimecesky.utils
 
-import org.junit.Test
-
-import java.util.ArrayList
-import java.util.Arrays
-
 import cz.muni.fi.umimecesky.pojo.Category
-
 import org.hamcrest.CoreMatchers.`is`
 import org.junit.Assert.assertThat
+import org.junit.Test
+import java.util.*
 
 
 class ConversionTest {
 
     @Test
     @Throws(Exception::class)
-    fun stringNumberToBoolean_zeroToFalse() {
+    fun stringNumberToBooleanZeroToFalse() {
         assertThat(Conversion.stringNumberToBoolean("0"), `is`(false))
     }
 
     @Test
     @Throws(Exception::class)
-    fun stringNumberToBoolean_oneToTrue() {
+    fun stringNumberToBooleanOneToTrue() {
         assertThat(Conversion.stringNumberToBoolean("1"), `is`(true))
     }
 

@@ -35,8 +35,8 @@ class CategoryAdapter(private val activity: Activity, context: Context, textView
             val vi = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             returnView = vi.inflate(R.layout.category_info, parent, false)
 
-            holder = ViewHolder(returnView.findViewById<TextView>(R.id.categoryName),
-                                returnView.findViewById<CheckBox>(checkBox))
+            holder = ViewHolder(returnView.findViewById(R.id.categoryName),
+                                returnView.findViewById(checkBox))
             holder.checkBox.tag = position
             returnView.tag = holder
 
@@ -57,9 +57,7 @@ class CategoryAdapter(private val activity: Activity, context: Context, textView
     }
 
 
-    internal fun isChecked(position: Int): Boolean {
-        return checkedStates[position]
-    }
+    internal fun isChecked(position: Int): Boolean = checkedStates[position]
 
     internal fun setCategoryChecked(position: Int, isChecked: Boolean) {
         checkedStates[position] = isChecked
@@ -68,26 +66,21 @@ class CategoryAdapter(private val activity: Activity, context: Context, textView
     }
 
     fun setAll(isChecked: Boolean) {
-        for (i in 0..this.count - 1) {
+        for (i in 0 until this.count) {
             setCategoryChecked(i, isChecked)
         }
     }
 
-    fun areAllChecked(): Boolean {
-        return (0..count - 1).any { isChecked(it) }
-    }
+    fun areAllChecked(): Boolean = (0 until count).any { isChecked(it) }
 
     val selectedCategories: List<Category>
         get() {
-            val selectedCategories = categoryList.indices
+            return categoryList.indices
                     .filter { checkedStates[it] }
                     .map { categoryList[it] }
-            return selectedCategories
         }
 
-    fun getCheckedStates(): BooleanArray {
-        return checkedStates
-    }
+    fun getCheckedStates(): BooleanArray = checkedStates
 
     fun setCheckedStates(checkedStates: BooleanArray) {
         this.checkedStates = checkedStates
@@ -95,7 +88,7 @@ class CategoryAdapter(private val activity: Activity, context: Context, textView
         checkTickAllText()
     }
 
-    fun checkTickAllText() {
+    private fun checkTickAllText() {
         if (areAllChecked()) {
             tickAll.setText(R.string.none)
         } else {

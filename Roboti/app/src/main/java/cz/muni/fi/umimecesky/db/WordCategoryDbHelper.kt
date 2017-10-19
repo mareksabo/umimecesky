@@ -2,16 +2,8 @@ package cz.muni.fi.umimecesky.db
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
-
-import java.util.ArrayList
-import java.util.Random
-
-import cz.muni.fi.umimecesky.pojo.FillWord
-
 import cz.muni.fi.umimecesky.db.DbContract.ALL_WORD_COLUMNS
 import cz.muni.fi.umimecesky.db.DbContract.CATEGORY_TABLE
 import cz.muni.fi.umimecesky.db.DbContract.COMMA_SEP
@@ -23,7 +15,9 @@ import cz.muni.fi.umimecesky.db.DbContract.JoinColumn.JOIN_CATEGORY_ID
 import cz.muni.fi.umimecesky.db.DbContract.JoinColumn.JOIN_WORD_ID
 import cz.muni.fi.umimecesky.db.DbContract.WORD_TABLE
 import cz.muni.fi.umimecesky.db.DbContract.WordColumn.WORD_ID
+import cz.muni.fi.umimecesky.pojo.FillWord
 import cz.muni.fi.umimecesky.utils.Conversion.convertCursorToFillWord
+import java.util.*
 
 
 class WordCategoryDbHelper(private val context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -55,12 +49,7 @@ class WordCategoryDbHelper(private val context: Context) : SQLiteOpenHelper(cont
         val cursor = db.rawQuery(selectQuery, null)
 
         val categoryId: Int
-        if (cursor.moveToFirst()) {
-            categoryId = Integer.parseInt(cursor.getString(0))
-        } else {
-            Log.d("Category missing", wordId.toString())
-            categoryId = -1
-        }
+        categoryId = if (cursor.moveToFirst()) cursor.getString(0).toInt() else -1
 
         cursor.close()
         db.close()
@@ -80,7 +69,7 @@ class WordCategoryDbHelper(private val context: Context) : SQLiteOpenHelper(cont
 
         val categoryIds = getCategoryIds(categoryIDs)
 
-        val QUERY = "SELECT " +
+        val query = "SELECT " +
                 ALL_WORD_COLUMNS +
                 " FROM " + JOIN_TABLE + " INNER JOIN " + WORD_TABLE + " INNER JOIN " + CATEGORY_TABLE +
                 " WHERE " + JOIN_TABLE + "." + JOIN_WORD_ID + " = " + WORD_TABLE + "." + WORD_ID +
@@ -88,10 +77,10 @@ class WordCategoryDbHelper(private val context: Context) : SQLiteOpenHelper(cont
                 " AND " + JOIN_TABLE + "." + JOIN_CATEGORY_ID + " IN " + categoryIds
 
         val db = this.readableDatabase
-        val cursor = db.rawQuery(QUERY, null)
+        val cursor = db.rawQuery(query, null)
 
         storedCategories = categoryIDs
-        storedWords = ArrayList<FillWord>()
+        storedWords = ArrayList()
 
         cursor.moveToFirst()
         while (!cursor.isAfterLast) {

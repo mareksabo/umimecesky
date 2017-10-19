@@ -15,8 +15,8 @@ abstract class AbstractRobot(view: ImageView, val hopsPerCorrect: Int) {
     private var remainingHopsToWin: Int = 0
     private val animator: ViewPropertyAnimator = view.animate()
 
-    private val ROBOT_MOVE: Float
-    private val TOTAL_MOVES_TO_WIN: Int
+    private val robotMove: Float
+    private val totalMovesToWin: Int
 
     abstract fun applyCorrect()
 
@@ -26,10 +26,10 @@ abstract class AbstractRobot(view: ImageView, val hopsPerCorrect: Int) {
         animator.duration = Constant.ANIMATION_DURATION.toLong()
 
         val calculateDp = Global.calculateDp
-        ROBOT_MOVE = calculateDp.calculateRobotMovePx()
+        robotMove = calculateDp.calculateRobotMovePx()
 
-        TOTAL_MOVES_TO_WIN = calculateDp.winMovesCount
-        remainingHopsToWin = TOTAL_MOVES_TO_WIN
+        totalMovesToWin = calculateDp.winMovesCount
+        remainingHopsToWin = totalMovesToWin
     }
 
     protected fun moveForward() {
@@ -61,7 +61,7 @@ abstract class AbstractRobot(view: ImageView, val hopsPerCorrect: Int) {
     }
 
     private fun animateBackward() {
-        animator.translationXBy(-ROBOT_MOVE)
+        animator.translationXBy(-robotMove)
         remainingHopsToWin++
     }
 
@@ -69,30 +69,22 @@ abstract class AbstractRobot(view: ImageView, val hopsPerCorrect: Int) {
         animateForwardWithAction(null, null)
     }
 
-    protected fun animateForwardWithAction(runnableBefore: Runnable?, runnableAfter: Runnable?) {
-        animator.translationXBy(ROBOT_MOVE * limitedHopsPerCorrect())
+    private fun animateForwardWithAction(runnableBefore: Runnable?, runnableAfter: Runnable?) {
+        animator.translationXBy(robotMove * limitedHopsPerCorrect())
                 .withStartAction(runnableBefore)
                 .withEndAction(runnableAfter)
     }
 
-    private fun limitedHopsPerCorrect(): Int {
-        return limitHopsWhenWon(hopsPerCorrect)
-    }
+    private fun limitedHopsPerCorrect(): Int = limitHopsWhenWon(hopsPerCorrect)
 
-    private fun limitHopsWhenWon(hopsBefore: Int): Int {
-        if (remainingHopsToWin >= hopsBefore) {
-            return hopsBefore
-        } else {
-            return remainingHopsToWin
-        }
-
-    }
+    private fun limitHopsWhenWon(hopsBefore: Int): Int =
+            if (remainingHopsToWin >= hopsBefore) hopsBefore else remainingHopsToWin
 
     private val isOneStepToWin: Boolean
-        get() = 0 < remainingHopsToWin && remainingHopsToWin <= hopsPerCorrect
+        get() = remainingHopsToWin in 1..hopsPerCorrect
 
     private val isNotAtStart: Boolean
-        get() = remainingHopsToWin != TOTAL_MOVES_TO_WIN
+        get() = remainingHopsToWin != totalMovesToWin
 
     fun setRunnableAfter(runnableAfter: Runnable) {
         this.runnableAfter = runnableAfter

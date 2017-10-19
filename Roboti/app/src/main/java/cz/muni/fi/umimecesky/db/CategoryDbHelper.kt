@@ -13,7 +13,6 @@ import cz.muni.fi.umimecesky.db.DbContract.CategoryColumn.NAME
 import cz.muni.fi.umimecesky.db.DbContract.DATABASE_NAME
 import cz.muni.fi.umimecesky.db.DbContract.DATABASE_VERSION
 import cz.muni.fi.umimecesky.pojo.Category
-import cz.muni.fi.umimecesky.utils.WebUtil
 import java.util.*
 
 
@@ -74,21 +73,8 @@ class CategoryDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
             return categoryList
         }
 
-    val allCategoryNames: Map<String, List<String>>
-        get() {
-            val map = TreeMap<String, List<String>>()
-            val raceConceptList = WebUtil.initWebConcepts()
-
-            for (raceConcept in raceConceptList) {
-                val subcategories = raceConcept.categoryIDs.map { findCategory(it.toLong())!!.name }
-                map.put(raceConcept.name, subcategories)
-            }
-            return map
-        }
-
-    private fun cursorToCategory(cursor: Cursor): Category {
-        return Category(Integer.parseInt(cursor.getString(0)), cursor.getString(1))
-    }
+    private fun cursorToCategory(cursor: Cursor): Category =
+            Category(Integer.parseInt(cursor.getString(0)), cursor.getString(1))
 
     companion object {
 

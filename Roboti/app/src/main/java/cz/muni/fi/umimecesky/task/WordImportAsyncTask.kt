@@ -14,7 +14,7 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.util.*
 
-private val CATEGORY_UNWANTED_ID = 46
+private val categoryUnwantedId = 46
 
 class WordImportAsyncTask(val activity: Activity) : AsyncTask<Void, Void, Void>() {
 
@@ -48,15 +48,15 @@ class WordImportAsyncTask(val activity: Activity) : AsyncTask<Void, Void, Void>(
 
         while (line != null) {
             val columns = line.split(";".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
-            Log.v("Column ", Arrays.toString(columns));
+            Log.v("Column ", Arrays.toString(columns))
 
             if (columns.size == 3) {
                 columns[1] = columns[1].trim({ it <= ' ' }) + " - " + columns[2].trim({ it <= ' ' })
             }
 
             val id = Integer.parseInt(columns[0].trim({ it <= ' ' }))
-            Log.i("id", id.toString());
-            if (id != CATEGORY_UNWANTED_ID) {
+            Log.i("id", id.toString())
+            if (id != categoryUnwantedId) {
                 dbHelper.addCategory(db, id.toLong(), columns[1].trim({ it <= ' ' }))
             }
             line = buffer.readLine()
@@ -122,13 +122,13 @@ class WordImportAsyncTask(val activity: Activity) : AsyncTask<Void, Void, Void>(
     @Throws(IOException::class)
     private fun importWords() {
 
-        val WORD_CSV_FILENAME = "doplnovacka_word.csv"
+        val wordCSVFilename = "doplnovacka_word.csv"
 
         val dbHelper = WordDbHelper(activity)
         val db = dbHelper.writableDatabase
         dbHelper.onUpgrade(db, 1, 2)
 
-        val inStream = activity.assets.open(WORD_CSV_FILENAME)
+        val inStream = activity.assets.open(wordCSVFilename)
         val buffer = BufferedReader(InputStreamReader(inStream))
 
         buffer.readLine() // column names are ignored

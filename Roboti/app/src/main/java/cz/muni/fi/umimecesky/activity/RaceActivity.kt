@@ -14,13 +14,20 @@ import cz.muni.fi.umimecesky.utils.Constant.RACE_NEW_WORD_DELAY_MS
 import cz.muni.fi.umimecesky.utils.Constant.RAW_HOPS_TO_WIN
 import cz.muni.fi.umimecesky.utils.Global
 import cz.muni.fi.umimecesky.utils.RobotDrawable
-import kotlinx.android.synthetic.main.activity_race.*
+import kotlinx.android.synthetic.main.activity_race.botView1
+import kotlinx.android.synthetic.main.activity_race.botView2
+import kotlinx.android.synthetic.main.activity_race.botView3
+import kotlinx.android.synthetic.main.activity_race.finishLine
+import kotlinx.android.synthetic.main.activity_race.firstButton
+import kotlinx.android.synthetic.main.activity_race.secondButton
+import kotlinx.android.synthetic.main.activity_race.usersRobotView
+import kotlinx.android.synthetic.main.activity_race.word
 
 class RaceActivity : BaseAbstractActivity() {
 
-    private var moveLogic: MoveLogic? = null
+    private lateinit var moveLogic: MoveLogic
 
-    private var concept: RaceConcept? = null
+    private lateinit var concept: RaceConcept
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +49,7 @@ class RaceActivity : BaseAbstractActivity() {
     }
 
     private fun createRaceTrack(usersRobotView: ImageView) {
-        val hopsToWin = RAW_HOPS_TO_WIN + concept!!.getCurrentLevel()
+        val hopsToWin = RAW_HOPS_TO_WIN + concept.getCurrentLevel()
         val calculateDp = CalculateDp(usersRobotView, hopsToWin)
         calculateDp.setupFinishLine(finishLine)
         Global.calculateDp = calculateDp
@@ -69,8 +76,8 @@ class RaceActivity : BaseAbstractActivity() {
         return botViews
     }
 
-    protected fun setNewRandomWord() {
-        val word = wordCategoryHelper.getRandomCategoryWord(concept!!.categoryIDs)
+    private fun setNewRandomWord() {
+        val word = wordCategoryHelper.getRandomCategoryWord(concept.categoryIDs)
         Log.d("random word", word.toString())
         setWord(word)
     }
@@ -78,7 +85,7 @@ class RaceActivity : BaseAbstractActivity() {
     override fun chosenCorrect(button: Button) {
         setCorrect(button)
         setButtonsDisabled()
-        val shouldContinue = moveLogic!!.applyCorrect()
+        val shouldContinue = moveLogic.applyCorrect()
         if (shouldContinue) {
             delayNewWord(button)
         }
@@ -98,12 +105,12 @@ class RaceActivity : BaseAbstractActivity() {
 
     override fun chosenWrong(button: Button) {
         setWrong(button)
-        moveLogic!!.applyIncorrect()
+        moveLogic.applyIncorrect()
     }
 
     override fun onPause() {
         super.onPause()
-        moveLogic!!.stopBotsAndInput()
+        moveLogic.stopBotsAndInput()
     }
 
     override fun onStop() {
@@ -111,7 +118,4 @@ class RaceActivity : BaseAbstractActivity() {
         this.finish()
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
 }

@@ -56,7 +56,6 @@ class FillWordBuilder {
         return this
     }
 
-    fun createFillWord(): FillWord {
-        return FillWord(id, wordMissing, wordFilled, variant1, variant2, correctVariant, explanation, grade, visibility)
-    }
+    fun createFillWord(): FillWord =
+            FillWord(id, wordMissing, wordFilled, variant1, variant2, correctVariant, explanation, grade, visibility)
 }

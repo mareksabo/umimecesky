@@ -53,7 +53,7 @@ class ListCategoriesActivity : AppCompatActivity() {
 
     private fun createSpinnerListener(): MaterialSpinner.OnItemSelectedListener<String> {
         val activity = this@ListCategoriesActivity
-        return MaterialSpinner.OnItemSelectedListener<String> { _, _, _, item -> Util.getSharedPreferences(activity).edit().putString(LAST_SPINNER_VALUE, item).apply() }
+        return MaterialSpinner.OnItemSelectedListener { _, _, _, item -> Util.getSharedPreferences(activity).edit().putString(LAST_SPINNER_VALUE, item).apply() }
     }
 
     private fun displayListView() {

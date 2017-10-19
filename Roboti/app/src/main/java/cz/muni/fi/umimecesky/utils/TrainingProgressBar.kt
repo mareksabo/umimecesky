@@ -5,10 +5,8 @@ import android.app.Activity
 import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.animation.DecelerateInterpolator
-
-import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
-
 import cn.refactor.lib.colordialog.PromptDialog
+import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
 import cz.muni.fi.umimecesky.R
 
 class TrainingProgressBar(private val activity: Activity, private val progressBar: RoundCornerProgressBar) {
@@ -28,7 +26,7 @@ class TrainingProgressBar(private val activity: Activity, private val progressBa
         } else {
             isInfinite = false
             progressBar.visibility = View.VISIBLE
-            seriesLength = Integer.parseInt(seriesLengthString)
+            seriesLength = seriesLengthString.toInt()
             updateProgressBar()
         }
     }
@@ -61,9 +59,7 @@ class TrainingProgressBar(private val activity: Activity, private val progressBa
         updateProgressBarColors()
     }
 
-    private fun calculateFinishedPercentage(): Int {
-        return passedWords * 100 / seriesLength
-    }
+    private fun calculateFinishedPercentage(): Int = passedWords * 100 / seriesLength
 
     private fun animate(to: Float) {
         val animation = ObjectAnimator.ofFloat(progressBar, "progress", progressBar.progress, to)
@@ -80,12 +76,10 @@ class TrainingProgressBar(private val activity: Activity, private val progressBa
 
     private fun updateProgressBarColors() {
         val currentProgressPercentage = calculateFinishedPercentage()
-        if (currentProgressPercentage <= 30) {
-            updateColors(R.color.progress_red_progress, R.color.progress_red_progress_half)
-        } else if (currentProgressPercentage <= 65) {
-            updateColors(R.color.progress_orange_progress, R.color.progress_orange_progress_half)
-        } else {
-            updateColors(R.color.color_primary, R.color.color_primary_half)
+        when {
+            currentProgressPercentage <= 30 -> updateColors(R.color.progress_red_progress, R.color.progress_red_progress_half)
+            currentProgressPercentage <= 65 -> updateColors(R.color.progress_orange_progress, R.color.progress_orange_progress_half)
+            else -> updateColors(R.color.color_primary, R.color.color_primary_half)
         }
     }
 
@@ -115,21 +109,17 @@ class TrainingProgressBar(private val activity: Activity, private val progressBa
 
     private fun dialogSuccessMessage(): String {
         val percentage = calculateSuccessPercentage()
-        if (percentage >= 80) {
-            return activity.getString(R.string.great_job)
-        } else if (percentage >= 60) {
-            return activity.getString(R.string.its_ok)
-        } else {
-            return activity.getString(R.string.you_need_to_improve)
+        return when {
+            percentage >= 80 -> activity.getString(R.string.great_job)
+            percentage >= 60 -> activity.getString(R.string.its_ok)
+            else -> activity.getString(R.string.you_need_to_improve)
         }
     }
 
-    private fun calculateSuccessPercentage(): Int {
-        return (passedWords - incorrectAttempts) * 100 / passedWords
-    }
+    private fun calculateSuccessPercentage(): Int =
+            (passedWords - incorrectAttempts) * 100 / passedWords
 
     companion object {
-
         private val SECONDARY_PROGRESS_SHIFT = 0.05f
     }
 

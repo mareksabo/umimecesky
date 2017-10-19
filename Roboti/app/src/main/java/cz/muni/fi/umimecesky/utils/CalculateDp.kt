@@ -10,9 +10,7 @@ import android.widget.ImageView
  */
 class CalculateDp(private val robot: ImageView, val winMovesCount: Int) {
 
-    fun calculateRobotMovePx(): Float {
-        return CalculateDp.dpiToPixels(calculateRobotMoveDp())
-    }
+    fun calculateRobotMovePx(): Float = CalculateDp.dpiToPixels(calculateRobotMoveDp())
 
     private val metrics: DisplayMetrics = Resources.getSystem().displayMetrics
 
@@ -22,8 +20,8 @@ class CalculateDp(private val robot: ImageView, val winMovesCount: Int) {
     }
 
     fun setupFinishLine(finishLine: View) {
-        val LINE_THICKNESS_DP = 4
-        val finalLineDp = screenWidthDp - robotWidthDp - (LINE_THICKNESS_DP / 2).toFloat()
+        val lineDPThickness = 4
+        val finalLineDp = screenWidthDp - robotWidthDp - (lineDPThickness / 2).toFloat()
         finishLine.x = CalculateDp.dpiToPixels(finalLineDp)
     }
 

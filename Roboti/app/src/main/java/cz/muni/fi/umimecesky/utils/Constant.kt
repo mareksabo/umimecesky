@@ -1,8 +1,7 @@
 package cz.muni.fi.umimecesky.utils
 
 import android.graphics.Color
-
-import java.util.Arrays
+import java.util.*
 
 object Constant {
 
@@ -26,7 +25,7 @@ object Constant {
     val CHECKED_STATES = "checked_states"
 
     val INFINITY = "Nekonečno"
-    val ROUND_POSSIBILITIES = Arrays.asList("10", "20", "35", "50", INFINITY)
+    val ROUND_POSSIBILITIES: MutableList<String> = Arrays.asList("10", "20", "35", "50", INFINITY)
 
     val ROBOT_START_DELAY_MS = 200
 }

@@ -24,9 +24,9 @@ object Conversion {
     @Throws(NumberFormatException::class)
     fun stringNumberToBoolean(inputString: String): Boolean {
         val parsedInt = Integer.parseInt(inputString) // should be 1 / 0
-        when (parsedInt) {
-            0 -> return false
-            1 -> return true
+        return when (parsedInt) {
+            0 -> false
+            1 -> true
             else -> throw NumberFormatException("Parsed number is neither 1 or 0, but: " + parsedInt)
         }
     }
@@ -46,16 +46,8 @@ object Conversion {
                 .createFillWord()
     }
 
-    fun convertCategoriesToIDs(categories: List<Category>): List<Int> {
-        val ids = ArrayList<Int>()
-        for (category in categories) {
-            ids.add(category.id)
-        }
-        return ids
-    }
+    fun convertCategoriesToIDs(categories: List<Category>): List<Int> = categories.map { it.id }
 
-    fun conceptToNames(conceptList: List<RaceConcept>): List<String> {
-        val names = conceptList.mapTo(ArrayList<String>()) { it.name }
-        return names
-    }
+    fun conceptToNames(conceptList: List<RaceConcept>): List<String> =
+            conceptList.mapTo(ArrayList()) { it.name }
 }

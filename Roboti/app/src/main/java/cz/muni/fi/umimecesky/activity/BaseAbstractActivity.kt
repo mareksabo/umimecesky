@@ -43,7 +43,7 @@ abstract class BaseAbstractActivity : AppCompatActivity() {
     lateinit var sharedPref: SharedPreferences
         private set
 
-    lateinit var wordText: TextView
+    private lateinit var wordText: TextView
     lateinit var variant1: Button
     lateinit var variant2: Button
 

@@ -7,5 +7,4 @@ import android.widget.TextView
  * Struct/class storing UI views.
  */
 
-class UiViewHelper(val wordText: TextView, val variant1: Button, val variant2: Button) {
-}
+class UiViewHelper(val wordText: TextView, val variant1: Button, val variant2: Button)

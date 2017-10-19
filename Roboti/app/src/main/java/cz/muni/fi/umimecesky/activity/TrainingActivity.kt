@@ -15,7 +15,11 @@ import cz.muni.fi.umimecesky.utils.Constant.TICKED_CATEGORIES_EXTRA
 import cz.muni.fi.umimecesky.utils.Constant.TRAINING_NEW_WORD_DELAY_MS
 import cz.muni.fi.umimecesky.utils.Conversion
 import cz.muni.fi.umimecesky.utils.TrainingProgressBar
-import kotlinx.android.synthetic.main.activity_training.*
+import kotlinx.android.synthetic.main.activity_training.explanationText
+import kotlinx.android.synthetic.main.activity_training.firstButton
+import kotlinx.android.synthetic.main.activity_training.secondButton
+import kotlinx.android.synthetic.main.activity_training.seriesProgressBar
+import kotlinx.android.synthetic.main.activity_training.word
 
 class TrainingActivity : BaseAbstractActivity() {
 
@@ -131,10 +135,6 @@ class TrainingActivity : BaseAbstractActivity() {
         super.onPause()
         val json = Gson().toJson(currentWord)
         sharedPref.edit().putString(LAST_FILLED_WORD, json).apply()
-    }
-
-    override fun onResume() {
-        super.onResume()
     }
 
 }

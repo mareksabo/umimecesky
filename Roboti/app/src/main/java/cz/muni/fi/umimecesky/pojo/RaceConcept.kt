@@ -40,9 +40,7 @@ class RaceConcept(val name: String, val categoryIDs: List<Int>, val numberOfLeve
      * Number describing how far in terms of levels user is.
      * @return  interval higher than 0, lower or equal to 1
      */
-    fun levelProgress(): Float {
-        return currentLevel / numberOfLevels.toFloat()
-    }
+    fun levelProgress(): Float = currentLevel / numberOfLevels.toFloat()
 
     override fun toString(): String {
         return "RaceConcept{" +
@@ -63,11 +61,7 @@ class RaceConcept(val name: String, val categoryIDs: List<Int>, val numberOfLeve
 
     }
 
-    override fun hashCode(): Int {
-        return name.hashCode()
-    }
+    override fun hashCode(): Int = name.hashCode()
 
-    override fun compareTo(other: RaceConcept): Int {
-        return this.name.compareTo(other.name)
-    }
+    override fun compareTo(other: RaceConcept): Int = this.name.compareTo(other.name)
 }

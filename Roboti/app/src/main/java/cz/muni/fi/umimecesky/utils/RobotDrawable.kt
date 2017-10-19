@@ -10,7 +10,7 @@ class RobotDrawable(private val activity: Activity) {
 
     private val robotNames = ArrayList<String>()
 
-    private val RANDOM = SecureRandom()
+    private val random = SecureRandom()
 
     init {
         val drawables = R.drawable::class.java.fields
@@ -25,7 +25,7 @@ class RobotDrawable(private val activity: Activity) {
     fun removeRobotDrawable(): Drawable {
 
         val resources = activity.resources
-        val randomInt = RANDOM.nextInt(robotNames.size)
+        val randomInt = random.nextInt(robotNames.size)
         val randomDrawableName = robotNames.removeAt(randomInt)
         val resourceId = resources.getIdentifier(randomDrawableName, "drawable",
                 activity.packageName)

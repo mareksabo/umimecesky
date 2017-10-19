@@ -12,9 +12,7 @@ class BotLogicSlow(private val concept: RaceConcept) : RobotLogic {
         Log.v("slow is before half", isBeforeHalf.toString())
     }
 
-    override fun millisecondsPerSolution(): Int {
-        return 3500 - (1500 * concept.levelProgress()).toInt()
-    }
+    override fun millisecondsPerSolution(): Int = 3500 - (1500 * concept.levelProgress()).toInt()
 
     override fun correctnessRatio(): Double {
         val addition = if (isBeforeHalf)
@@ -24,9 +22,7 @@ class BotLogicSlow(private val concept: RaceConcept) : RobotLogic {
         return 0.75 + addition
     }
 
-    override fun hopsPerCorrect(): Int {
-        return if (isBeforeHalf) 1 else 2
-    }
+    override fun hopsPerCorrect(): Int = if (isBeforeHalf) 1 else 2
 
     private val isBeforeHalf: Boolean
         get() = concept.levelProgress() < 0.5
