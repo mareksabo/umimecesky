@@ -16,8 +16,7 @@ object Constant {
             metrics.ydpi / 0.0254f)
 
 
-    // rescale the balls so it's about 0.5 cm on screen
-    val ballSize = (0.010f * metersToPixels.x + 0.5f).toInt()
+    val ballSize = 150
     val holeSize = ballSize
     val holeRadius = holeSize / 2
     val ballRadius = ballSize / 2

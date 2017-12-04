@@ -22,10 +22,11 @@ class HoleView(hole: Hole, context: Context?) : View(context) {
         translationX = hole.middle().x
         translationY = hole.middle().y
 
-        textInside = if (hole is ResultHole) {
-            createTextInside(hole.result)
+        if (hole is ResultHole) {
+            textInside = createTextInside(hole.result)
+            textInside.textSize += 1f
         } else {
-            createTextInside("")
+            textInside = createTextInside("")
         }
     }
 
