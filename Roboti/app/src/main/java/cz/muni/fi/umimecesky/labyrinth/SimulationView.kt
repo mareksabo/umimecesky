@@ -1,5 +1,6 @@
 package cz.muni.fi.umimecesky.labyrinth
 
+import android.animation.LayoutTransition
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -7,11 +8,14 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.view.Gravity
 import android.view.Surface
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
+import android.widget.TextView
+import cz.muni.fi.umimecesky.db.WordDbHelper
 import cz.muni.fi.umimecesky.labyrinth.Constant.ballRadius
 import cz.muni.fi.umimecesky.labyrinth.Constant.ballSize
 import cz.muni.fi.umimecesky.labyrinth.Constant.holeRadius
@@ -22,6 +26,8 @@ import cz.muni.fi.umimecesky.labyrinth.hole.CorrectHole
 import cz.muni.fi.umimecesky.labyrinth.hole.Hole
 import cz.muni.fi.umimecesky.labyrinth.hole.HoleCircle
 import cz.muni.fi.umimecesky.labyrinth.hole.HoleView
+import cz.muni.fi.umimecesky.labyrinth.hole.IncorrectHole
+import cz.muni.fi.umimecesky.pojo.FillWord
 import java.util.*
 
 /**
@@ -42,10 +48,12 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
 
     private val random = Random()
     private val ball = Ball(context)
-    private val correctHole = CorrectHole(HoleCircle(minHolePosition), "i")
-    private val incorrectHole = CorrectHole(HoleCircle(maxHolePosition), "y")
-    private val holes = createHoles(15)
-    private val incorrectHoleView: HoleView
+    private var correctHole = CorrectHole(HoleCircle(minHolePosition), "i")
+    private var incorrectHole = IncorrectHole(HoleCircle(maxHolePosition), "y")
+    private lateinit var holes: List<Hole>
+    private lateinit var incorrectHoleView: HoleView
+
+    private val wordDbHelper = WordDbHelper(context)
 
     private fun createHoles(amount: Int): List<Hole> {
         val circles = ArrayList<Circle>(amount + 3)
@@ -81,10 +89,45 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
     fun stopSimulation() = sensorManager.unregisterListener(this)
 
     init {
+        setupView()
+        val lt = LayoutTransition()
+        layoutTransition = lt
+    }
+
+    private fun setupView() {
+        setNewRandomWord()
+        holes = createHoles(10)
+
         for (hole in holes) setupHoleView(hole)
         setupHoleView(correctHole)
         incorrectHoleView = setupHoleView(incorrectHole)
+
+        val t = TextView(context)
+        t.text = randomWord.wordMissing
+        t.textSize += 5f
+        t.gravity = Gravity.END or Gravity.TOP
+        addView(t)
+
         addView(ball, ViewGroup.LayoutParams(ballSize, ballSize))
+    }
+
+
+    private var randomWord: FillWord = wordDbHelper.randomFilledWord
+
+    private fun setNewRandomWord() {
+        do {
+            randomWord = wordDbHelper.randomFilledWord
+        } while (randomWord.variant1.length > 3 || randomWord.variant2.length > 3)
+        // TODO: better fix long answers
+        val pos = if (random.nextBoolean()) minHolePosition else maxHolePosition
+        val pos2 = if (pos == minHolePosition) maxHolePosition else minHolePosition
+        if (randomWord.correctVariant == 0) {
+            correctHole = CorrectHole(HoleCircle(pos), randomWord.variant1)
+            incorrectHole = IncorrectHole(HoleCircle(pos2), randomWord.variant2)
+        } else {
+            correctHole = CorrectHole(HoleCircle(pos), randomWord.variant2)
+            incorrectHole = IncorrectHole(HoleCircle(pos2), randomWord.variant1)
+        }
     }
 
     private fun setupHoleView(hole: Hole): HoleView {
@@ -131,19 +174,23 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
 
         for (hole in holes) {
             if (ball.checkInside(hole)) {
-                ball.isInsideHole = true
                 runFallingBallAnimation(hole)
             }
         }
 
         if (ball.checkInside(incorrectHole)) {
             incorrectHoleView.textInside.setTextColor(Color.RED)
+        } else if (ball.checkInside(correctHole)) {
+            runFallingBallAnimation(correctHole)
+            this.removeAllViews()
+            setupView()
         }
 
         invalidate()
     }
 
     private fun runFallingBallAnimation(hole: Hole) {
+        ball.isInsideHole = true
         val animator = ball.animate()
         animator.translationX(hole.middle().x + holeRadius - ballRadius)
                 .translationY(hole.middle().y + holeRadius - ballRadius)

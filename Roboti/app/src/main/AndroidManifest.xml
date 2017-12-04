@@ -49,7 +49,7 @@
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:label="@string/action_bar_name"
             android:parentActivityName=".activity.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="landscape"  />
     </application>
 
 </manifest>

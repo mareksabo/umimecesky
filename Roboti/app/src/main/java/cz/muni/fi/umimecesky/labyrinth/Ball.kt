@@ -70,8 +70,8 @@ class Ball(context: Context) : View(context) {
 
     fun computeMove(sx: Float, sy: Float) {
 
-        val ax = -sx / 5
-        val ay = -sy / 5
+        val ax = -sx / 8
+        val ay = -sy / 8
 
         posX += metersToPixels.x * (velocity.x * dT + ax * dT * dT / 2)
         posY -= metersToPixels.y * (velocity.y * dT + ay * dT * dT / 2)
@@ -104,9 +104,8 @@ class Ball(context: Context) : View(context) {
     }
 
     fun checkInside(hole: Hole): Boolean {
-        val isInside = Math.abs(posX - hole.middle().x) <= holeRadius
-                && Math.abs(posY - hole.middle().y) <= holeRadius
-        return isInside
+        return (Math.abs(posX - hole.middle().x) <= holeRadius
+                && Math.abs(posY - hole.middle().y) <= holeRadius)
     }
 
     override fun toString(): String = "Ball [$posX, $posY]"
