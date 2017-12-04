@@ -25,7 +25,7 @@ class RaceConcept(val name: String, val categoryIDs: List<Int>, val numberOfLeve
 
     /**
      * Increases the current level.
-     * @param context current context
+     * @param context current activity
      * *
      * @return true if level was increased
      */

@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
-import android.widget.TextView
 import com.google.gson.Gson
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.pojo.Category
@@ -30,9 +29,10 @@ class TrainingActivity : BaseAbstractActivity() {
         setContentView(R.layout.activity_training)
         initUi()
 
+        @Suppress("UNCHECKED_CAST")
         checkedCategories = intent.getSerializableExtra(TICKED_CATEGORIES_EXTRA) as List<Category>
 
-        categoryText = findViewById(R.id.categoryText) as TextView
+        categoryText = findViewById(R.id.categoryText)
 
         setLastUsedWord()
 

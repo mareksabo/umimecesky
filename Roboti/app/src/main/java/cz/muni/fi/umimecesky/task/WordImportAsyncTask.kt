@@ -3,6 +3,7 @@ package cz.muni.fi.umimecesky.task
 import android.app.Activity
 import android.os.AsyncTask
 import android.util.Log
+import com.afollestad.materialdialogs.MaterialDialog
 import cz.muni.fi.umimecesky.db.CategoryDbHelper
 import cz.muni.fi.umimecesky.db.WordCategoryDbHelper
 import cz.muni.fi.umimecesky.db.WordDbHelper
@@ -17,6 +18,17 @@ import java.util.*
 private val categoryUnwantedId = 46
 
 class WordImportAsyncTask(val activity: Activity) : AsyncTask<Void, Void, Void>() {
+
+    private lateinit var dialog : MaterialDialog
+
+    override fun onPreExecute() {
+        super.onPreExecute()
+        dialog = MaterialDialog.Builder(activity)
+                .title("Importuji data")
+                .content("Nahrávám data, hned to bude.")
+                .cancelable(false)
+                .show()
+    }
 
     override fun doInBackground(vararg params: Void): Void? {
 
@@ -161,6 +173,7 @@ class WordImportAsyncTask(val activity: Activity) : AsyncTask<Void, Void, Void>(
     override fun onPostExecute(aVoid: Void?) {
         val prefs = Util.getSharedPreferences(activity)
         prefs.edit().putBoolean(IS_FILLED, true).apply()
+        dialog.dismiss()
     }
 
 }

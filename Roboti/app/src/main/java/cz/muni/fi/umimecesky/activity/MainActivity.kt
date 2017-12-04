@@ -8,7 +8,8 @@ import cz.muni.fi.umimecesky.task.WordImportAsyncTask
 import cz.muni.fi.umimecesky.utils.Constant.IS_FILLED
 import cz.muni.fi.umimecesky.utils.GuiUtil
 import cz.muni.fi.umimecesky.utils.Util
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.raceButton
+import kotlinx.android.synthetic.main.activity_main.trainingButton
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,7 +22,7 @@ class MainActivity : AppCompatActivity() {
 
         if (!sharedPref.getBoolean(IS_FILLED, false)) {
             WordImportAsyncTask(this@MainActivity).execute()
-        } // TODO: create loading screen with importing data progress
+        }
     }
 
     private fun setupButtons() {
