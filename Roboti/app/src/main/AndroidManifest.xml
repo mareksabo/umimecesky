@@ -44,6 +44,12 @@
             android:label="@string/action_bar_name"
             android:parentActivityName=".activity.MainActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".labyrinth.LabyrinthActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:label="@string/action_bar_name"
+            android:parentActivityName=".activity.MainActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
