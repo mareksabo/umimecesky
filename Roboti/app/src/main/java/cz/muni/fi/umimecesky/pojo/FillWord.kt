@@ -16,4 +16,13 @@ class FillWord internal constructor(val id: Long, val wordMissing: String, val w
                 ", visibility=" + isVisible +
                 '}'
     }
+
+    fun variants() : Pair<String, String> {
+        return replaceWhitespace(variant1) to replaceWhitespace(variant2)
+    }
+
+    private fun replaceWhitespace(string: String) : String {
+        return if (string.isBlank()) "␣" else string
+    }
+
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.labyrinth.Constant.holeRadius
+import cz.muni.fi.umimecesky.labyrinth.Constant.holeSize
 import cz.muni.fi.umimecesky.labyrinth.Constant.maxBallPosition
 import cz.muni.fi.umimecesky.labyrinth.Constant.metersToPixels
 import cz.muni.fi.umimecesky.labyrinth.hole.Hole
@@ -19,13 +20,12 @@ class Ball(context: Context) : View(context) {
                 maxBallPosition.x / 2,
                 maxBallPosition.y / 2
         )
-        private val initialVelocity = Point2Df(0f, 0f)
+        private val zeroVelocity = Point2Df(0f, 0f)
         private val dT = 0.015f
 
     }
 
-    private var velocity = Point2Df(initialVelocity)
-    var isInsideHole = false
+    private var velocity = Point2Df(zeroVelocity)
 
     /*
      * Position cannot be outside display, when touching an edge change velocity to 0.
@@ -98,14 +98,18 @@ class Ball(context: Context) : View(context) {
         posX = initialPosition.x
         posY = initialPosition.y
 
-        velocity.setTo(initialVelocity)
-
-        isInsideHole = false
+        stop()
     }
 
-    fun checkInside(hole: Hole): Boolean {
-        return (Math.abs(posX - hole.middle().x) <= holeRadius
-                && Math.abs(posY - hole.middle().y) <= holeRadius)
+    fun checkInside(hole: Hole): Boolean = hole.middle().distance(posX, posY) <= holeRadius
+
+    fun checkTouching(hole: Hole): Boolean = hole.middle().distance(posX, posY) <= holeSize
+
+    private fun stop() = velocity.setTo(zeroVelocity)
+
+    fun reverseVelocity() {
+        velocity.x *= -1
+        velocity.y *= -1
     }
 
     override fun toString(): String = "Ball [$posX, $posY]"

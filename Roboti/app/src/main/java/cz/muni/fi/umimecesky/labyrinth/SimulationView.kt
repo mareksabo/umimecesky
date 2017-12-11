@@ -8,13 +8,16 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.util.Log
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.Surface
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 import android.widget.TextView
+import android.widget.Toast
 import cz.muni.fi.umimecesky.db.WordDbHelper
 import cz.muni.fi.umimecesky.labyrinth.Constant.ballRadius
 import cz.muni.fi.umimecesky.labyrinth.Constant.ballSize
@@ -29,6 +32,7 @@ import cz.muni.fi.umimecesky.labyrinth.hole.HoleView
 import cz.muni.fi.umimecesky.labyrinth.hole.IncorrectHole
 import cz.muni.fi.umimecesky.pojo.FillWord
 import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * @author Marek Sabo
@@ -54,6 +58,7 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
     private lateinit var incorrectHoleView: HoleView
 
     private val wordDbHelper = WordDbHelper(context)
+    private var canRoll = AtomicBoolean(false)
 
     private fun createHoles(amount: Int): List<Hole> {
         val circles = ArrayList<Circle>(amount + 3)
@@ -92,6 +97,9 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
         setupView()
         val lt = LayoutTransition()
         layoutTransition = lt
+        val toast = Toast.makeText(context, "Spusti dotykem", Toast.LENGTH_LONG)
+        toast.setGravity(Gravity.CENTER, 0, 0)
+        toast.show()
     }
 
     private fun setupView() {
@@ -111,6 +119,13 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
         addView(ball, ViewGroup.LayoutParams(ballSize, ballSize))
     }
 
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        if (event?.action == MotionEvent.ACTION_DOWN) {
+            canRoll.set(true)
+            invalidate()
+        }
+        return super.onTouchEvent(event)
+    }
 
     private var randomWord: FillWord = wordDbHelper.randomFilledWord
 
@@ -118,15 +133,16 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
         do {
             randomWord = wordDbHelper.randomFilledWord
         } while (randomWord.variant1.length > 3 || randomWord.variant2.length > 3)
+        val (variant1, variant2) = randomWord.variants()
         // TODO: better fix long answers
         val pos = if (random.nextBoolean()) minHolePosition else maxHolePosition
         val pos2 = if (pos == minHolePosition) maxHolePosition else minHolePosition
         if (randomWord.correctVariant == 0) {
-            correctHole = CorrectHole(HoleCircle(pos), randomWord.variant1)
-            incorrectHole = IncorrectHole(HoleCircle(pos2), randomWord.variant2)
+            correctHole = CorrectHole(HoleCircle(pos), variant1)
+            incorrectHole = IncorrectHole(HoleCircle(pos2), variant2)
         } else {
-            correctHole = CorrectHole(HoleCircle(pos), randomWord.variant2)
-            incorrectHole = IncorrectHole(HoleCircle(pos2), randomWord.variant1)
+            correctHole = CorrectHole(HoleCircle(pos), variant2)
+            incorrectHole = IncorrectHole(HoleCircle(pos2), variant1)
         }
     }
 
@@ -168,36 +184,41 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
     }
 
     override fun onDraw(canvas: Canvas) {
-        if (ball.isInsideHole) return
+        Log.i("canRoll", canRoll.get().toString())
+        if (!canRoll.get()) return
+
+        if (ball.checkTouching(incorrectHole)) {
+            ball.reverseVelocity()
+            incorrectHoleView.textInside.setTextColor(Color.RED)
+        } else if (ball.checkInside(correctHole)) {
+            runFallingBallAnimation(correctHole, false)
+            this.removeAllViews()
+            setupView()
+        }
 
         ball.computeMove(sensor.x, sensor.y)
 
         for (hole in holes) {
             if (ball.checkInside(hole)) {
-                runFallingBallAnimation(hole)
+                runFallingBallAnimation(hole, true)
             }
-        }
-
-        if (ball.checkInside(incorrectHole)) {
-            incorrectHoleView.textInside.setTextColor(Color.RED)
-        } else if (ball.checkInside(correctHole)) {
-            runFallingBallAnimation(correctHole)
-            this.removeAllViews()
-            setupView()
         }
 
         invalidate()
     }
 
-    private fun runFallingBallAnimation(hole: Hole) {
-        ball.isInsideHole = true
+    private fun runFallingBallAnimation(hole: Hole, enableRolling: Boolean) {
+        canRoll.set(false)
         val animator = ball.animate()
         animator.translationX(hole.middle().x + holeRadius - ballRadius)
                 .translationY(hole.middle().y + holeRadius - ballRadius)
                 .scaleX(0.5f)
                 .scaleY(0.5f)
                 .alpha(0f)
-                .withEndAction { ball.recreateBall() }
+                .withEndAction {
+                    ball.recreateBall()
+                    if (enableRolling) canRoll.set(true)
+                }
         animator.duration = 800L
         animator.interpolator = interpolator
         animator.start()
