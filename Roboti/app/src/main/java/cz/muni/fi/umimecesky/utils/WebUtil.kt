@@ -4,7 +4,6 @@ import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import cz.muni.fi.umimecesky.pojo.RaceConcept
-import cz.muni.fi.umimecesky.utils.Conversion.conceptToNames
 import java.util.*
 
 /**
@@ -31,8 +30,10 @@ object WebUtil {
         if (jsonConcept != null) {
             concepts = Gson().fromJson<List<RaceConcept>>(jsonConcept, object : TypeToken<List<RaceConcept>>() {
             }.type) as MutableList<RaceConcept>
-            if (concepts.size != initWebConcepts().size) {
-                concepts = addMissingConcepts(concepts)
+            // TODO: refactor
+            if (concepts.any { it.name == null }) {
+                concepts = initWebConcepts()
+                setWebConcepts(context, concepts)
             }
         } else {
             concepts = initWebConcepts()
@@ -41,20 +42,6 @@ object WebUtil {
         Collections.sort(concepts)
         return concepts
     }
-
-    private fun addMissingConcepts(oldConcepts: MutableList<RaceConcept>): MutableList<RaceConcept> {
-        val oldConceptNames = conceptToNames(oldConcepts)
-        initWebConcepts().filterNotTo(oldConcepts) { oldConceptNames.contains(it.name) }
-
-        for (raceConcept in oldConcepts) {
-            if (raceConcept.name == "Velká písmena") {
-                oldConcepts.remove(raceConcept)
-                break
-            }
-        }
-        return oldConcepts
-    }
-
 
     fun updateConcept(context: Context, concept: RaceConcept) {
         val list = getWebConcepts(context)
