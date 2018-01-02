@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
+import com.google.firebase.analytics.FirebaseAnalytics
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.adapterlistener.LevelAdapter
 import cz.muni.fi.umimecesky.utils.Constant
@@ -15,9 +16,13 @@ import kotlinx.android.synthetic.main.activity_race_levels.levelListView
 
 class LevelRaceActivity : AppCompatActivity() {
 
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_race_levels)
+
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this)
     }
 
     override fun onStart() {
@@ -29,6 +34,13 @@ class LevelRaceActivity : AppCompatActivity() {
 
         levelListView.adapter =
                 LevelAdapter(getWebConcepts(this), { raceConcept ->
+
+                    val bundle = Bundle()
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, raceConcept.name)
+                    bundle.putString(FirebaseAnalytics.Param.VALUE, raceConcept.getCurrentLevel().toString())
+                    bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, raceConcept.toString())
+                    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
+
                     val intent = Intent(this@LevelRaceActivity, RaceActivity::class.java)
                     intent.putExtra(Constant.RACE_CONCEPT_EXTRA, raceConcept)
                     startActivity(intent)

@@ -58,20 +58,20 @@
         android:textAllCaps="false"
         android:textSize="32sp"/>
 
-    <Button
-        android:id="@+id/holeButton"
-        android:layout_weight="15"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:background="@drawable/button"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:paddingLeft="@dimen/main_buttons_padding"
-        android:paddingStart="@dimen/main_buttons_padding"
-        android:paddingRight="@dimen/main_buttons_padding"
-        android:paddingEnd="@dimen/main_buttons_padding"
-        android:text="@string/hole_button_name"
-        android:textAllCaps="false"
-        android:textSize="32sp"/>
+    <!--<Button-->
+        <!--android:id="@+id/holeButton"-->
+        <!--android:layout_weight="15"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@drawable/button"-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--android:layout_marginBottom="20dp"-->
+        <!--android:paddingLeft="@dimen/main_buttons_padding"-->
+        <!--android:paddingStart="@dimen/main_buttons_padding"-->
+        <!--android:paddingRight="@dimen/main_buttons_padding"-->
+        <!--android:paddingEnd="@dimen/main_buttons_padding"-->
+        <!--android:text="@string/hole_button_name"-->
+        <!--android:textAllCaps="false"-->
+        <!--android:textSize="32sp"/>-->
 
 </LinearLayout>
