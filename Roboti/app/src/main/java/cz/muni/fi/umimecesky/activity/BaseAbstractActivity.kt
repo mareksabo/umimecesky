@@ -1,6 +1,5 @@
 package cz.muni.fi.umimecesky.activity
 
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.support.v7.app.AppCompatActivity
@@ -13,7 +12,6 @@ import cz.muni.fi.umimecesky.utils.Constant.DEFAULT_COLOR
 import cz.muni.fi.umimecesky.utils.Constant.STROKE_WIDTH
 import cz.muni.fi.umimecesky.utils.Constant.WRONG_COLOR
 import cz.muni.fi.umimecesky.utils.GuiUtil
-import cz.muni.fi.umimecesky.utils.Util
 
 /**
  * Activity containing major properties needed to show words with word puzzles and its answers.
@@ -29,8 +27,6 @@ abstract class BaseAbstractActivity : AppCompatActivity() {
     lateinit var categoryText: TextView
 
     lateinit var checkedCategories: List<Category>
-    lateinit var sharedPref: SharedPreferences
-        private set
 
     private lateinit var wordText: TextView
     lateinit var variant1: Button
@@ -54,7 +50,6 @@ abstract class BaseAbstractActivity : AppCompatActivity() {
         variant1 = uiViewHelper.variant1
         variant2 = uiViewHelper.variant2
 
-        sharedPref = Util.getSharedPreferences(this)
         initButtonClickListeners()
     }
 

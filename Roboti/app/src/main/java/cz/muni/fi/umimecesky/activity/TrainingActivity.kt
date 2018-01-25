@@ -5,13 +5,12 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
-import com.google.gson.Gson
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.db.helper.joinCategoryWordOpenHelper
 import cz.muni.fi.umimecesky.db.helper.wordOpenHelper
 import cz.muni.fi.umimecesky.pojo.Category
 import cz.muni.fi.umimecesky.pojo.FillWord
-import cz.muni.fi.umimecesky.utils.Constant.LAST_FILLED_WORD
+import cz.muni.fi.umimecesky.prefs
 import cz.muni.fi.umimecesky.utils.Constant.TICKED_CATEGORIES_EXTRA
 import cz.muni.fi.umimecesky.utils.Constant.TRAINING_NEW_WORD_DELAY_MS
 import cz.muni.fi.umimecesky.utils.TrainingProgressBar
@@ -96,8 +95,7 @@ class TrainingActivity : BaseAbstractActivity() {
     }
 
     private fun setLastUsedWord() {
-        val json = sharedPref.getString(LAST_FILLED_WORD, null)
-        val lastWord = Gson().fromJson<FillWord>(json, FillWord::class.java)
+        val lastWord = prefs.lastShownWord
 
         if (lastWord != null) {
             setWord(lastWord)
@@ -131,8 +129,7 @@ class TrainingActivity : BaseAbstractActivity() {
 
     override fun onPause() {
         super.onPause()
-        val json = Gson().toJson(currentWord)
-        sharedPref.edit().putString(LAST_FILLED_WORD, json).apply()
+        prefs.lastShownWord = currentWord
     }
 
 }

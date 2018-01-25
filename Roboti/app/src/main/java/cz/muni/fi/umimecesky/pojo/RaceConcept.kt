@@ -1,6 +1,5 @@
 package cz.muni.fi.umimecesky.pojo
 
-import android.content.Context
 import cz.muni.fi.umimecesky.utils.WebUtil
 import java.io.Serializable
 
@@ -25,14 +24,13 @@ class RaceConcept(val name: String, val categoryIDs: List<Int>, val numberOfLeve
 
     /**
      * Increases the current level.
-     * @param context current activity
-     * *
+     *
      * @return true if level was increased
      */
-    fun increaseLevel(context: Context): Boolean {
+    fun increaseLevel(): Boolean {
         val oldLevel = currentLevel
         setCurrentLevel(currentLevel + 1)
-        WebUtil.updateConcept(context, this)
+        WebUtil.updateConcept(this)
         return oldLevel != currentLevel
     }
 

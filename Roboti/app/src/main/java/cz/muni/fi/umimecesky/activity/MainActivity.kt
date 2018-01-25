@@ -4,7 +4,6 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.db.DbContract.CATEGORY_TABLE_NAME
 import cz.muni.fi.umimecesky.db.DbContract.CategoryColumn.CATEGORY_ID
@@ -29,9 +28,7 @@ import cz.muni.fi.umimecesky.db.helper.wordOpenHelper
 import cz.muni.fi.umimecesky.pojo.Category
 import cz.muni.fi.umimecesky.pojo.FillWord
 import cz.muni.fi.umimecesky.prefs
-import cz.muni.fi.umimecesky.utils.Constant.IS_FILLED
 import cz.muni.fi.umimecesky.utils.GuiUtil
-import cz.muni.fi.umimecesky.utils.Util
 import kotlinx.android.synthetic.main.activity_main.raceButton
 import kotlinx.android.synthetic.main.activity_main.trainingButton
 import org.jetbrains.anko.db.insert
@@ -51,11 +48,7 @@ class MainActivity : AppCompatActivity() {
 
         setupButtons()
 
-        val needUpgrade: Boolean = categoryOpenHelper.readableDatabase.needUpgrade(DATABASE_VERSION)
-        Log.i("needUpgrade", "${categoryOpenHelper.readableDatabase.version}")
-        if (!prefs.isImported || needUpgrade) {
-            importDataAsynchronously()
-        }
+        if (!prefs.isImported) importDataAsynchronously()
     }
 
     private fun importDataAsynchronously() {
@@ -70,14 +63,12 @@ class MainActivity : AppCompatActivity() {
             importCategories()
             importWords()
             importConversions()
+            prefs.isImported = true
 
             runOnUiThread( { dialog.cancel() } )
 
             Category(1, "aa")
             FillWord(1, "", "", "", "", 0, "", 1, true)
-
-            val sharedPref = Util.getSharedPreferences(this@MainActivity)
-            sharedPref.edit().putBoolean(IS_FILLED, true).apply()
         }
     }
 

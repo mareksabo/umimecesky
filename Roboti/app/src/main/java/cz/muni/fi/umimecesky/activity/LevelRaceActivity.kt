@@ -33,7 +33,7 @@ class LevelRaceActivity : AppCompatActivity() {
         levelListView.itemAnimator = DefaultItemAnimator()
 
         levelListView.adapter =
-                LevelAdapter(getWebConcepts(this), { raceConcept ->
+                LevelAdapter(getWebConcepts(), { raceConcept ->
 
                     val bundle = Bundle()
                     bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, raceConcept.name)

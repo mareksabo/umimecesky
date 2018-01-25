@@ -8,6 +8,7 @@ import android.view.animation.DecelerateInterpolator
 import cn.refactor.lib.colordialog.PromptDialog
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
 import cz.muni.fi.umimecesky.R
+import cz.muni.fi.umimecesky.prefs
 
 class TrainingProgressBar(private val activity: Activity, private val progressBar: RoundCornerProgressBar) {
 
@@ -19,14 +20,14 @@ class TrainingProgressBar(private val activity: Activity, private val progressBa
 
     init {
 
-        val seriesLengthString = Util.getSharedPreferences(activity).getString(Constant.LAST_SPINNER_VALUE, Constant.INFINITY)
-        if (Constant.INFINITY == seriesLengthString) {
+        val seriesAmountString = prefs.seriesAmount
+        if (Constant.INFINITY == seriesAmountString) {
             isInfinite = true
             progressBar.visibility = View.GONE
         } else {
             isInfinite = false
             progressBar.visibility = View.VISIBLE
-            seriesLength = seriesLengthString.toInt()
+            seriesLength = seriesAmountString.toInt()
             updateProgressBar()
         }
     }

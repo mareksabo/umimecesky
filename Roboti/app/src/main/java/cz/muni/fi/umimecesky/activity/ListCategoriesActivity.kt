@@ -9,13 +9,10 @@ import com.jaredrummler.materialspinner.MaterialSpinner
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.adapterlistener.CategoryAdapter
 import cz.muni.fi.umimecesky.db.helper.categoryOpenHelper
+import cz.muni.fi.umimecesky.prefs
 import cz.muni.fi.umimecesky.utils.Constant
-import cz.muni.fi.umimecesky.utils.Constant.CHECKED_STATES
-import cz.muni.fi.umimecesky.utils.Constant.LAST_FILLED_WORD
-import cz.muni.fi.umimecesky.utils.Constant.LAST_SPINNER_VALUE
 import cz.muni.fi.umimecesky.utils.Constant.TICKED_CATEGORIES_EXTRA
 import cz.muni.fi.umimecesky.utils.GuiUtil
-import cz.muni.fi.umimecesky.utils.Util
 import kotlinx.android.synthetic.main.activity_list_categories.backButton
 import kotlinx.android.synthetic.main.activity_list_categories.listView
 import kotlinx.android.synthetic.main.activity_list_categories.nextButton
@@ -41,18 +38,14 @@ class ListCategoriesActivity : AppCompatActivity() {
 
     private fun setSpinner() {
         val spinnerValues = Constant.ROUND_POSSIBILITIES
-        val lastValue = Util.getSharedPreferences(this)
-                .getString(LAST_SPINNER_VALUE, Constant.INFINITY)
 
         roundsSpinner.setItems(spinnerValues)
-        roundsSpinner.selectedIndex = spinnerValues.indexOf(lastValue)
+        roundsSpinner.selectedIndex = spinnerValues.indexOf(prefs.seriesAmount)
         roundsSpinner.setOnItemSelectedListener(createSpinnerListener())
     }
 
-    private fun createSpinnerListener(): MaterialSpinner.OnItemSelectedListener<String> {
-        val activity = this@ListCategoriesActivity
-        return MaterialSpinner.OnItemSelectedListener { _, _, _, item -> Util.getSharedPreferences(activity).edit().putString(LAST_SPINNER_VALUE, item).apply() }
-    }
+    private fun createSpinnerListener(): MaterialSpinner.OnItemSelectedListener<String> =
+            MaterialSpinner.OnItemSelectedListener { _, _, _, item -> prefs.seriesAmount = item }
 
     private fun displayListView() {
         val allCategories = categoryOpenHelper.allCategories()
@@ -74,8 +67,7 @@ class ListCategoriesActivity : AppCompatActivity() {
             val intent = Intent(baseContext, TrainingActivity::class.java)
             intent.putExtra(TICKED_CATEGORIES_EXTRA, selectedCategories as Serializable)
 
-            val sharedPref = Util.getSharedPreferences(baseContext)
-            sharedPref.edit().putString(LAST_FILLED_WORD, null).apply()
+            prefs.lastShownWord = null
             startActivity(intent)
         })
 
@@ -92,13 +84,13 @@ class ListCategoriesActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        Util.saveArray(this, dataAdapter!!.getCheckedStates(), CHECKED_STATES)
+        prefs.checkedStates = dataAdapter!!.getCheckedStates()
     }
 
     override fun onResume() {
         super.onResume()
-        val statesArray = Util.loadArray(this, CHECKED_STATES)
-        if (statesArray.isNotEmpty()) dataAdapter!!.setCheckedStates(statesArray)
+        val statesArray = prefs.checkedStates
+        if (statesArray.size > 1) dataAdapter!!.setCheckedStates(statesArray)
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {

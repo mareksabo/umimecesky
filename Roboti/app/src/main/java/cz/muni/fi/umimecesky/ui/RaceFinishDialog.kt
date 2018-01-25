@@ -21,7 +21,7 @@ class RaceFinishDialog(private val raceActivity: RaceActivity, private val conce
 
     fun showWinningDialog() {
 
-        val hasIncreased = concept.increaseLevel(raceActivity)
+        val hasIncreased = concept.increaseLevel()
         val dialogText = createDialogText(hasIncreased)
 
         val promptDialog = PromptDialog(raceActivity)
