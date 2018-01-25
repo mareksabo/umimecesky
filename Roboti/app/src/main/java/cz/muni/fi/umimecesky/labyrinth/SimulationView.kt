@@ -18,7 +18,7 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
-import cz.muni.fi.umimecesky.db.WordDbHelper
+import cz.muni.fi.umimecesky.db.helper.wordOpenHelper
 import cz.muni.fi.umimecesky.labyrinth.Constant.ballRadius
 import cz.muni.fi.umimecesky.labyrinth.Constant.ballSize
 import cz.muni.fi.umimecesky.labyrinth.Constant.holeRadius
@@ -57,7 +57,6 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
     private lateinit var holes: List<Hole>
     private lateinit var incorrectHoleView: HoleView
 
-    private val wordDbHelper = WordDbHelper(context)
     private var canRoll = AtomicBoolean(false)
 
     private fun createHoles(amount: Int): List<Hole> {
@@ -127,11 +126,11 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
         return super.onTouchEvent(event)
     }
 
-    private var randomWord: FillWord = wordDbHelper.randomFilledWord
+    private var randomWord: FillWord = context.wordOpenHelper.getRandomWord()
 
     private fun setNewRandomWord() {
         do {
-            randomWord = wordDbHelper.randomFilledWord
+            randomWord = context.wordOpenHelper.getRandomWord()
         } while (randomWord.variant1.length > 3 || randomWord.variant2.length > 3)
         val (variant1, variant2) = randomWord.variants()
         // TODO: better fix long answers

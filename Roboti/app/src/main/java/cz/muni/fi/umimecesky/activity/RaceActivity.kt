@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import cz.muni.fi.umimecesky.R
+import cz.muni.fi.umimecesky.db.helper.joinCategoryWordOpenHelper
 import cz.muni.fi.umimecesky.logic.MoveLogic
 import cz.muni.fi.umimecesky.pojo.RaceConcept
 import cz.muni.fi.umimecesky.pojo.RobotImages
@@ -77,7 +78,7 @@ class RaceActivity : BaseAbstractActivity() {
     }
 
     private fun setNewRandomWord() {
-        val word = wordCategoryHelper.getRandomCategoryWord(concept.categoryIDs)
+        val word = joinCategoryWordOpenHelper.getRandomCategoryWord(concept)
         Log.d("random word", word.toString())
         setWord(word)
     }

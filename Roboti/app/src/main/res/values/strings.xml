@@ -16,7 +16,7 @@
 
     <string name="congratulations">Gratuluji!</string>
     <string name="series_finished">Série je u konce</string>
-    <string name="success_rate">Tvá úspešnost je</string>
+    <string name="success_rate">Tvá úspěšnost je</string>
     <string name="great_job">Skvělá práce!</string>
     <string name="its_ok">Ješte to ujde.</string>
     <string name="you_need_to_improve">Máš co zlepšovat.</string>
@@ -29,5 +29,6 @@
     <string name="theme">Téma</string>
     <string name="current_level">Dosažený level</string>
     <string name="choose_at_least_one_category">Zvol alespoň jednu kategorii</string>
+    <string name="loading_data">Nahrávám data, hned to bude.</string>
 
 </resources>

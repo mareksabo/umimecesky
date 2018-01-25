@@ -1,11 +1,8 @@
 package cz.muni.fi.umimecesky.utils
 
 import android.database.Cursor
-import cz.muni.fi.umimecesky.pojo.Category
 import cz.muni.fi.umimecesky.pojo.FillWord
 import cz.muni.fi.umimecesky.pojo.FillWordBuilder
-import cz.muni.fi.umimecesky.pojo.RaceConcept
-import java.util.*
 
 /**
  * Class representing static conversion methods.
@@ -46,8 +43,4 @@ object Conversion {
                 .createFillWord()
     }
 
-    fun convertCategoriesToIDs(categories: List<Category>): List<Int> = categories.map { it.id }
-
-    fun conceptToNames(conceptList: List<RaceConcept>): List<String> =
-            conceptList.mapTo(ArrayList()) { it.name }
 }

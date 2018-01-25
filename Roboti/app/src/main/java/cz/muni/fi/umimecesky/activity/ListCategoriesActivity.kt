@@ -5,11 +5,10 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import com.jaredrummler.materialspinner.MaterialSpinner
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.adapterlistener.CategoryAdapter
-import cz.muni.fi.umimecesky.db.CategoryDbHelper
+import cz.muni.fi.umimecesky.db.helper.categoryOpenHelper
 import cz.muni.fi.umimecesky.utils.Constant
 import cz.muni.fi.umimecesky.utils.Constant.CHECKED_STATES
 import cz.muni.fi.umimecesky.utils.Constant.LAST_FILLED_WORD
@@ -22,19 +21,18 @@ import kotlinx.android.synthetic.main.activity_list_categories.listView
 import kotlinx.android.synthetic.main.activity_list_categories.nextButton
 import kotlinx.android.synthetic.main.activity_list_categories.roundsSpinner
 import kotlinx.android.synthetic.main.activity_list_categories.tickAll
+import org.jetbrains.anko.longToast
 import java.io.Serializable
 
 
 class ListCategoriesActivity : AppCompatActivity() {
 
-    private var categoryHelper: CategoryDbHelper? = null
     private var dataAdapter: CategoryAdapter? = null
 
-        override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list_categories)
 
-        categoryHelper = CategoryDbHelper(this)
 
         setSpinner()
         displayListView()
@@ -57,9 +55,9 @@ class ListCategoriesActivity : AppCompatActivity() {
     }
 
     private fun displayListView() {
-        val categories = categoryHelper!!.allCategories
+        val allCategories = categoryOpenHelper.allCategories()
 
-        dataAdapter = CategoryAdapter(this, this, R.layout.category_info, categories, tickAll)
+        dataAdapter = CategoryAdapter(this, this, R.layout.category_info, allCategories, tickAll)
         listView.adapter = dataAdapter
     }
 
@@ -69,8 +67,7 @@ class ListCategoriesActivity : AppCompatActivity() {
         nextButton.setOnClickListener(View.OnClickListener {
             val selectedCategories = dataAdapter!!.selectedCategories
             if (selectedCategories.isEmpty()) {
-                Toast.makeText(this@ListCategoriesActivity, R.string.choose_at_least_one_category,
-                        Toast.LENGTH_LONG).show()
+                longToast(R.string.choose_at_least_one_category)
                 return@OnClickListener
             }
 

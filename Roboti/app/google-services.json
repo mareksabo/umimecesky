@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "762763120919",
+    "firebase_url": "https://umimecesky.firebaseio.com",
+    "project_id": "umimecesky",
+    "storage_bucket": "umimecesky.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:762763120919:android:46d5270a76ea6720",
+        "android_client_info": {
+          "package_name": "cz.muni.fi.umimecesky"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "762763120919-8vlta70p5nf4nd9qvp59ar4uhrev3s85.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cz.muni.fi.umimecesky",
+            "certificate_hash": "c597e93dc685c55223b308f4892ead85879053b9"
+          }
+        },
+        {
+          "client_id": "762763120919-8tk3rl9chssbunhf5h4i1cd20sdsrlf3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3SelPaKKZ5LPz-M47VnKml2_1DfpRWfQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "762763120919-8tk3rl9chssbunhf5h4i1cd20sdsrlf3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

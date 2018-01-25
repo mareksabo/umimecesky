@@ -6,9 +6,6 @@ import android.graphics.drawable.GradientDrawable
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.TextView
-import cz.muni.fi.umimecesky.db.CategoryDbHelper
-import cz.muni.fi.umimecesky.db.WordCategoryDbHelper
-import cz.muni.fi.umimecesky.db.WordDbHelper
 import cz.muni.fi.umimecesky.pojo.Category
 import cz.muni.fi.umimecesky.pojo.FillWord
 import cz.muni.fi.umimecesky.utils.Constant.CORRECT_COLOR
@@ -25,14 +22,6 @@ import cz.muni.fi.umimecesky.utils.Util
  * Method [.init] must be called in [.onCreate].
  */
 abstract class BaseAbstractActivity : AppCompatActivity() {
-
-
-    lateinit var wordHelper: WordDbHelper
-        private set
-    lateinit var wordCategoryHelper: WordCategoryDbHelper
-        private set
-    lateinit var categoryHelper: CategoryDbHelper
-        private set
 
     lateinit var currentWord: FillWord
         private set
@@ -65,15 +54,8 @@ abstract class BaseAbstractActivity : AppCompatActivity() {
         variant1 = uiViewHelper.variant1
         variant2 = uiViewHelper.variant2
 
-        setHelpers()
-        initButtonClickListeners()
-    }
-
-    private fun setHelpers() {
-        wordHelper = WordDbHelper(this)
-        wordCategoryHelper = WordCategoryDbHelper(this)
-        categoryHelper = CategoryDbHelper(this)
         sharedPref = Util.getSharedPreferences(this)
+        initButtonClickListeners()
     }
 
     private fun initButtonClickListeners() {

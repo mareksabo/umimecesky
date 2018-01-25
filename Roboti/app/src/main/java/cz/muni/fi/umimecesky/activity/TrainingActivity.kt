@@ -7,12 +7,13 @@ import android.view.View
 import android.widget.Button
 import com.google.gson.Gson
 import cz.muni.fi.umimecesky.R
+import cz.muni.fi.umimecesky.db.helper.joinCategoryWordOpenHelper
+import cz.muni.fi.umimecesky.db.helper.wordOpenHelper
 import cz.muni.fi.umimecesky.pojo.Category
 import cz.muni.fi.umimecesky.pojo.FillWord
 import cz.muni.fi.umimecesky.utils.Constant.LAST_FILLED_WORD
 import cz.muni.fi.umimecesky.utils.Constant.TICKED_CATEGORIES_EXTRA
 import cz.muni.fi.umimecesky.utils.Constant.TRAINING_NEW_WORD_DELAY_MS
-import cz.muni.fi.umimecesky.utils.Conversion
 import cz.muni.fi.umimecesky.utils.TrainingProgressBar
 import kotlinx.android.synthetic.main.activity_training.explanationText
 import kotlinx.android.synthetic.main.activity_training.firstButton
@@ -22,7 +23,7 @@ import kotlinx.android.synthetic.main.activity_training.word
 
 class TrainingActivity : BaseAbstractActivity() {
 
-    lateinit var trainingProgressBar: TrainingProgressBar
+    private lateinit var trainingProgressBar: TrainingProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,10 +109,9 @@ class TrainingActivity : BaseAbstractActivity() {
     private fun setNewRandomWord() {
         val word: FillWord
         if (checkedCategories.isEmpty()) {
-            word = wordHelper.randomFilledWord
+            word = wordOpenHelper.getRandomWord()
         } else {
-            val categoryIDs = Conversion.convertCategoriesToIDs(checkedCategories)
-            word = wordCategoryHelper.getRandomCategoryWord(categoryIDs)
+            word = joinCategoryWordOpenHelper.getRandomCategoryWord(checkedCategories)
         }
         Log.v("random word", word.toString())
         setWord(word)
@@ -126,9 +126,7 @@ class TrainingActivity : BaseAbstractActivity() {
     }
 
     private fun setCategoryName() {
-        val categoryId = wordCategoryHelper.getCategoryId(currentWord.id)
-        val category = categoryHelper.findCategory(categoryId!!.toLong())
-        categoryText.text = category?.name
+        categoryText.text = joinCategoryWordOpenHelper.getCategory(currentWord).name
     }
 
     override fun onPause() {
