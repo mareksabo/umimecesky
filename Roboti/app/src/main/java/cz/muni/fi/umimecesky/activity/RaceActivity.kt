@@ -32,7 +32,7 @@ class RaceActivity : BaseAbstractActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_race)
-        initUi()
+        super.initUI(word, firstButton, secondButton)
 
         concept = intent.extras.getSerializable(Constant.RACE_CONCEPT_EXTRA) as RaceConcept
 
@@ -40,12 +40,6 @@ class RaceActivity : BaseAbstractActivity() {
         setupRobotViews(usersRobotView)
 
         setNewRandomWord()
-    }
-
-    private fun initUi() {
-        val viewHelper = UiViewHelper(word, firstButton, secondButton)
-
-        super.init(viewHelper)
     }
 
     private fun createRaceTrack(usersRobotView: ImageView) {
@@ -82,10 +76,8 @@ class RaceActivity : BaseAbstractActivity() {
     override fun chosenCorrect(button: Button) {
         setCorrect(button)
         setButtonsDisabled()
-        val shouldContinue = moveLogic.applyCorrect()
-        if (shouldContinue) {
-            delayNewWord(button)
-        }
+        moveLogic.applyCorrect()
+        delayNewWord(button)
     }
 
     private fun delayNewWord(button: Button) {

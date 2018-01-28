@@ -1,7 +1,6 @@
 package cz.muni.fi.umimecesky.activity
 
 import android.app.ProgressDialog
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import cz.muni.fi.umimecesky.R
@@ -33,6 +32,7 @@ import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.transaction
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.indeterminateProgressDialog
+import org.jetbrains.anko.startActivity
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -158,32 +158,10 @@ class MainActivity : AppCompatActivity() {
         return buffer
     }
 
-
     private fun setupButtons() {
-        setupTrainingButton()
-        setupRaceButton()
-//        setupHoleButton()
+        trainingButton.setOnClickListener { startActivity<ListCategoriesActivity>() }
+        raceButton.setOnClickListener { startActivity<LevelRaceActivity>() }
+//        holeButton.setOnClickListener { startActivity<LabyrinthActivity>() }
     }
-
-    private fun setupTrainingButton() {
-        trainingButton.setOnClickListener {
-            val intent = Intent(this@MainActivity, ListCategoriesActivity::class.java)
-            startActivity(intent)
-        }
-    }
-
-    private fun setupRaceButton() {
-        raceButton.setOnClickListener {
-            val intent = Intent(this@MainActivity, LevelRaceActivity::class.java)
-            startActivity(intent)
-        }
-    }
-//    private fun setupHoleButton() {
-//        holeButton.setOnClickListener {
-//            val intent = Intent(this@MainActivity, LabyrinthActivity::class.java)
-//            startActivity(intent)
-//        }
-//
-//    }
 
 }

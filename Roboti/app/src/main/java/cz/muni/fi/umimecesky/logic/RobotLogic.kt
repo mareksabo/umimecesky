@@ -19,4 +19,12 @@ interface RobotLogic {
      * @return positive number, usually 1 or 2
      */
     fun hopsPerCorrect(): Int
+
+    companion object {
+        fun probabilityTrue(probabilityToReturnTrue: Double): Boolean =
+                Math.random() >= 1.0 - probabilityToReturnTrue
+
+        fun roundBy2places(numberToRound: Double): Double =
+                Math.round(numberToRound * 100).toDouble() / 100
+    }
 }

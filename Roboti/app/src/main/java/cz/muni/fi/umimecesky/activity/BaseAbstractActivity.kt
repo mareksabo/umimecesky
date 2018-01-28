@@ -17,14 +17,12 @@ import cz.muni.fi.umimecesky.utils.GuiUtil
  * Activity containing major properties needed to show words with word puzzles and its answers.
  *
  *
- * Method [.init] must be called in [.onCreate].
+ * Method [.initUI] must be called in [.onCreate].
  */
 abstract class BaseAbstractActivity : AppCompatActivity() {
 
     lateinit var currentWord: FillWord
         private set
-
-    lateinit var categoryText: TextView
 
     lateinit var checkedCategories: List<Category>
 
@@ -44,11 +42,11 @@ abstract class BaseAbstractActivity : AppCompatActivity() {
      */
     protected abstract fun chosenCorrect(button: Button)
 
-    protected fun init(uiViewHelper: UiViewHelper) {
+    protected fun initUI(wordText: TextView, variant1: Button, variant2: Button) {
 
-        wordText = uiViewHelper.wordText
-        variant1 = uiViewHelper.variant1
-        variant2 = uiViewHelper.variant2
+        this.wordText = wordText
+        this.variant1 = variant1
+        this.variant2 = variant2
 
         initButtonClickListeners()
     }

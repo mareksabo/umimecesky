@@ -1,7 +1,6 @@
 package cz.muni.fi.umimecesky.utils
 
 import android.content.res.Resources
-import android.util.DisplayMetrics
 import android.view.View
 import android.widget.ImageView
 
@@ -10,40 +9,21 @@ import android.widget.ImageView
  */
 class CalculateDp(private val robot: ImageView, val winMovesCount: Int) {
 
-    fun calculateRobotMovePx(): Float = CalculateDp.dpiToPixels(calculateRobotMoveDp())
-
-    private val metrics: DisplayMetrics = Resources.getSystem().displayMetrics
-
-    private fun calculateRobotMoveDp(): Float {
-        val dpAmountToWin = screenWidthDp - robotWidthDp
-        return dpAmountToWin / winMovesCount
-    }
+    fun calculateRobotMovePx(): Float = ((screenWidthDp - robotWidthDp) / winMovesCount).px
 
     fun setupFinishLine(finishLine: View) {
-        val lineDPThickness = 4
-        val finalLineDp = screenWidthDp - robotWidthDp - (lineDPThickness / 2).toFloat()
-        finishLine.x = CalculateDp.dpiToPixels(finalLineDp)
+        val finalLineDp = screenWidthDp - robotWidthDp - 2 // 2 is lineDPThickness
+        finishLine.x = finalLineDp.px
     }
 
     private val robotWidthDp: Float
-        get() = CalculateDp.pixelsToDpi(robot.layoutParams.width.toFloat())
+        get() = robot.layoutParams.width.toFloat().dp
 
     private val screenWidthDp: Float
-        get() {
-            val density = metrics.density
-            return metrics.widthPixels / density
-        }
-
-    companion object {
-
-        fun dpiToPixels(dpi: Float): Float {
-            val density = Resources.getSystem().displayMetrics.density
-            return dpi * density
-        }
-
-        fun pixelsToDpi(px: Float): Float {
-            val density = Resources.getSystem().displayMetrics.density
-            return px / density
-        }
-    }
+        get() = Resources.getSystem().displayMetrics.widthPixels.toFloat().dp
 }
+
+val Float.dp: Float
+    get() = this / Resources.getSystem().displayMetrics.density
+val Float.px: Float
+    get() = this * Resources.getSystem().displayMetrics.density

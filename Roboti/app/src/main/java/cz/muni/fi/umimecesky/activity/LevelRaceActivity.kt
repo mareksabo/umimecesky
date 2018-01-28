@@ -1,7 +1,6 @@
 package cz.muni.fi.umimecesky.activity
 
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
@@ -10,9 +9,10 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.adapterlistener.LevelAdapter
 import cz.muni.fi.umimecesky.prefs
-import cz.muni.fi.umimecesky.utils.Constant
+import cz.muni.fi.umimecesky.utils.Constant.RACE_CONCEPT_EXTRA
 import cz.muni.fi.umimecesky.utils.GuiUtil
 import kotlinx.android.synthetic.main.activity_race_levels.levelListView
+import org.jetbrains.anko.startActivity
 
 class LevelRaceActivity : AppCompatActivity() {
 
@@ -41,9 +41,7 @@ class LevelRaceActivity : AppCompatActivity() {
                     bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, raceConcept.toString())
                     firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
 
-                    val intent = Intent(this@LevelRaceActivity, RaceActivity::class.java)
-                    intent.putExtra(Constant.RACE_CONCEPT_EXTRA, raceConcept)
-                    startActivity(intent)
+                    startActivity<RaceActivity>(RACE_CONCEPT_EXTRA to raceConcept)
                 })
 
     }

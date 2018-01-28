@@ -11,9 +11,10 @@ import cz.muni.fi.umimecesky.db.helper.wordOpenHelper
 import cz.muni.fi.umimecesky.pojo.Category
 import cz.muni.fi.umimecesky.pojo.FillWord
 import cz.muni.fi.umimecesky.prefs
-import cz.muni.fi.umimecesky.utils.Constant.TICKED_CATEGORIES_EXTRA
+import cz.muni.fi.umimecesky.utils.Constant.TICKED_CATEGORIES
 import cz.muni.fi.umimecesky.utils.Constant.TRAINING_NEW_WORD_DELAY_MS
 import cz.muni.fi.umimecesky.utils.TrainingProgressBar
+import kotlinx.android.synthetic.main.activity_training.categoryText
 import kotlinx.android.synthetic.main.activity_training.explanationText
 import kotlinx.android.synthetic.main.activity_training.firstButton
 import kotlinx.android.synthetic.main.activity_training.secondButton
@@ -27,12 +28,10 @@ class TrainingActivity : BaseAbstractActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_training)
-        initUi()
+        super.initUI(word, firstButton, secondButton)
 
         @Suppress("UNCHECKED_CAST")
-        checkedCategories = intent.getSerializableExtra(TICKED_CATEGORIES_EXTRA) as List<Category>
-
-        categoryText = findViewById(R.id.categoryText)
+        checkedCategories = intent.getSerializableExtra(TICKED_CATEGORIES) as List<Category>
 
         setLastUsedWord()
 
@@ -56,12 +55,6 @@ class TrainingActivity : BaseAbstractActivity() {
         variant1.setOnTouchListener(touchListener)
         variant2.setOnTouchListener(touchListener)
 
-    }
-
-    private fun initUi() {
-        val viewHelper = UiViewHelper(word, firstButton, secondButton)
-
-        super.init(viewHelper)
     }
 
 

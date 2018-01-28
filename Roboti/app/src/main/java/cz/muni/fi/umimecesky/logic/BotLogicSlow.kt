@@ -1,9 +1,8 @@
 package cz.muni.fi.umimecesky.logic
 
 import android.util.Log
-
+import cz.muni.fi.umimecesky.logic.RobotLogic.Companion.roundBy2places
 import cz.muni.fi.umimecesky.pojo.RaceConcept
-import cz.muni.fi.umimecesky.utils.Util
 
 class BotLogicSlow(private val concept: RaceConcept) : RobotLogic {
 
@@ -16,7 +15,7 @@ class BotLogicSlow(private val concept: RaceConcept) : RobotLogic {
 
     override fun correctnessRatio(): Double {
         val addition = if (isBeforeHalf)
-            Util.roundBy2places(0.4 * concept.levelProgress())
+            roundBy2places(0.4 * concept.levelProgress())
         else
             0.1 * concept.levelProgress()
         return 0.75 + addition

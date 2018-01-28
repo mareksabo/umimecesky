@@ -121,7 +121,7 @@ class TrainingProgressBar(private val activity: Activity, private val progressBa
             (passedWords - incorrectAttempts) * 100 / passedWords
 
     companion object {
-        private val SECONDARY_PROGRESS_SHIFT = 0.05f
+        private const val SECONDARY_PROGRESS_SHIFT = 0.05f
     }
 
 }

@@ -9,7 +9,5 @@ class UsersRobot(view: ImageView) : AbstractRobot(view, 1) {
         lastWasCorrect = true
     }
 
-    override fun applyWrong() {
-        moveBackward()
-    }
+    override fun applyWrong() = moveBackward()
 }

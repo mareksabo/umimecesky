@@ -16,7 +16,7 @@ object Constant {
     val CORRECT_COLOR = Color.parseColor("#4C924C")
     const val WRONG_COLOR = Color.RED
 
-    const val TICKED_CATEGORIES_EXTRA = "ticked_categories"
+    const val TICKED_CATEGORIES = "ticked_categories"
     const val RACE_CONCEPT_EXTRA = "concept"
     const val SHARED_PREFS_FILE = "shared_prefs"
 

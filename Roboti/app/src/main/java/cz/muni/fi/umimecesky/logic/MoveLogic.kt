@@ -35,12 +35,11 @@ class MoveLogic(private val raceActivity: RaceActivity, robotImage: ImageView, b
         usersRobot.setRunnableBefore(actionWhenUserWins())
     }
 
-    private fun createBots(botViews: Array<ImageView>, concept: RaceConcept): Array<Bot> {
-        val bot1 = Bot(botViews[0], BotLogicQuick(concept))
-        val bot2 = Bot(botViews[1], BotLogicSlow(concept))
-        val bot3 = Bot(botViews[2], BotLogicQuick(concept))
-        return arrayOf(bot1, bot2, bot3)
-    }
+    private fun createBots(botViews: Array<ImageView>, concept: RaceConcept): Array<Bot> = arrayOf(
+            Bot(botViews[0], BotLogicQuick(concept)),
+            Bot(botViews[1], BotLogicSlow(concept)),
+            Bot(botViews[2], BotLogicQuick(concept))
+    )
 
     private fun setupBot(bot: Bot) {
         val logic = bot.logic
@@ -56,21 +55,17 @@ class MoveLogic(private val raceActivity: RaceActivity, robotImage: ImageView, b
         handlers.add(handler)
     }
 
-    private fun actionWhenUserWins(): Runnable {
-        return Runnable {
-            if (noWinnerYet.getAndSet(false)) {
-                stopBotsAndInput()
-                finishDialog.showWinningDialog()
-            }
+    private fun actionWhenUserWins(): Runnable = Runnable {
+        if (noWinnerYet.getAndSet(false)) {
+            stopBotsAndInput()
+            finishDialog.showWinningDialog()
         }
     }
 
-    private fun actionWhenUserLoses(): Runnable {
-        return Runnable {
-            if (noWinnerYet.getAndSet(false)) {
-                stopBotsAndInput()
-                finishDialog.showLosingDialog()
-            }
+    private fun actionWhenUserLoses(): Runnable = Runnable {
+        if (noWinnerYet.getAndSet(false)) {
+            stopBotsAndInput()
+            finishDialog.showLosingDialog()
         }
     }
 
@@ -81,13 +76,8 @@ class MoveLogic(private val raceActivity: RaceActivity, robotImage: ImageView, b
         raceActivity.disableButtons()
     }
 
-    fun applyIncorrect() {
-        usersRobot.applyWrong()
-    }
+    fun applyIncorrect() = usersRobot.applyWrong()
 
-    fun applyCorrect(): Boolean {
-        usersRobot.applyCorrect()
-        return true
-    }
+    fun applyCorrect() = usersRobot.applyCorrect()
 
 }

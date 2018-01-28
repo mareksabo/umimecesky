@@ -1,6 +1,5 @@
 package cz.muni.fi.umimecesky.activity
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -11,7 +10,7 @@ import cz.muni.fi.umimecesky.adapterlistener.CategoryAdapter
 import cz.muni.fi.umimecesky.db.helper.categoryOpenHelper
 import cz.muni.fi.umimecesky.prefs
 import cz.muni.fi.umimecesky.utils.Constant
-import cz.muni.fi.umimecesky.utils.Constant.TICKED_CATEGORIES_EXTRA
+import cz.muni.fi.umimecesky.utils.Constant.TICKED_CATEGORIES
 import cz.muni.fi.umimecesky.utils.GuiUtil
 import kotlinx.android.synthetic.main.activity_list_categories.backButton
 import kotlinx.android.synthetic.main.activity_list_categories.listView
@@ -19,7 +18,7 @@ import kotlinx.android.synthetic.main.activity_list_categories.nextButton
 import kotlinx.android.synthetic.main.activity_list_categories.roundsSpinner
 import kotlinx.android.synthetic.main.activity_list_categories.tickAll
 import org.jetbrains.anko.longToast
-import java.io.Serializable
+import org.jetbrains.anko.startActivity
 
 
 class ListCategoriesActivity : AppCompatActivity() {
@@ -64,11 +63,8 @@ class ListCategoriesActivity : AppCompatActivity() {
                 return@OnClickListener
             }
 
-            val intent = Intent(baseContext, TrainingActivity::class.java)
-            intent.putExtra(TICKED_CATEGORIES_EXTRA, selectedCategories as Serializable)
-
             prefs.lastShownWord = null
-            startActivity(intent)
+            startActivity<TrainingActivity>(TICKED_CATEGORIES to selectedCategories)
         })
 
 
