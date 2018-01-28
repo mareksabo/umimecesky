@@ -8,7 +8,6 @@ import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.db.helper.joinCategoryWordOpenHelper
 import cz.muni.fi.umimecesky.logic.MoveLogic
 import cz.muni.fi.umimecesky.pojo.RaceConcept
-import cz.muni.fi.umimecesky.pojo.RobotImages
 import cz.muni.fi.umimecesky.utils.CalculateDp
 import cz.muni.fi.umimecesky.utils.Constant
 import cz.muni.fi.umimecesky.utils.Constant.RACE_NEW_WORD_DELAY_MS
@@ -50,17 +49,14 @@ class RaceActivity : BaseAbstractActivity() {
     }
 
     private fun createRaceTrack(usersRobotView: ImageView) {
-        val hopsToWin = RAW_HOPS_TO_WIN + concept.getCurrentLevel()
+        val hopsToWin = RAW_HOPS_TO_WIN + concept.currentLevel
         val calculateDp = CalculateDp(usersRobotView, hopsToWin)
         calculateDp.setupFinishLine(finishLine)
         Global.calculateDp = calculateDp
     }
 
     private fun setupRobotViews(usersRobotView: ImageView) {
-
-        val robotImages = RobotImages(usersRobotView, createBotViews())
-
-        moveLogic = MoveLogic(this, robotImages)
+        moveLogic = MoveLogic(this, usersRobotView, createBotViews())
     }
 
     private fun createBotViews(): Array<ImageView> {

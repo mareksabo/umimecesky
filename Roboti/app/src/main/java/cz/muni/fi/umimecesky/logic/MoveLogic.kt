@@ -6,14 +6,13 @@ import cz.muni.fi.umimecesky.activity.RaceActivity
 import cz.muni.fi.umimecesky.pojo.AbstractRobot.Companion.noWinnerYet
 import cz.muni.fi.umimecesky.pojo.Bot
 import cz.muni.fi.umimecesky.pojo.RaceConcept
-import cz.muni.fi.umimecesky.pojo.RobotImages
 import cz.muni.fi.umimecesky.pojo.UsersRobot
 import cz.muni.fi.umimecesky.ui.RaceFinishDialog
 import cz.muni.fi.umimecesky.utils.Constant
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 
-class MoveLogic(private val raceActivity: RaceActivity, robotImages: RobotImages) {
+class MoveLogic(private val raceActivity: RaceActivity, robotImage: ImageView, botViews: Array<ImageView>) {
 
     private val handlers = ArrayList<Handler>()
 
@@ -26,13 +25,13 @@ class MoveLogic(private val raceActivity: RaceActivity, robotImages: RobotImages
         finishDialog = RaceFinishDialog(raceActivity, concept)
         noWinnerYet = AtomicBoolean(true)
 
-        val bots = createBots(robotImages.botViews, concept)
+        val bots = createBots(botViews, concept)
         for (bot in bots) {
             setupBot(bot)
             bot.setRunnableAfter(actionWhenUserLoses())
         }
 
-        usersRobot = UsersRobot(robotImages.usersView)
+        usersRobot = UsersRobot(robotImage)
         usersRobot.setRunnableBefore(actionWhenUserWins())
     }
 

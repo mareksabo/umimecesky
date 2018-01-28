@@ -17,7 +17,6 @@ import cz.muni.fi.umimecesky.db.DbContract.WordColumn.CORRECT_VARIANT
 import cz.muni.fi.umimecesky.db.DbContract.WordColumn.EXPLANATION
 import cz.muni.fi.umimecesky.db.DbContract.WordColumn.FILLED_WORD
 import cz.muni.fi.umimecesky.db.DbContract.WordColumn.GRADE
-import cz.muni.fi.umimecesky.db.DbContract.WordColumn.IS_VISIBLE
 import cz.muni.fi.umimecesky.db.DbContract.WordColumn.MISSING_WORD
 import cz.muni.fi.umimecesky.db.DbContract.WordColumn.VARIANT1
 import cz.muni.fi.umimecesky.db.DbContract.WordColumn.VARIANT2
@@ -28,7 +27,6 @@ import cz.muni.fi.umimecesky.db.helper.wordOpenHelper
 import cz.muni.fi.umimecesky.pojo.Category
 import cz.muni.fi.umimecesky.pojo.FillWord
 import cz.muni.fi.umimecesky.prefs
-import cz.muni.fi.umimecesky.utils.GuiUtil
 import kotlinx.android.synthetic.main.activity_main.raceButton
 import kotlinx.android.synthetic.main.activity_main.trainingButton
 import org.jetbrains.anko.db.insert
@@ -68,7 +66,7 @@ class MainActivity : AppCompatActivity() {
             runOnUiThread( { dialog.cancel() } )
 
             Category(1, "aa")
-            FillWord(1, "", "", "", "", 0, "", 1, true)
+            FillWord(1, "", "", "", "", 0, "", 1)
         }
     }
 
@@ -110,6 +108,9 @@ class MainActivity : AppCompatActivity() {
                             .split(";")
                             .dropLastWhile({ it.isEmpty() })
 
+                    // ignoring "not visible" words
+                    if (columns[8] == "0") continue
+
                     insert(WORD_TABLE_NAME,
                             WORD_ID to columns[0],
                             MISSING_WORD to columns[1],
@@ -118,8 +119,7 @@ class MainActivity : AppCompatActivity() {
                             VARIANT2 to columns[4],
                             CORRECT_VARIANT to columns[5],
                             EXPLANATION to columns[6],
-                            GRADE to columns[7],
-                            IS_VISIBLE to columns[8]
+                            GRADE to columns[7]
                     )
                 }
             }
@@ -166,7 +166,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupTrainingButton() {
-        GuiUtil.setDefaultColor(trainingButton)
         trainingButton.setOnClickListener {
             val intent = Intent(this@MainActivity, ListCategoriesActivity::class.java)
             startActivity(intent)
@@ -178,8 +177,6 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, LevelRaceActivity::class.java)
             startActivity(intent)
         }
-
-        GuiUtil.setDefaultColor(raceButton)
     }
 //    private fun setupHoleButton() {
 //        holeButton.setOnClickListener {

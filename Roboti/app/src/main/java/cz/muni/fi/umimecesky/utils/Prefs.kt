@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import cz.muni.fi.umimecesky.pojo.FillWord
 import cz.muni.fi.umimecesky.pojo.RaceConcept
+import cz.muni.fi.umimecesky.pojo.RaceConcept.Companion.initConcepts
 
 /**
  * @author Marek Sabo
@@ -46,11 +47,14 @@ class Prefs(context: Context) {
                 .toBooleanArray()
         set(value) = prefs.edit().putString(CHECKED_STATES, value.joinToString(",")).apply()
 
-    var maxRobotsCategories: List<RaceConcept>?
+    /**
+     * Gets categories with saved player's level state.
+     */
+    var maxRobotsCategories: MutableList<RaceConcept>
         get() {
-            val jsonConcepts = prefs.getString(JSON_CONCEPTS, null)
+            val jsonConcepts = prefs.getString(JSON_CONCEPTS, gson.toJson(initConcepts))
             return gson.fromJson<List<RaceConcept>>(jsonConcepts,
-                    object : TypeToken<List<RaceConcept>>() {}.type) as List<RaceConcept>
+                    object : TypeToken<List<RaceConcept>>() {}.type) as MutableList<RaceConcept>
         }
         set(value) = prefs.edit().putString(JSON_CONCEPTS, gson.toJson(value)).apply()
 

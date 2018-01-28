@@ -35,21 +35,17 @@ class RaceFinishDialog(private val raceActivity: RaceActivity, private val conce
     }
 
     private fun createDialogText(levelHasIncreased: Boolean): String {
-        val s = StringBuilder()
+        var s = ""
         if (levelHasIncreased) {
-            s.append(raceActivity.getString(R.string.your_next_level))
-            s.append(" ")
-            s.append(concept.getCurrentLevel())
-            s.append(" ")
-            s.append(raceActivity.getString(R.string.in_category))
-            s.append(" ")
-            s.append(concept.name)
+            s += raceActivity.getString(R.string.your_next_level)
+            s += " "
+            s += concept.currentLevel
+            s += " "
+            s += raceActivity.getString(R.string.in_category)
         } else {
-            s.append(raceActivity.getString(R.string.u_r_at_max_level))
-            s.append(" ")
-            s.append(concept.name)
+            s += raceActivity.getString(R.string.u_r_at_max_level)
         }
-        s.append(".")
-        return s.toString()
+        s += " ${concept.name}."
+        return s
     }
 }

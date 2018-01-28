@@ -8,7 +8,6 @@ import cz.muni.fi.umimecesky.db.DbContract.WordColumn.CORRECT_VARIANT
 import cz.muni.fi.umimecesky.db.DbContract.WordColumn.EXPLANATION
 import cz.muni.fi.umimecesky.db.DbContract.WordColumn.FILLED_WORD
 import cz.muni.fi.umimecesky.db.DbContract.WordColumn.GRADE
-import cz.muni.fi.umimecesky.db.DbContract.WordColumn.IS_VISIBLE
 import cz.muni.fi.umimecesky.db.DbContract.WordColumn.MISSING_WORD
 import cz.muni.fi.umimecesky.db.DbContract.WordColumn.VARIANT1
 import cz.muni.fi.umimecesky.db.DbContract.WordColumn.VARIANT2
@@ -34,8 +33,7 @@ object DbContract {
                     "$WORD_TABLE_NAME.$VARIANT2, " +
                     "$WORD_TABLE_NAME.$CORRECT_VARIANT, " +
                     "$WORD_TABLE_NAME.$EXPLANATION, " +
-                    "$WORD_TABLE_NAME.$GRADE, " +
-                    "$WORD_TABLE_NAME.$IS_VISIBLE"
+                    "$WORD_TABLE_NAME.$GRADE"
 
     const val ALL_CATEGORY_COLUMNS =
             "$CATEGORY_TABLE_NAME.$CATEGORY_ID, $CATEGORY_TABLE_NAME.$CATEGORY_NAME"
@@ -55,7 +53,6 @@ object DbContract {
         const val CORRECT_VARIANT = "correct_variant"
         const val EXPLANATION = "explanation"
         const val GRADE = "grade"
-        const val IS_VISIBLE = "is_visible"
     }
 
     object CategoryColumn {

@@ -1,27 +1,19 @@
 package cz.muni.fi.umimecesky.pojo
 
-class FillWord internal constructor(val id: Long, val wordMissing: String, val wordFilled: String, val variant1: String, val variant2: String,
-                                    val correctVariant: Int, val explanation: String, val grade: Int, val isVisible: Boolean) {
+data class FillWord constructor(val id: Long,
+                                val wordMissing: String,
+                                val wordFilled: String,
+                                val variant1: String,
+                                val variant2: String,
+                                val correctVariant: Int,
+                                val explanation: String,
+                                val grade: Int) {
 
-    override fun toString(): String {
-        return "FillWord{" +
-                "id=" + id +
-                ", wordMissing='" + wordMissing + '\'' +
-                ", wordFilled='" + wordFilled + '\'' +
-                ", variant1='" + variant1 + '\'' +
-                ", variant2='" + variant2 + '\'' +
-                ", correctVariant=" + correctVariant +
-                ", explanation='" + explanation + '\'' +
-                ", grade=" + grade +
-                ", visibility=" + isVisible +
-                '}'
-    }
-
-    fun variants() : Pair<String, String> {
+    fun variants(): Pair<String, String> {
         return replaceWhitespace(variant1) to replaceWhitespace(variant2)
     }
 
-    private fun replaceWhitespace(string: String) : String {
+    private fun replaceWhitespace(string: String): String {
         return if (string.isBlank()) "␣" else string
     }
 

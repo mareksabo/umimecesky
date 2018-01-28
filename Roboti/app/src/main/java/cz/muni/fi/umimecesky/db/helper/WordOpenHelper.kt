@@ -8,7 +8,6 @@ import cz.muni.fi.umimecesky.db.DbContract.WordColumn.CORRECT_VARIANT
 import cz.muni.fi.umimecesky.db.DbContract.WordColumn.EXPLANATION
 import cz.muni.fi.umimecesky.db.DbContract.WordColumn.FILLED_WORD
 import cz.muni.fi.umimecesky.db.DbContract.WordColumn.GRADE
-import cz.muni.fi.umimecesky.db.DbContract.WordColumn.IS_VISIBLE
 import cz.muni.fi.umimecesky.db.DbContract.WordColumn.MISSING_WORD
 import cz.muni.fi.umimecesky.db.DbContract.WordColumn.VARIANT1
 import cz.muni.fi.umimecesky.db.DbContract.WordColumn.VARIANT2
@@ -55,8 +54,7 @@ class WordOpenHelper(context: Context) : ManagedSQLiteOpenHelper(
                 VARIANT2 to TEXT + NOT_NULL,
                 CORRECT_VARIANT to INTEGER + NOT_NULL,
                 EXPLANATION to TEXT + NOT_NULL,
-                GRADE to INTEGER + NOT_NULL,
-                IS_VISIBLE to INTEGER + NOT_NULL
+                GRADE to INTEGER + NOT_NULL
         )
     }
 
@@ -73,7 +71,6 @@ class WordOpenHelper(context: Context) : ManagedSQLiteOpenHelper(
 
     fun getRandomWord() : FillWord = use {
         select(WORD_TABLE_NAME)
-                .whereArgs("$IS_VISIBLE = {isVisible}", "isVisible" to true)
                 .orderBy("RANDOM()")
                 .limit(1)
                 .exec { parseSingle(classParser()) }

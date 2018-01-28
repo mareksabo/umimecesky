@@ -1,16 +1,10 @@
 package cz.muni.fi.umimecesky.utils
 
 import android.app.Activity
-import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.view.View
 import android.view.WindowManager
-import android.widget.Button
-
 import cn.refactor.lib.colordialog.PromptDialog
-
-import cz.muni.fi.umimecesky.utils.Constant.DEFAULT_COLOR
-import cz.muni.fi.umimecesky.utils.Constant.STROKE_WIDTH
 
 /**
  * User interface static methods.
@@ -44,11 +38,6 @@ object GuiUtil {
             flags = flags or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         }
         activity.window.decorView.systemUiVisibility = flags
-    }
-
-    fun setDefaultColor(button: Button) {
-        button.setTextColor(DEFAULT_COLOR)
-        (button.background as GradientDrawable).setStroke(STROKE_WIDTH, DEFAULT_COLOR)
     }
 
     fun createFinishListener(activity: Activity): PromptDialog.OnPositiveListener {

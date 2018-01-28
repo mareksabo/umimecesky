@@ -5,8 +5,8 @@
     <string name="action_bar_name">Umíme česky - roboti</string>
     <string name="action_settings">Nastavení</string>
 
-    <string name="train_button_name">Procvičovat</string>
-    <string name="race_button_name">Závodit</string>
+    <string name="train_button_name">Procvičování</string>
+    <string name="race_button_name">Robotí závody</string>
     <string name="hole_button_name">Díry</string>
     <string name="none">Žádné</string>
     <string name="all">Všechny</string>

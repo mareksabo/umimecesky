@@ -29,7 +29,7 @@ class LevelAdapter(val items: List<RaceConcept>, val listener: (RaceConcept) -> 
 
         fun bind(item: RaceConcept, listener: (RaceConcept) -> Unit) = with(itemView) {
             sectionName.text = item.name
-            val currentLevelNumber = item.getCurrentLevel()
+            val currentLevelNumber = item.currentLevel
             currentLevel.text = currentLevelNumber.toString()
             progressBar.max = (item.numberOfLevels - 1).toFloat()
             progressBar.progress = (currentLevelNumber - 1).toFloat()
