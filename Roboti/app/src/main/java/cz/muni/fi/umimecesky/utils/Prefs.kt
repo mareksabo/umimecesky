@@ -16,6 +16,7 @@ private const val LAST_SEEN_WORD = "lastSeenWord"
 private const val LAST_SPINNER_VALUE = "last_spinner_const value"
 private const val CHECKED_STATES = "checked_states"
 private const val JSON_CONCEPTS = "jsonConcepts"
+private const val CURRENT_ROBOT_CONCEPT = "currentRobotConcept"
 
 class Prefs(context: Context) {
     private val gson = Gson()
@@ -57,5 +58,14 @@ class Prefs(context: Context) {
                     object : TypeToken<List<RaceConcept>>() {}.type) as MutableList<RaceConcept>
         }
         set(value) = prefs.edit().putString(JSON_CONCEPTS, gson.toJson(value)).apply()
+
+    var currentRobotConcept: RaceConcept
+        get() {
+            val json = prefs.getString(CURRENT_ROBOT_CONCEPT, null)
+            return gson.fromJson<RaceConcept>(json, RaceConcept::class.java)
+        }
+        set(value) {
+            prefs.edit().putString(CURRENT_ROBOT_CONCEPT, gson.toJson(value)).apply()
+        }
 
 }

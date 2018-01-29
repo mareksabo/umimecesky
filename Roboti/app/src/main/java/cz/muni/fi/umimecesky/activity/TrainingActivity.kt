@@ -69,7 +69,7 @@ class TrainingActivity : BaseAbstractActivity() {
         trainingProgressBar.processCorrectResult()
 
         button.postDelayed({
-            setButtonsEnabled()
+            enableButtons()
             setNewRandomWord()
         }, TRAINING_NEW_WORD_DELAY_MS.toLong())
 
@@ -113,7 +113,7 @@ class TrainingActivity : BaseAbstractActivity() {
 
         hideExplanation()
         setCategoryName()
-        setButtonsEnabled()
+        enableButtons()
     }
 
     private fun setCategoryName() {

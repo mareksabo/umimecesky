@@ -45,6 +45,11 @@ private constructor(val name: String, val categoryIDs: List<Int>, val numberOfLe
 
     override fun compareTo(other: RaceConcept): Int = this.name.compareTo(other.name)
 
+    override fun toString(): String {
+        return "RaceConcept(name='$name', categoryIDs=$categoryIDs, " +
+                "numberOfLevels=$numberOfLevels, currentLevel=$currentLevel)"
+    }
+
     companion object {
         /**
          * Categories are bundled into testable groups, taken from original website.

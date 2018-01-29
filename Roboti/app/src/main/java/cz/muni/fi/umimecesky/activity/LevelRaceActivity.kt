@@ -9,7 +9,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.adapterlistener.LevelAdapter
 import cz.muni.fi.umimecesky.prefs
-import cz.muni.fi.umimecesky.utils.Constant.RACE_CONCEPT_EXTRA
 import cz.muni.fi.umimecesky.utils.GuiUtil
 import kotlinx.android.synthetic.main.activity_race_levels.levelListView
 import org.jetbrains.anko.startActivity
@@ -41,7 +40,8 @@ class LevelRaceActivity : AppCompatActivity() {
                     bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, raceConcept.toString())
                     firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
 
-                    startActivity<RaceActivity>(RACE_CONCEPT_EXTRA to raceConcept)
+                    prefs.currentRobotConcept = raceConcept
+                    startActivity<RaceActivity>()
                 })
 
     }

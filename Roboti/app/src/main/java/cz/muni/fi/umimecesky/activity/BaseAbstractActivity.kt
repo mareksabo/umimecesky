@@ -74,7 +74,7 @@ abstract class BaseAbstractActivity : AppCompatActivity() {
         variant2.text = word.variant2
         setDefaultButtonsColor()
 
-        setButtonsEnabled()
+        enableButtons()
     }
 
     private fun setDefaultButtonsColor() {
@@ -89,12 +89,12 @@ abstract class BaseAbstractActivity : AppCompatActivity() {
         setDefaultButtonsColor() // to avoid colorful buttons in other activities
     }
 
-    protected fun setButtonsEnabled() {
+    fun enableButtons() {
         variant1.isEnabled = true
         variant2.isEnabled = true
     }
 
-    protected fun setButtonsDisabled() {
+    fun disableButtons() {
         variant1.isEnabled = false
         variant2.isEnabled = false
     }

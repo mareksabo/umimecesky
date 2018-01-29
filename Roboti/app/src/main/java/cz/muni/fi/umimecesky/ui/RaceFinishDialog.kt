@@ -4,10 +4,12 @@ package cz.muni.fi.umimecesky.ui
 import cn.refactor.lib.colordialog.PromptDialog
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.activity.RaceActivity
-import cz.muni.fi.umimecesky.pojo.RaceConcept
+import cz.muni.fi.umimecesky.prefs
 import cz.muni.fi.umimecesky.utils.GuiUtil
 
-class RaceFinishDialog(private val raceActivity: RaceActivity, private val concept: RaceConcept) {
+class RaceFinishDialog(private val raceActivity: RaceActivity) {
+
+    private val concept = prefs.currentRobotConcept
 
     fun showLosingDialog() {
         val promptDialog = PromptDialog(raceActivity)
