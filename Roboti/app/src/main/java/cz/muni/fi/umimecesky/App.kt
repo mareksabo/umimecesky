@@ -3,6 +3,7 @@ package cz.muni.fi.umimecesky
 import android.app.Application
 import android.os.StrictMode
 import cz.muni.fi.umimecesky.utils.Prefs
+import java.security.SecureRandom
 
 
 /**
@@ -11,6 +12,8 @@ import cz.muni.fi.umimecesky.utils.Prefs
 val prefs: Prefs by lazy {
     App.prefs!!
 }
+
+val random = SecureRandom()
 
 class App : Application() {
     companion object {

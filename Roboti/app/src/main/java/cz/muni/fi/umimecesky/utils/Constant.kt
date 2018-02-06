@@ -17,7 +17,6 @@ object Constant {
     const val WRONG_COLOR = Color.RED
 
     const val TICKED_CATEGORIES = "ticked_categories"
-    const val RACE_CONCEPT_EXTRA = "concept"
     const val SHARED_PREFS_FILE = "shared_prefs"
 
     const val INFINITY = "Nekonečno"

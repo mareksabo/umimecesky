@@ -11,7 +11,7 @@ import cz.muni.fi.umimecesky.db.helper.categoryOpenHelper
 import cz.muni.fi.umimecesky.prefs
 import cz.muni.fi.umimecesky.utils.Constant
 import cz.muni.fi.umimecesky.utils.Constant.TICKED_CATEGORIES
-import cz.muni.fi.umimecesky.utils.GuiUtil
+import cz.muni.fi.umimecesky.utils.GuiUtil.hideNavigationBar
 import kotlinx.android.synthetic.main.activity_list_categories.backButton
 import kotlinx.android.synthetic.main.activity_list_categories.listView
 import kotlinx.android.synthetic.main.activity_list_categories.nextButton
@@ -91,6 +91,6 @@ class ListCategoriesActivity : AppCompatActivity() {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (hasFocus) GuiUtil.hideNavigationBar(this)
+        if (hasFocus) hideNavigationBar()
     }
 }

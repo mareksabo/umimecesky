@@ -23,9 +23,11 @@ import cz.muni.fi.umimecesky.db.DbContract.WordColumn.WORD_ID
 import cz.muni.fi.umimecesky.db.helper.categoryOpenHelper
 import cz.muni.fi.umimecesky.db.helper.joinCategoryWordOpenHelper
 import cz.muni.fi.umimecesky.db.helper.wordOpenHelper
+import cz.muni.fi.umimecesky.labyrinth.LabyrinthActivity
 import cz.muni.fi.umimecesky.pojo.Category
 import cz.muni.fi.umimecesky.pojo.FillWord
 import cz.muni.fi.umimecesky.prefs
+import kotlinx.android.synthetic.main.activity_main.holeButton
 import kotlinx.android.synthetic.main.activity_main.raceButton
 import kotlinx.android.synthetic.main.activity_main.trainingButton
 import org.jetbrains.anko.db.insert
@@ -161,7 +163,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupButtons() {
         trainingButton.setOnClickListener { startActivity<ListCategoriesActivity>() }
         raceButton.setOnClickListener { startActivity<LevelRaceActivity>() }
-//        holeButton.setOnClickListener { startActivity<LabyrinthActivity>() }
+        holeButton.setOnClickListener { startActivity<LabyrinthActivity>() }
     }
 
 }

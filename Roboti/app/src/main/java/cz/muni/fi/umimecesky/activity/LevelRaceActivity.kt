@@ -9,7 +9,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.adapterlistener.LevelAdapter
 import cz.muni.fi.umimecesky.prefs
-import cz.muni.fi.umimecesky.utils.GuiUtil
+import cz.muni.fi.umimecesky.utils.GuiUtil.hideNavigationBar
 import kotlinx.android.synthetic.main.activity_race_levels.levelListView
 import org.jetbrains.anko.startActivity
 
@@ -48,7 +48,7 @@ class LevelRaceActivity : AppCompatActivity() {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (hasFocus) GuiUtil.hideNavigationBar(this)
+        if (hasFocus) hideNavigationBar()
     }
 
 }

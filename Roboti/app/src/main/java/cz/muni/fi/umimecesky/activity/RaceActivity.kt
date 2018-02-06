@@ -2,8 +2,6 @@ package cz.muni.fi.umimecesky.activity
 
 import android.content.res.Resources
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import cz.muni.fi.umimecesky.R
@@ -16,7 +14,7 @@ import cz.muni.fi.umimecesky.pojo.RobotAnimator
 import cz.muni.fi.umimecesky.prefs
 import cz.muni.fi.umimecesky.utils.Constant.RACE_NEW_WORD_DELAY_MS
 import cz.muni.fi.umimecesky.utils.Constant.RAW_HOPS_TO_WIN
-import cz.muni.fi.umimecesky.utils.RobotDrawable
+import cz.muni.fi.umimecesky.utils.RobotDrawable.getRobotDrawable
 import kotlinx.android.synthetic.main.activity_race.botView1
 import kotlinx.android.synthetic.main.activity_race.botView2
 import kotlinx.android.synthetic.main.activity_race.botView3
@@ -36,16 +34,16 @@ class RaceActivity : BaseAbstractActivity() {
         var robotMovePx: Float? = null
     }
 
-    private lateinit var moveLogic: MoveLogic
-
     private val concept = prefs.currentRobotConcept
-    private lateinit var usersAnimator: RobotAnimator
+
+    private val screenWidthDp: Float
+        get() = Resources.getSystem().displayMetrics.widthPixels.toFloat().dp
 
     private val robotWidthDp: Float
         get() = usersRobotView.layoutParams.width.toFloat().dp
 
-    private val screenWidthDp: Float
-        get() = Resources.getSystem().displayMetrics.widthPixels.toFloat().dp
+    private lateinit var moveLogic: MoveLogic
+    private lateinit var usersAnimator: RobotAnimator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,9 +51,8 @@ class RaceActivity : BaseAbstractActivity() {
         super.initUI(word, firstButton, secondButton)
 
         robotMovePx = ((screenWidthDp - robotWidthDp) / totalMovesToWin).px
-
+        finishLine.x = (screenWidthDp - robotWidthDp - 2).px // 2 dp is line thickness
         setupRandomDrawables(arrayOf(botView1, botView2, botView3))
-        setupFinishLine(finishLine)
 
         usersAnimator = RobotAnimator(usersRobotView, Robot())
         moveLogic = MoveLogic(this, createAnimators())
@@ -65,16 +62,9 @@ class RaceActivity : BaseAbstractActivity() {
 
 
     private fun setupRandomDrawables(botViews: Array<ImageView>) {
-        val robotDrawable = RobotDrawable(this)
-
         for (botView in botViews) {
-            botView.setImageDrawable(robotDrawable.removeRobotDrawable())
+            botView.setImageDrawable(getRobotDrawable(this))
         }
-    }
-
-    private fun setupFinishLine(finishLine: View) {
-        val finalLineDp = screenWidthDp - robotWidthDp - 2 // 2 is lineDPThickness
-        finishLine.x = finalLineDp.px
     }
 
     private fun createAnimators(): Array<RobotAnimator> {
@@ -86,11 +76,8 @@ class RaceActivity : BaseAbstractActivity() {
         )
     }
 
-    private fun setNewRandomWord() {
-        val word = joinCategoryWordOpenHelper.getRandomCategoryWord(concept)
-        Log.d("random word", word.toString())
-        setWord(word)
-    }
+    private fun setNewRandomWord() =
+            setWord(joinCategoryWordOpenHelper.getRandomCategoryWord(concept))
 
     override fun chosenCorrect(button: Button) {
         setCorrect(button)

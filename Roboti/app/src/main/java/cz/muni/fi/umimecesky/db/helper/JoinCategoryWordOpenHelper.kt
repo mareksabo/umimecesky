@@ -14,6 +14,7 @@ import cz.muni.fi.umimecesky.db.DbContract.JoinColumn.JOIN_WORD_ID
 import cz.muni.fi.umimecesky.pojo.Category
 import cz.muni.fi.umimecesky.pojo.FillWord
 import cz.muni.fi.umimecesky.pojo.RaceConcept
+import cz.muni.fi.umimecesky.random
 import org.jetbrains.anko.db.INTEGER
 import org.jetbrains.anko.db.ManagedSQLiteOpenHelper
 import org.jetbrains.anko.db.NOT_NULL
@@ -88,8 +89,7 @@ class JoinCategoryWordOpenHelper(context: Context) : ManagedSQLiteOpenHelper(
     }
 
     private var storedWords: MutableList<FillWord> = ArrayList()
-    private var storedCategories: List<Int> = ArrayList() // TODO: find better solution?
-    private val random = Random()
+    private var storedCategories: List<Int> = ArrayList() // TODO: use UniqueRandom
 
     private fun getWordsInCategories(categoryIds: List<Int>): List<FillWord> = use {
         select(JOIN_ALL_TABLES, ALL_WORD_COLUMNS)

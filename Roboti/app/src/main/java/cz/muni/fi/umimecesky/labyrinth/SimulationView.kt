@@ -25,12 +25,12 @@ import cz.muni.fi.umimecesky.labyrinth.Constant.holeRadius
 import cz.muni.fi.umimecesky.labyrinth.Constant.holeSize
 import cz.muni.fi.umimecesky.labyrinth.Constant.maxHolePosition
 import cz.muni.fi.umimecesky.labyrinth.Constant.minHolePosition
-import cz.muni.fi.umimecesky.labyrinth.hole.CorrectHole
 import cz.muni.fi.umimecesky.labyrinth.hole.Hole
 import cz.muni.fi.umimecesky.labyrinth.hole.HoleCircle
 import cz.muni.fi.umimecesky.labyrinth.hole.HoleView
-import cz.muni.fi.umimecesky.labyrinth.hole.IncorrectHole
+import cz.muni.fi.umimecesky.labyrinth.hole.ResultHole
 import cz.muni.fi.umimecesky.pojo.FillWord
+import cz.muni.fi.umimecesky.random
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -50,10 +50,9 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
 
     private var sensor = Point2Df(0f, 0f)
 
-    private val random = Random()
     private val ball = Ball(context)
-    private var correctHole = CorrectHole(HoleCircle(minHolePosition), "i")
-    private var incorrectHole = IncorrectHole(HoleCircle(maxHolePosition), "y")
+    private lateinit var correctHole: ResultHole
+    private lateinit var incorrectHole: ResultHole
     private lateinit var holes: List<Hole>
     private lateinit var incorrectHoleView: HoleView
 
@@ -80,12 +79,12 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
     }
 
     /*
-             * It is not necessary to get accelerometer events at a very high
-             * rate, by using a slower rate (SENSOR_DELAY_UI), we get an
-             * automatic low-pass filter, which "extracts" the gravity component
-             * of the acceleration. As an added benefit, we use less power and
-             * CPU resources.
-             */
+     * It is not necessary to get accelerometer events at a very high
+     * rate, by using a slower rate (SENSOR_DELAY_UI), we get an
+     * automatic low-pass filter, which "extracts" the gravity component
+     * of the acceleration. As an added benefit, we use less power and
+     * CPU resources.
+     */
     fun startSimulation() =
             sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME)
 
@@ -112,9 +111,10 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
         val t = TextView(context)
         t.text = randomWord.wordMissing
         t.textSize += 5f
-        t.gravity = Gravity.END or Gravity.TOP
+        t.gravity = Gravity.START or Gravity.BOTTOM
         addView(t)
 
+        ball.parent?.let { (ball.parent as ViewGroup).removeView(ball) }
         addView(ball, ViewGroup.LayoutParams(ballSize, ballSize))
     }
 
@@ -137,11 +137,11 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
         val pos = if (random.nextBoolean()) minHolePosition else maxHolePosition
         val pos2 = if (pos == minHolePosition) maxHolePosition else minHolePosition
         if (randomWord.correctVariant == 0) {
-            correctHole = CorrectHole(HoleCircle(pos), variant1)
-            incorrectHole = IncorrectHole(HoleCircle(pos2), variant2)
+            correctHole = ResultHole(HoleCircle(pos), variant1, true)
+            incorrectHole = ResultHole(HoleCircle(pos2), variant2, false)
         } else {
-            correctHole = CorrectHole(HoleCircle(pos), variant2)
-            incorrectHole = IncorrectHole(HoleCircle(pos2), variant1)
+            correctHole = ResultHole(HoleCircle(pos), variant2, true)
+            incorrectHole = ResultHole(HoleCircle(pos2), variant1, false)
         }
     }
 
@@ -189,19 +189,18 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
         if (ball.checkTouching(incorrectHole)) {
             ball.reverseVelocity()
             incorrectHoleView.textInside.setTextColor(Color.RED)
-        } else if (ball.checkInside(correctHole)) {
+        }
+        if (ball.checkInside(correctHole)) {
             runFallingBallAnimation(correctHole, false)
             this.removeAllViews()
             setupView()
+        } else {
+            holes
+                    .filter { ball.checkInside(it) }
+                    .forEach { runFallingBallAnimation(it, true) }
         }
 
         ball.computeMove(sensor.x, sensor.y)
-
-        for (hole in holes) {
-            if (ball.checkInside(hole)) {
-                runFallingBallAnimation(hole, true)
-            }
-        }
 
         invalidate()
     }

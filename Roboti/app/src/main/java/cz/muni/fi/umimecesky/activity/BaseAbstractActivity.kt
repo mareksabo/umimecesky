@@ -11,7 +11,7 @@ import cz.muni.fi.umimecesky.utils.Constant.CORRECT_COLOR
 import cz.muni.fi.umimecesky.utils.Constant.DEFAULT_COLOR
 import cz.muni.fi.umimecesky.utils.Constant.STROKE_WIDTH
 import cz.muni.fi.umimecesky.utils.Constant.WRONG_COLOR
-import cz.muni.fi.umimecesky.utils.GuiUtil
+import cz.muni.fi.umimecesky.utils.GuiUtil.hideNavigationBar
 
 /**
  * Activity containing major properties needed to show words with word puzzles and its answers.
@@ -118,7 +118,7 @@ abstract class BaseAbstractActivity : AppCompatActivity() {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (hasFocus) GuiUtil.hideNavigationBar(this)
+        if (hasFocus) hideNavigationBar()
     }
 
 }

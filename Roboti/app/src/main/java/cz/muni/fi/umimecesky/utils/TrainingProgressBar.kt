@@ -9,6 +9,8 @@ import cn.refactor.lib.colordialog.PromptDialog
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.prefs
+import cz.muni.fi.umimecesky.utils.GuiUtil.createFinishListener
+import cz.muni.fi.umimecesky.utils.GuiUtil.showDialogImmersive
 
 class TrainingProgressBar(private val activity: Activity, private val progressBar: RoundCornerProgressBar) {
 
@@ -95,9 +97,9 @@ class TrainingProgressBar(private val activity: Activity, private val progressBa
                 .setDialogType(PromptDialog.DIALOG_TYPE_HELP)
                 .setTitleText(activity.getString(R.string.series_finished))
                 .setContentText(createDialogContent())
-                .setPositiveListener(R.string.ok, GuiUtil.createFinishListener(activity))
+                .setPositiveListener(R.string.ok, activity.createFinishListener())
                 .setCanceledOnTouchOutside(false)
-        GuiUtil.showDialogImmersive(promptDialog, activity)
+        activity.showDialogImmersive(promptDialog)
     }
 
     private fun createDialogContent(): String {
