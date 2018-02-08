@@ -1,5 +1,7 @@
 package cz.muni.fi.umimecesky.pojo
 
+import java.io.Serializable
+
 data class FillWord constructor(val id: Long,
                                 val wordMissing: String,
                                 val wordFilled: String,
@@ -7,7 +9,7 @@ data class FillWord constructor(val id: Long,
                                 val variant2: String,
                                 val correctVariant: Int,
                                 val explanation: String,
-                                val grade: Int) {
+                                val grade: Int) : Serializable {
 
     fun variants(): Pair<String, String> {
         return replaceWhitespace(variant1) to replaceWhitespace(variant2)

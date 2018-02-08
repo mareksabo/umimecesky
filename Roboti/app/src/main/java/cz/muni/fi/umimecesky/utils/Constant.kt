@@ -5,8 +5,8 @@ import java.util.*
 
 object Constant {
 
-    const val TRAINING_NEW_WORD_DELAY_MS = 800
-    const val RACE_NEW_WORD_DELAY_MS = 200
+    const val TRAINING_NEW_WORD_DELAY_MS = 800L
+    const val RACE_NEW_WORD_DELAY_MS = 200L
     const val ROBOT_MOVE_ANIMATION_MS = 450L
 
     const val RAW_HOPS_TO_WIN = 5
@@ -22,5 +22,5 @@ object Constant {
     const val INFINITY = "Nekonečno"
     val ROUND_POSSIBILITIES: List<String> = Arrays.asList("10", "20", "35", "50", INFINITY)
 
-    const val ROBOT_START_DELAY_MS = 200
+    const val ROBOT_START_DELAY_MS = 200L
 }

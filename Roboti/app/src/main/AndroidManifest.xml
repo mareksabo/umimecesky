@@ -46,7 +46,7 @@
             android:parentActivityName=".activity.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".labyrinth.LabyrinthActivity"
+            android:name=".labyrinth.HoleGameActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:label="@string/action_bar_name"
             android:parentActivityName=".activity.MainActivity"

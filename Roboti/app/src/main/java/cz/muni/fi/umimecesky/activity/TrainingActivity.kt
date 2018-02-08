@@ -1,16 +1,13 @@
 package cz.muni.fi.umimecesky.activity
 
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.db.helper.joinCategoryWordOpenHelper
-import cz.muni.fi.umimecesky.db.helper.wordOpenHelper
 import cz.muni.fi.umimecesky.pojo.Category
 import cz.muni.fi.umimecesky.pojo.FillWord
-import cz.muni.fi.umimecesky.prefs
 import cz.muni.fi.umimecesky.utils.Constant.TICKED_CATEGORIES
 import cz.muni.fi.umimecesky.utils.Constant.TRAINING_NEW_WORD_DELAY_MS
 import cz.muni.fi.umimecesky.utils.TrainingProgressBar
@@ -23,6 +20,8 @@ import kotlinx.android.synthetic.main.activity_training.word
 
 class TrainingActivity : BaseAbstractActivity() {
 
+    companion object {        private const val LAST_SEEN_WORD = "lastSeenWord" }
+
     private lateinit var trainingProgressBar: TrainingProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,10 +32,11 @@ class TrainingActivity : BaseAbstractActivity() {
         @Suppress("UNCHECKED_CAST")
         checkedCategories = intent.getSerializableExtra(TICKED_CATEGORIES) as List<Category>
 
-        setLastUsedWord()
+        setNewRandomWord()
 
         trainingProgressBar = TrainingProgressBar(this, seriesProgressBar)
 
+        // TODO: show better when button is pressed
         val touchListener = View.OnTouchListener { v, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -57,6 +57,20 @@ class TrainingActivity : BaseAbstractActivity() {
 
     }
 
+    override fun onSaveInstanceState(outState: Bundle?) {
+        outState?.putSerializable(LAST_SEEN_WORD, currentWord)
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        if (savedInstanceState != null) {
+            setWord(savedInstanceState.get(LAST_SEEN_WORD) as FillWord)
+        } else {
+            setNewRandomWord()
+        }
+    }
 
     override fun chosenWrong(button: Button) {
         setWrong(button)
@@ -71,7 +85,7 @@ class TrainingActivity : BaseAbstractActivity() {
         button.postDelayed({
             enableButtons()
             setNewRandomWord()
-        }, TRAINING_NEW_WORD_DELAY_MS.toLong())
+        }, TRAINING_NEW_WORD_DELAY_MS)
 
     }
 
@@ -87,24 +101,8 @@ class TrainingActivity : BaseAbstractActivity() {
         explanationText.visibility = View.INVISIBLE
     }
 
-    private fun setLastUsedWord() {
-        val lastWord = prefs.lastShownWord
-
-        if (lastWord != null) {
-            setWord(lastWord)
-        } else {
-            setNewRandomWord()
-        }
-    }
-
     private fun setNewRandomWord() {
-        val word: FillWord
-        if (checkedCategories.isEmpty()) {
-            word = wordOpenHelper.getRandomWord()
-        } else {
-            word = joinCategoryWordOpenHelper.getRandomCategoryWord(checkedCategories)
-        }
-        Log.v("random word", word.toString())
+        val word = joinCategoryWordOpenHelper.getRandomCategoryWord(checkedCategories)
         setWord(word)
     }
 
@@ -119,10 +117,4 @@ class TrainingActivity : BaseAbstractActivity() {
     private fun setCategoryName() {
         categoryText.text = joinCategoryWordOpenHelper.getCategory(currentWord).name
     }
-
-    override fun onPause() {
-        super.onPause()
-        prefs.lastShownWord = currentWord
-    }
-
 }

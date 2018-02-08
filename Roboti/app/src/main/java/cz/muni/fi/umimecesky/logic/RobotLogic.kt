@@ -6,7 +6,7 @@ interface RobotLogic {
      * Returns how many milliseconds it takes to solve clue.
      * @return positive number
      */
-    fun millisecondsPerSolution(): Int
+    fun millisecondsPerSolution(): Long
 
     /**
      * Checks how often is robot correct.

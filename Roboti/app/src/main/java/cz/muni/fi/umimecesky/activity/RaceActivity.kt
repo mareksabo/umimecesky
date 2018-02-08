@@ -90,7 +90,7 @@ class RaceActivity : BaseAbstractActivity() {
         button.postDelayed({
             enableButtons()
             setNewRandomWord()
-        }, RACE_NEW_WORD_DELAY_MS.toLong())
+        }, RACE_NEW_WORD_DELAY_MS)
     }
 
     override fun chosenWrong(button: Button) {

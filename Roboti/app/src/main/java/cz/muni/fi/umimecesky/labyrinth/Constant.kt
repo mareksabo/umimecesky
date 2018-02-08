@@ -16,10 +16,10 @@ object Constant {
             metrics.ydpi / 0.0254f)
 
 
-    val ballSize = 150
-    val holeSize = ballSize
-    val holeRadius = holeSize / 2
-    val ballRadius = ballSize / 2
+    const val ballSize = 150
+    const val holeSize = ballSize
+    const val holeRadius = holeSize / 2
+    const val ballRadius = ballSize / 2
 
     val minBallPosition = Point2Df(0f, 0f)
     val maxBallPosition = Point2Df(

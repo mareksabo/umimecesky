@@ -63,7 +63,6 @@ class ListCategoriesActivity : AppCompatActivity() {
                 return@OnClickListener
             }
 
-            prefs.lastShownWord = null
             startActivity<TrainingActivity>(TICKED_CATEGORIES to selectedCategories)
         })
 

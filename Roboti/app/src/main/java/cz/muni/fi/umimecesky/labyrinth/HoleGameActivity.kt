@@ -4,8 +4,9 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.WindowManager
 import cz.muni.fi.umimecesky.R
+import org.jetbrains.anko.longToast
 
-class LabyrinthActivity : Activity() {
+class HoleGameActivity : Activity() {
 
     private lateinit var simulationView: SimulationView
 
@@ -16,6 +17,13 @@ class LabyrinthActivity : Activity() {
         simulationView = SimulationView(this)
         simulationView.setBackgroundResource(R.drawable.wood)
         setContentView(simulationView)
+
+        longToast("Spusti dotykem")
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        // todo: remember last word?
     }
 
     override fun onResume() {

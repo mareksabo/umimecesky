@@ -1,17 +1,21 @@
 package cz.muni.fi.umimecesky.logic
 
-import android.os.Handler
 import cz.muni.fi.umimecesky.activity.RaceActivity
 import cz.muni.fi.umimecesky.pojo.RobotAnimator
 import cz.muni.fi.umimecesky.pojo.RobotAnimator.Companion.noWinnerYet
+import cz.muni.fi.umimecesky.random
 import cz.muni.fi.umimecesky.ui.RaceFinishDialog
-import cz.muni.fi.umimecesky.utils.Constant
+import cz.muni.fi.umimecesky.utils.Constant.ROBOT_START_DELAY_MS
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import java.util.*
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 
 class MoveLogic(private val raceActivity: RaceActivity, animators: Array<RobotAnimator>) {
 
-    private val handlers = ArrayList<Handler>()
+    private val disposables = ArrayList<Disposable>()
 
     private val finishDialog: RaceFinishDialog = RaceFinishDialog(raceActivity)
 
@@ -29,17 +33,13 @@ class MoveLogic(private val raceActivity: RaceActivity, animators: Array<RobotAn
     }
 
     private fun setupBot(animator: RobotAnimator) {
-        val logic = animator.robot.logic!!
-        val handler = Handler()
-        handler.postDelayed(object : Runnable {
-            override fun run() {
-                animator.processBotMove()
-                if (noWinnerYet.get()) {
-                    handler.postDelayed(this, logic.millisecondsPerSolution().toLong())
-                }
-            }
-        }, (Math.random() * 2000 + Constant.ROBOT_START_DELAY_MS).toLong())
-        handlers.add(handler)
+        val delay = animator.robot.logic!!.millisecondsPerSolution()
+
+        val disposable = Observable.interval(delay, TimeUnit.MILLISECONDS)
+                .delay(random.nextInt(1500) + ROBOT_START_DELAY_MS, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { if (noWinnerYet.get()) animator.processBotMove() }
+        disposables.add(disposable)
     }
 
     private fun actionWhenUserWins(): Runnable = Runnable {
@@ -57,9 +57,7 @@ class MoveLogic(private val raceActivity: RaceActivity, animators: Array<RobotAn
     }
 
     fun stopBotsAndInput() {
-        for (handler in handlers) {
-            handler.removeCallbacksAndMessages(null)
-        }
+        for (d in disposables) d.dispose()
         raceActivity.disableButtons()
     }
 

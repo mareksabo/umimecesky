@@ -1,17 +1,11 @@
 package cz.muni.fi.umimecesky.logic
 
-import android.util.Log
 import cz.muni.fi.umimecesky.logic.RobotLogic.Companion.roundBy2places
 import cz.muni.fi.umimecesky.pojo.RaceConcept
 
 class BotLogicSlow(private val concept: RaceConcept) : RobotLogic {
 
-    init {
-        Log.v("slow concept", concept.levelProgress().toString())
-        Log.v("slow is before half", isBeforeHalf.toString())
-    }
-
-    override fun millisecondsPerSolution(): Int = 3500 - (1500 * concept.levelProgress()).toInt()
+    override fun millisecondsPerSolution(): Long = 3500L - (1500L * concept.levelProgress()).toLong()
 
     override fun correctnessRatio(): Double {
         val addition = if (isBeforeHalf)

@@ -8,19 +8,15 @@ import cz.muni.fi.umimecesky.db.DbContract.CategoryColumn.CATEGORY_ID
 import cz.muni.fi.umimecesky.db.DbContract.CategoryColumn.CATEGORY_NAME
 import cz.muni.fi.umimecesky.pojo.Category
 import org.jetbrains.anko.db.INTEGER
-import org.jetbrains.anko.db.IntParser
 import org.jetbrains.anko.db.ManagedSQLiteOpenHelper
 import org.jetbrains.anko.db.NOT_NULL
 import org.jetbrains.anko.db.PRIMARY_KEY
-import org.jetbrains.anko.db.RowParser
 import org.jetbrains.anko.db.TEXT
 import org.jetbrains.anko.db.UNIQUE
 import org.jetbrains.anko.db.classParser
 import org.jetbrains.anko.db.createTable
 import org.jetbrains.anko.db.dropTable
 import org.jetbrains.anko.db.parseList
-import org.jetbrains.anko.db.parseSingle
-import org.jetbrains.anko.db.rowParser
 import org.jetbrains.anko.db.select
 
 val Context.categoryOpenHelper: CategoryOpenHelper
@@ -55,29 +51,9 @@ class CategoryOpenHelper(context: Context) : ManagedSQLiteOpenHelper(
         onCreate(db)
     }
 
-    fun findCategory(id: Int): Category = use {
-        select(CATEGORY_TABLE_NAME).whereSimple("$CATEGORY_ID = ?", id.toString())
-                .exec {
-                    val parser = rowParser { id: Int, name: String -> Pair(id, name) }
-                    parseSingle(classParser())
-                }
-    }
-
-    fun findCategory(): Int = use {
-        select(CATEGORY_TABLE_NAME, CATEGORY_ID).whereSimple("$CATEGORY_ID = 1")
-                .exec { parseSingle(IntParser) }
-    }
-
     fun allCategories(): List<Category> = use {
         select(CATEGORY_TABLE_NAME).exec {
             parseList(classParser())
         }
     }
 }
-
-class MyRowParser : RowParser<Pair<Int, String>> {
-    override fun parseRow(columns: Array<Any?>): Pair<Int, String> {
-        return Pair(columns[0] as Int, columns[1] as String)
-    }
-}
-
