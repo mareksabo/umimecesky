@@ -63,16 +63,21 @@ class WordOpenHelper(context: Context) : ManagedSQLiteOpenHelper(
         onCreate(db)
     }
 
-    fun getWord(id: Int) : FillWord = use {
+    fun getRandomWord(grade: Int) : FillWord = use {
         select(WORD_TABLE_NAME)
-                .whereSimple("$WORD_ID = ?", id.toString())
-                .exec { parseSingle(classParser()) }
-    }
-
-    fun getRandomWord() : FillWord = use {
-        select(WORD_TABLE_NAME)
+                .whereSimple("$GRADE = ?", "$grade")
                 .orderBy("RANDOM()")
                 .limit(1)
                 .exec { parseSingle(classParser()) }
+    }
+
+
+    // TODO: better fix long answers
+    fun getRandomWordWithSmallVariants(grade: Int): FillWord {
+        var currentWord: FillWord
+        do {
+            currentWord = getRandomWord(grade)
+        } while (currentWord.variant1.length >= 3 || currentWord.variant2.length >= 3)
+        return currentWord
     }
 }

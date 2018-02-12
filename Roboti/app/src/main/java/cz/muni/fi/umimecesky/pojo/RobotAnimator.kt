@@ -3,9 +3,10 @@ package cz.muni.fi.umimecesky.pojo
 import android.view.ViewPropertyAnimator
 import android.widget.ImageView
 import cz.muni.fi.umimecesky.activity.RaceActivity.Companion.robotMovePx
-import cz.muni.fi.umimecesky.activity.totalMovesToWin
+import cz.muni.fi.umimecesky.activity.RaceActivity.Companion.totalMovesToWin
 import cz.muni.fi.umimecesky.utils.Constant.ROBOT_MOVE_ANIMATION_MS
 import java.util.concurrent.atomic.AtomicBoolean
+
 
 /**
  * @author Marek Sabo
@@ -14,6 +15,8 @@ class RobotAnimator(view: ImageView, val robot: Robot) {
     var runnableBefore: Runnable? = null
     var runnableAfter: Runnable? = null
     val isAI = robot.isAI
+
+    private val totalMovesToWin = totalMovesToWin()
 
     private var remainingHopsToWin = totalMovesToWin
     private val animator: ViewPropertyAnimator = view.animate()

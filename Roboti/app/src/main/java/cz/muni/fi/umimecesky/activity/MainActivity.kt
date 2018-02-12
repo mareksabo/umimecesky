@@ -1,8 +1,16 @@
 package cz.muni.fi.umimecesky.activity
 
 import android.app.ProgressDialog
+import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
+import android.view.ViewManager
+import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.SeekBar
+import android.widget.TextView
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.db.DbContract.CATEGORY_TABLE_NAME
 import cz.muni.fi.umimecesky.db.DbContract.CategoryColumn.CATEGORY_ID
@@ -30,16 +38,39 @@ import cz.muni.fi.umimecesky.prefs
 import kotlinx.android.synthetic.main.activity_main.holeButton
 import kotlinx.android.synthetic.main.activity_main.raceButton
 import kotlinx.android.synthetic.main.activity_main.trainingButton
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.customView
 import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.transaction
+import org.jetbrains.anko.dip
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.indeterminateProgressDialog
+import org.jetbrains.anko.linearLayout
+import org.jetbrains.anko.padding
+import org.jetbrains.anko.px2dip
+import org.jetbrains.anko.radioButton
+import org.jetbrains.anko.radioGroup
+import org.jetbrains.anko.seekBar
+import org.jetbrains.anko.space
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.textView
+import org.jetbrains.anko.verticalLayout
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
+import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
+
+
+    private var hardnessRB: Array<RadioButton> = emptyArray()
+    private var randomRB: RadioButton? = null
+
+// visible words: 4505
+// grade 0: 98
+// grade 1: 1534
+// grade 2: 1916
+// grade 3: 957
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,7 +96,7 @@ class MainActivity : AppCompatActivity() {
             importConversions()
             prefs.isImported = true
 
-            runOnUiThread( { dialog.cancel() } )
+            runOnUiThread({ dialog.cancel() })
 
             Category(1, "aa")
             FillWord(1, "", "", "", "", 0, "", 1)
@@ -163,7 +194,104 @@ class MainActivity : AppCompatActivity() {
     private fun setupButtons() {
         trainingButton.setOnClickListener { startActivity<ListCategoriesActivity>() }
         raceButton.setOnClickListener { startActivity<LevelRaceActivity>() }
-        holeButton.setOnClickListener { startActivity<HoleGameActivity>() }
+        holeButton.setOnClickListener {
+
+            alert {
+                title = resources.getString(R.string.action_settings)
+                positiveButton("Ok") { startActivity<HoleGameActivity>() }
+                customView {
+                    verticalLayout {
+                        padding = dip(10)
+                        lateinit var holesCount: TextView
+                        linearLayout {
+                            headingTextView("Počet děr:").lparams { leftMargin = dip(5) }
+                            holesCount = headingTextView("${prefs.holesAmount}")
+                        }
+                        space {}
+                        seekBar {
+                            val realMin = 5
+                            val realMax = 15
+
+                            max = realMax - realMin
+                            progress = prefs.holesAmount - realMin
+                            setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                                    val currentValue = progress + realMin
+                                    holesCount.text = "$currentValue"
+                                    prefs.holesAmount = currentValue
+                                }
+
+                                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+                                override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+                            })
+                        }
+
+                        headingTextView("Umístnění děr").lparams { leftMargin = dip(5) }
+
+                        radioGroup {
+                            orientation = LinearLayout.HORIZONTAL
+
+                            randomRB = radioButton()
+                            textView("Náhodné")
+                            val hardRB = radioButton()
+                            textView("S minimální vzdáleností")
+
+                            if (prefs.holesRandomlyGenerated) randomRB?.isChecked = true
+                            else hardRB.isChecked = true
+                        }
+
+                        headingTextView("Náročnost slov").lparams { leftMargin = dip(5) }
+
+                        radioGroup {
+                            orientation = LinearLayout.HORIZONTAL
+                            val easy = radioButton()
+                            textView("Lehoučké")
+                            val medium = radioButton()
+                            textView("Mírné")
+                            val hard = radioButton()
+                            textView("Težší")
+                            val extreme = radioButton()
+                            textView("Náročné")
+
+                            hardnessRB = arrayOf(easy, medium, hard, extreme)
+                            hardnessRB[prefs.holeWordGrade].isChecked = true
+                        }
+                    }
+                }
+            }.show()
+        }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        return when (item.itemId) {
+            R.id.action_settings -> {
+                startActivity<SettingsActivity>()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (hardnessRB.isNotEmpty())
+            prefs.holeWordGrade = hardnessRB.map { it.isChecked }.indexOf(true)
+
+        randomRB?.let { prefs.holesRandomlyGenerated = it.isChecked }
+    }
+
+    private fun ViewManager.headingTextView(text: CharSequence): TextView =
+            textView(text) {
+                padding = dip(10)
+                typeface = Typeface.DEFAULT_BOLD
+                textSize = px2dip(textSize.roundToInt()) + 3f
+            }
 
 }

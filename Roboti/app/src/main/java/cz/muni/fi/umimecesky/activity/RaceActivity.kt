@@ -25,13 +25,12 @@ import kotlinx.android.synthetic.main.activity_race.usersRobotView
 import kotlinx.android.synthetic.main.activity_race.word
 
 // for RobotAnimator
-val totalMovesToWin: Int by lazy { RaceActivity.hopsToWin }
 
 class RaceActivity : BaseAbstractActivity() {
 
     companion object {
-        var hopsToWin: Int = RAW_HOPS_TO_WIN + prefs.currentRobotConcept.currentLevel
         var robotMovePx: Float? = null
+        fun totalMovesToWin(): Int = RAW_HOPS_TO_WIN + prefs.currentRobotConcept.currentLevel
     }
 
     private val concept = prefs.currentRobotConcept
@@ -50,7 +49,7 @@ class RaceActivity : BaseAbstractActivity() {
         setContentView(R.layout.activity_race)
         super.initUI(word, firstButton, secondButton)
 
-        robotMovePx = ((screenWidthDp - robotWidthDp) / totalMovesToWin).px
+        robotMovePx = ((screenWidthDp - robotWidthDp) / totalMovesToWin()).px
         finishLine.x = (screenWidthDp - robotWidthDp - 2).px // 2 dp is line thickness
         setupRandomDrawables(arrayOf(botView1, botView2, botView3))
 

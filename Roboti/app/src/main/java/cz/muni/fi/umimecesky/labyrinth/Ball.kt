@@ -6,7 +6,8 @@ import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.labyrinth.Constant.holeRadius
 import cz.muni.fi.umimecesky.labyrinth.Constant.holeSize
 import cz.muni.fi.umimecesky.labyrinth.Constant.maxBallPosition
-import cz.muni.fi.umimecesky.labyrinth.Constant.metersToPixels
+import cz.muni.fi.umimecesky.labyrinth.Constant.metersToPixelsX
+import cz.muni.fi.umimecesky.labyrinth.Constant.metersToPixelsY
 import cz.muni.fi.umimecesky.labyrinth.hole.Hole
 
 /**
@@ -14,16 +15,16 @@ import cz.muni.fi.umimecesky.labyrinth.hole.Hole
  */
 class Ball(context: Context) : View(context) {
 
+    private val maxBallPosition = maxBallPosition()
+
     companion object {
 
-        val initialPosition = Point2Df(
-                maxBallPosition.x / 2,
-                maxBallPosition.y / 2
-        )
         private val zeroVelocity = Point2Df(0f, 0f)
         private val dT = 0.015f
 
     }
+
+    val initialPosition = Point2Df(maxBallPosition.x / 2, maxBallPosition.y / 2)
 
     private var velocity = Point2Df(zeroVelocity)
 
@@ -32,10 +33,9 @@ class Ball(context: Context) : View(context) {
      */
     private var posX = initialPosition.x
         set(value) {
-            val xMax = maxBallPosition.x
             field = value
-            if (value >= xMax) {
-                field = xMax
+            if (value >= maxBallPosition.x) {
+                field = maxBallPosition.x
                 velocity.x = 0f
             } else if (value <= 0f) {
                 field = 0f
@@ -47,10 +47,9 @@ class Ball(context: Context) : View(context) {
 
     private var posY = initialPosition.y
         set(value) {
-            val yMax = maxBallPosition.y
             field = value
-            if (value >= yMax) {
-                field = yMax
+            if (value >= maxBallPosition.y) {
+                field = maxBallPosition.y
                 velocity.y = 0f
             } else if (posY <= 0f) {
                 field = 0f
@@ -73,8 +72,8 @@ class Ball(context: Context) : View(context) {
         val ax = -sx / 8
         val ay = -sy / 8
 
-        posX += metersToPixels.x * (velocity.x * dT + ax * dT * dT / 2)
-        posY -= metersToPixels.y * (velocity.y * dT + ay * dT * dT / 2)
+        posX += metersToPixelsX() * (velocity.x * dT + ax * dT * dT / 2)
+        posY -= metersToPixelsY() * (velocity.y * dT + ay * dT * dT / 2)
 
         velocity.x += ax * dT
         velocity.y += ay * dT
