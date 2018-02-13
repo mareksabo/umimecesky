@@ -27,22 +27,22 @@
         </activity>
         <activity
             android:name=".activity.TrainingActivity"
-            android:label="@string/action_bar_name"
+            android:label="@string/train_button_name"
             android:parentActivityName=".activity.ListCategoriesActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ListCategoriesActivity"
-            android:label="@string/action_bar_name"
+            android:label="@string/train_button_name"
             android:parentActivityName=".activity.MainActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.RaceActivity"
-            android:label="@string/action_bar_name"
+            android:label="@string/race_button_name"
             android:parentActivityName=".activity.LevelRaceActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.LevelRaceActivity"
-            android:label="@string/action_bar_name"
+            android:label="@string/race_button_name"
             android:parentActivityName=".activity.MainActivity"
             android:screenOrientation="portrait" />
         <activity

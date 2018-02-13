@@ -1,6 +1,9 @@
+@file:Suppress("DEPRECATION")
+
 package cz.muni.fi.umimecesky.activity
 
 import android.app.ProgressDialog
+import android.content.Context
 import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -35,6 +38,7 @@ import cz.muni.fi.umimecesky.labyrinth.HoleGameActivity
 import cz.muni.fi.umimecesky.pojo.Category
 import cz.muni.fi.umimecesky.pojo.FillWord
 import cz.muni.fi.umimecesky.prefs
+import cz.muni.fi.umimecesky.utils.Constant
 import kotlinx.android.synthetic.main.activity_main.holeButton
 import kotlinx.android.synthetic.main.activity_main.raceButton
 import kotlinx.android.synthetic.main.activity_main.trainingButton
@@ -79,12 +83,15 @@ class MainActivity : AppCompatActivity() {
 
         setupButtons()
 
-        if (!prefs.isImported) importDataAsynchronously()
+        if (!prefs.isImported) {
+            // remove old preferences to avoid duplicates, todo remove later
+            getSharedPreferences(Constant.SHARED_PREFS_FILE, Context.MODE_PRIVATE).edit().clear().apply()
+            importDataAsynchronously()
+        }
     }
 
     private fun importDataAsynchronously() {
         doAsync {
-            @Suppress("DEPRECATION")
             lateinit var dialog: ProgressDialog
             runOnUiThread {
                 dialog = indeterminateProgressDialog(getString(R.string.loading_data))
@@ -245,7 +252,7 @@ class MainActivity : AppCompatActivity() {
                         radioGroup {
                             orientation = LinearLayout.HORIZONTAL
                             val easy = radioButton()
-                            textView("Lehoučké")
+                            textView("Lehké")
                             val medium = radioButton()
                             textView("Mírné")
                             val hard = radioButton()

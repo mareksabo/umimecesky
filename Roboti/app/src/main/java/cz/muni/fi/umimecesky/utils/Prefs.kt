@@ -12,9 +12,9 @@ import cz.muni.fi.umimecesky.pojo.RaceConcept.Companion.initConcepts
  * @author Marek Sabo
  */
 private const val IS_IMPORTED = "isImported"
-private const val LAST_SPINNER_VALUE = "last_spinner_const value"
-private const val CHECKED_STATES = "checked_states"
-private const val JSON_CONCEPTS = "jsonConcepts"
+private const val LAST_SPINNER_VALUE = "lastSpinnerValue"
+private const val CHECKED_STATES = "checkedStates"
+private const val RACE_CONCEPTS = "raceConcepts"
 private const val CURRENT_ROBOT_CONCEPT = "currentRobotConcept"
 private const val LAST_RANDOM_WORD = "lastRandomWord"
 private const val HOLES_AMOUNT = "holesAmount"
@@ -33,7 +33,7 @@ class Prefs(context: Context) {
         set(value) = prefs.edit().putBoolean(IS_IMPORTED, value).apply()
 
     var seriesAmount: String
-        get() = prefs.getString(LAST_SPINNER_VALUE, Constant.INFINITY)
+        get() = prefs.getString(LAST_SPINNER_VALUE, Constant.ROUND_POSSIBILITIES[0])
         set(value) = prefs.edit().putString(LAST_SPINNER_VALUE, value).apply()
 
     var checkedStates: BooleanArray
@@ -48,11 +48,11 @@ class Prefs(context: Context) {
      */
     var maxRobotsCategories: MutableList<RaceConcept>
         get() {
-            val jsonConcepts = prefs.getString(JSON_CONCEPTS, gson.toJson(initConcepts))
+            val jsonConcepts = prefs.getString(RACE_CONCEPTS, gson.toJson(initConcepts))
             return gson.fromJson<List<RaceConcept>>(jsonConcepts,
                     object : TypeToken<List<RaceConcept>>() {}.type) as MutableList<RaceConcept>
         }
-        set(value) = prefs.edit().putString(JSON_CONCEPTS, gson.toJson(value)).apply()
+        set(value) = prefs.edit().putString(RACE_CONCEPTS, gson.toJson(value)).apply()
 
     var currentRobotConcept: RaceConcept
         get() {
