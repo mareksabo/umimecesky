@@ -71,7 +71,6 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
     private val textView = TextView(context)
 
     private var currentWord: FillWord = prefs.lastRandomWord
-    private val isRandom = prefs.holesRandomlyGenerated
 
     private fun createHoles(amount: Int): List<Hole> {
         val circles = ArrayList<Circle>(amount + 3)
@@ -102,9 +101,7 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
     }
 
     private fun validateHolePosition(circles: List<Circle>, holeCircle: Circle) =
-            if (isRandom) {
-                circles.none { it.isTouching(holeCircle) }
-            } else circles.none { it.isRelativelyClose(holeCircle) }
+            circles.none { it.isRelativelyClose(holeCircle) }
 
     /*
      * It is not necessary to get accelerometer events at a very high

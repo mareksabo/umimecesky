@@ -20,7 +20,6 @@ private const val LAST_RANDOM_WORD = "lastRandomWord"
 private const val HOLES_AMOUNT = "holesAmount"
 private const val ROTATION_MODE = "rotationMode"
 private const val HOLE_WORD_GRADE = "holeWordGrade"
-private const val HOLES_RANDOMLY_GENERATED = "holesRandomlyGenerated"
 
 class Prefs(context: Context) {
     private val gson = Gson()
@@ -81,7 +80,4 @@ class Prefs(context: Context) {
         get() = prefs.getInt(HOLE_WORD_GRADE, 1)
         set(value) = prefs.edit().putInt(HOLE_WORD_GRADE, value).apply()
 
-    var holesRandomlyGenerated: Boolean
-        get() = prefs.getBoolean(HOLES_RANDOMLY_GENERATED, true)
-        set(value) = prefs.edit().putBoolean(HOLES_RANDOMLY_GENERATED, value).apply()
 }
