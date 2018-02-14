@@ -9,6 +9,7 @@ import cz.muni.fi.umimecesky.labyrinth.Constant.maxBallPosition
 import cz.muni.fi.umimecesky.labyrinth.Constant.metersToPixelsX
 import cz.muni.fi.umimecesky.labyrinth.Constant.metersToPixelsY
 import cz.muni.fi.umimecesky.labyrinth.hole.Hole
+import cz.muni.fi.umimecesky.prefs
 
 /**
  * @author Marek Sabo
@@ -18,11 +19,10 @@ class Ball(context: Context) : View(context) {
     private val maxBallPosition = maxBallPosition()
 
     companion object {
-
         private val zeroVelocity = Point2Df(0f, 0f)
-        private val dT = 0.015f
-
     }
+
+    private val dT = 0.003f * (2 + prefs.ballWeight)
 
     val initialPosition = Point2Df(maxBallPosition.x / 2, maxBallPosition.y / 2)
 

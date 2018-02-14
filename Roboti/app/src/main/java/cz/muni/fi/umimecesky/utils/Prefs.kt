@@ -20,6 +20,7 @@ private const val LAST_RANDOM_WORD = "lastRandomWord"
 private const val HOLES_AMOUNT = "holesAmount"
 private const val ROTATION_MODE = "rotationMode"
 private const val HOLE_WORD_GRADE = "holeWordGrade"
+private const val BALL_WEIGHT = "ballWeight"
 
 class Prefs(context: Context) {
     private val gson = Gson()
@@ -79,5 +80,9 @@ class Prefs(context: Context) {
     var holeWordGrade: Int
         get() = prefs.getInt(HOLE_WORD_GRADE, 1)
         set(value) = prefs.edit().putInt(HOLE_WORD_GRADE, value).apply()
+
+    var ballWeight: Int
+        get() = prefs.getInt(BALL_WEIGHT, 2)
+        set(value) = prefs.edit().putInt(BALL_WEIGHT, value).apply()
 
 }

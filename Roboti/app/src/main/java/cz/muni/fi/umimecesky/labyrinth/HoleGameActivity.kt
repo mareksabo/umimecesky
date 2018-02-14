@@ -112,11 +112,11 @@ class HoleGameActivity : Activity() {
             prefs.holeWordGrade = hardnessRB.map { it.isChecked }.indexOf(true)
     }
 
-    private fun ViewManager.headingTextView(text: CharSequence): TextView =
-            textView(text) {
-                padding = dip(10)
-                typeface = Typeface.DEFAULT_BOLD
-                textSize = px2dip(textSize.roundToInt()) + 3f
-            }
-
 }
+
+fun ViewManager.headingTextView(text: CharSequence): TextView =
+        textView(text) {
+            padding = dip(10)
+            typeface = Typeface.DEFAULT_BOLD
+            textSize = px2dip(textSize.roundToInt()) + 3f
+        }

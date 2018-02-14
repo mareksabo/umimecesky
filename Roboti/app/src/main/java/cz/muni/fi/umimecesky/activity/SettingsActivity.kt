@@ -5,8 +5,12 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Gravity
 import android.widget.LinearLayout.HORIZONTAL
 import android.widget.RadioButton
+import android.widget.SeekBar
 import cz.muni.fi.umimecesky.R
+import cz.muni.fi.umimecesky.labyrinth.headingTextView
 import cz.muni.fi.umimecesky.prefs
+import org.jetbrains.anko._LinearLayout
+import org.jetbrains.anko.ctx
 import org.jetbrains.anko.dip
 import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.imageView
@@ -15,6 +19,9 @@ import org.jetbrains.anko.matchParent
 import org.jetbrains.anko.padding
 import org.jetbrains.anko.radioButton
 import org.jetbrains.anko.radioGroup
+import org.jetbrains.anko.scrollView
+import org.jetbrains.anko.seekBar
+import org.jetbrains.anko.textView
 import org.jetbrains.anko.verticalLayout
 
 /**
@@ -22,70 +29,95 @@ import org.jetbrains.anko.verticalLayout
  */
 class SettingsActivity : AppCompatActivity() {
 
-    private lateinit var array: Array<RadioButton>
+    private val radioButtons = ArrayList<RadioButton>()
+
+    companion object {
+        private val ballWeightOptions = arrayOf("Pírko", "Lehká", "Normální", "Těžká", "Kámen")
+        private val weightTypesCount = ballWeightOptions.size - 1
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        verticalLayout {
-            padding = dip(15)
+        scrollView {
 
-            linearLayout {
+            verticalLayout {
+                padding = dip(10)
 
-                imageView {
-                    imageResource = R.drawable.phone1
-                    adjustViewBounds = true
-                }.lparams(weight = 1f)
-                imageView {
-                    imageResource = R.drawable.phone3
-                    adjustViewBounds = true
-                }.lparams(weight = 1f)
-                imageView {
-                    imageResource = R.drawable.phone2
-                    adjustViewBounds = true
-                }.lparams(weight = 1f)
-                imageView {
-                    imageResource = R.drawable.phone4
-                    adjustViewBounds = true
-                }.lparams(weight = 1f)
-            }.lparams {
+                headingTextView(ctx.getString(R.string.display_rotation)).padding = dip(15)
+
+                linearLayout {
+                    adjustedDrawable(R.drawable.phone1)
+                    adjustedDrawable(R.drawable.phone3)
+                    adjustedDrawable(R.drawable.phone2)
+                    adjustedDrawable(R.drawable.phone4)
+                }
+
+                radioGroup {
+                    orientation = HORIZONTAL
+
+                    repeat(4) {
+                        // TODO: fix radio button center
+                        radioButtons.add(radioButton {
+                            gravity = Gravity.CENTER
+                        }.lparams {
+                            width = matchParent
+                            weight = 1f
+                            leftMargin = dip(30)
+                        })
+                    }
+                    radioButtons[prefs.rotationMode].isChecked = true
+
+                }.lparams(width = matchParent)
+
+                val ballWeightIndex = weightTypesCount - prefs.ballWeight
+                val weightTextView = headingTextView(
+                        ctx.getString(R.string.ball_weight_text, ballWeightOptions[ballWeightIndex]))
+                weightTextView.padding = dip(15)
+
+                textView(ctx.getString(R.string.ball_weight_explanation))
+                        .lparams { leftMargin = dip(10) }
+
+                seekBar {
+                    padding = dip(25)
+                    max = weightTypesCount
+                    progress = ballWeightIndex
+
+                    setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                            weightTextView.text = ctx.getString(R.string.ball_weight_text, ballWeightOptions[progress])
+                            prefs.ballWeight = weightTypesCount - progress
+                        }
+
+                        override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+                        override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+                    })
+                }
+
+                linearLayout {
+                    for (text in ballWeightOptions) {
+                        textView(text) {
+                            gravity = Gravity.CENTER
+                        }.lparams {
+                            width = matchParent
+                            weight = 1f
+                        }
+                    }
+
+                }.lparams(width = matchParent)
+
             }
-
-            radioGroup {
-                orientation = HORIZONTAL
-
-                // TODO: fix radio button center
-                val button1 = radioButton {
-                    gravity = Gravity.CENTER
-                }.lparams {
-                    width = matchParent
-                    weight = 1f
-                    leftMargin =  dip(30)
-                }
-                val button2 = radioButton { }.lparams {
-                    width = matchParent
-                    weight = 1f
-                    leftMargin =  dip(30)
-                }
-                val button3 = radioButton().lparams {
-                    width = matchParent
-                    weight = 1f
-                    leftMargin =  dip(30)
-                }
-                val button4 = radioButton().lparams {
-                    width = matchParent
-                    weight = 1f
-                    leftMargin =  dip(30)
-                }
-                array = arrayOf(button1, button2, button3, button4)
-                array[prefs.rotationMode].isChecked = true
-
-            }.lparams(width = matchParent)
         }
     }
 
+    private fun _LinearLayout.adjustedDrawable(image: Int) = imageView {
+        imageResource = image
+        adjustViewBounds = true
+    }.lparams(weight = 1f)
+
     override fun onPause() {
         super.onPause()
-        prefs.rotationMode = array.map { it.isChecked }.indexOf(true)
+        prefs.rotationMode = radioButtons.map { it.isChecked }.indexOf(true)
     }
 }

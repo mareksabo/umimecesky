@@ -1,54 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cz.muni.fi.umimecesky">
+          package="cz.muni.fi.umimecesky">
 
     <application
-        android:icon="@drawable/icon"
-        android:label="@string/app_name"
+        android:name=".App"
         android:allowBackup="true"
         android:fullBackupContent="true"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
         android:supportsRtl="true"
-        android:name=".App"
         android:theme="@style/AppTheme">
 
         <!-- for huge displays -->
         <meta-data
             android:name="android.max_aspect"
-            android:value="2.1" />
+            android:value="2.1"/>
 
         <activity
             android:name=".activity.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.TrainingActivity"
             android:label="@string/train_button_name"
             android:parentActivityName=".activity.ListCategoriesActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.ListCategoriesActivity"
             android:label="@string/train_button_name"
             android:parentActivityName=".activity.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.RaceActivity"
             android:label="@string/race_button_name"
             android:parentActivityName=".activity.LevelRaceActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.LevelRaceActivity"
             android:label="@string/race_button_name"
             android:parentActivityName=".activity.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".labyrinth.HoleGameActivity"
-            android:theme="@style/AppTheme.NoActionBar.FullScreen"
-            android:parentActivityName=".activity.MainActivity"/>
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar.FullScreen"/>
         <activity
             android:name=".activity.SettingsActivity"
             android:parentActivityName=".activity.MainActivity"/>

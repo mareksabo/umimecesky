@@ -28,6 +28,10 @@
     <string name="theme">Téma</string>
     <string name="current_level">Dosažený level</string>
     <string name="choose_at_least_one_category">Zvol alespoň jednu kategorii</string>
-    <string name="loading_data">Nahrávám data, hned to bude.</string>
+    <string name="loading_data">Nahrávám data, hned to bude</string>
+    <string name="ball_weight_text">Váha loptičky: %1$s</string>
+    <string name="hint_settings_text">Nastavení hry Kulička</string>
+    <string name="display_rotation">Rotace displeje</string>
+    <string name="ball_weight_explanation">Lehčí má větší citlivost a zrychlení</string>
 
 </resources>

@@ -4,14 +4,10 @@ package cz.muni.fi.umimecesky.activity
 
 import android.app.ProgressDialog
 import android.content.Context
-import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import android.view.ViewManager
-import android.widget.RadioButton
-import android.widget.TextView
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.db.DbContract.CATEGORY_TABLE_NAME
 import cz.muni.fi.umimecesky.db.DbContract.CategoryColumn.CATEGORY_ID
@@ -37,22 +33,21 @@ import cz.muni.fi.umimecesky.pojo.Category
 import cz.muni.fi.umimecesky.pojo.FillWord
 import cz.muni.fi.umimecesky.prefs
 import cz.muni.fi.umimecesky.utils.Constant
+import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_main.holeButton
 import kotlinx.android.synthetic.main.activity_main.raceButton
 import kotlinx.android.synthetic.main.activity_main.trainingButton
+import me.toptas.fancyshowcase.FancyShowCaseView
 import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.transaction
-import org.jetbrains.anko.dip
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.indeterminateProgressDialog
-import org.jetbrains.anko.padding
-import org.jetbrains.anko.px2dip
 import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.textView
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
-import kotlin.math.roundToInt
+import java.util.concurrent.TimeUnit
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -89,11 +84,27 @@ class MainActivity : AppCompatActivity() {
             importConversions()
             prefs.isImported = true
 
-            runOnUiThread({ dialog.cancel() })
+            runOnUiThread({
+                dialog.cancel()
+                showHintOnce()
+            })
 
             Category(1, "aa")
             FillWord(1, "", "", "", "", 0, "", 1)
         }
+    }
+
+    private fun showHintOnce() {
+        Observable.just("a")
+                .delay(50L, TimeUnit.MILLISECONDS)
+                .subscribe {
+                    FancyShowCaseView.Builder(this)
+                            .focusOn(findViewById(R.id.action_settings))
+                            .title(getString(R.string.hint_settings_text))
+                            .showOnce("settingsHint")
+                            .build()
+                            .show()
+                }
     }
 
     private fun createTables() {
