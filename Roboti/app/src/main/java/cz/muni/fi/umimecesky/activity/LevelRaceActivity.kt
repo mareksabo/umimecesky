@@ -36,8 +36,6 @@ class LevelRaceActivity : AppCompatActivity() {
 
                     val bundle = Bundle()
                     bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, raceConcept.name)
-                    bundle.putString(FirebaseAnalytics.Param.VALUE, raceConcept.currentLevel.toString())
-                    bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, raceConcept.toString())
                     firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
 
                     prefs.currentRobotConcept = raceConcept

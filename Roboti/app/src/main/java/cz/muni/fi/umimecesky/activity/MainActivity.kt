@@ -3,7 +3,10 @@
 package cz.muni.fi.umimecesky.activity
 
 import android.app.ProgressDialog
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
@@ -52,6 +55,7 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.landscape
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.toast
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -139,7 +143,7 @@ class MainActivity : AppCompatActivity() {
                 .delay(50L, TimeUnit.MILLISECONDS)
                 .subscribe {
                     FancyShowCaseView.Builder(this)
-                            .focusOn(findViewById(R.id.action_settings))
+                            .focusOn(findViewById(R.id.action_settings_item))
                             .title(getString(R.string.hint_settings_text))
                             .showOnce("settingsHint")
                             .build()
@@ -243,13 +247,47 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         return when (item.itemId) {
-            R.id.action_settings -> {
+            R.id.action_settings_item -> {
                 startActivity<SettingsActivity>()
+                true
+            }
+            R.id.rate_app_item -> {
+                openPlayStore()
+                true
+            }
+            R.id.send_bug_item -> {
+                sendFeedback()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
 
+    }
+
+    private fun openPlayStore() {
+        val goToMarket = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName"))
+        // To count with Play market back stack, After pressing back button,
+        // to taken back to our application, we need to add following flags to intent.
+        goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+        try {
+            startActivity(goToMarket)
+        } catch (e: ActivityNotFoundException) {
+            startActivity(Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://play.google.com/store/apps/details?id=$packageName")))
+        }
+    }
+
+    private fun sendFeedback() {
+
+        val i = Intent(Intent.ACTION_SEND)
+                .putExtra(Intent.EXTRA_EMAIL, arrayOf("marek.sabo.gvpt@gmail.com"))
+                .putExtra(Intent.EXTRA_SUBJECT, "Umíme česky - feedback")
+        i.type = "message/rfc822"
+        try {
+            startActivity(Intent.createChooser(i, "Pošli mail"))
+        } catch (_: android.content.ActivityNotFoundException) {
+            toast("Nedokážu poslat email.")
+        }
     }
 
     override fun onDestroy() {

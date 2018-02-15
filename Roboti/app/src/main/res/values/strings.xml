@@ -34,5 +34,7 @@
     <string name="hint_settings_text">Nastavení hry Kulička</string>
     <string name="display_rotation">Rotace displeje</string>
     <string name="ball_weight_explanation">Lehčí má větší citlivost a zrychlení</string>
+    <string name="rate_app">Ohodnotit aplikaci</string>
+    <string name="send_feedback">Poslat zpětnou vazbu</string>
 
 </resources>
