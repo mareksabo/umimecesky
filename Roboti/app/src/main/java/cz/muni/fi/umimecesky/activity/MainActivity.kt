@@ -6,8 +6,13 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.ViewTreeObserver
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.LinearLayout
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.db.DbContract.CATEGORY_TABLE_NAME
 import cz.muni.fi.umimecesky.db.DbContract.CategoryColumn.CATEGORY_ID
@@ -34,15 +39,30 @@ import cz.muni.fi.umimecesky.pojo.FillWord
 import cz.muni.fi.umimecesky.prefs
 import cz.muni.fi.umimecesky.utils.Constant
 import io.reactivex.Observable
+import kotlinx.android.synthetic.main.activity_main.activity_main
 import kotlinx.android.synthetic.main.activity_main.holeButton
 import kotlinx.android.synthetic.main.activity_main.raceButton
 import kotlinx.android.synthetic.main.activity_main.trainingButton
 import me.toptas.fancyshowcase.FancyShowCaseView
+import org.jetbrains.anko._LinearLayout
+import org.jetbrains.anko.allCaps
 import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.transaction
+import org.jetbrains.anko.dip
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.imageResource
+import org.jetbrains.anko.imageView
 import org.jetbrains.anko.indeterminateProgressDialog
+import org.jetbrains.anko.leftPadding
+import org.jetbrains.anko.margin
+import org.jetbrains.anko.matchParent
+import org.jetbrains.anko.padding
+import org.jetbrains.anko.px2dip
+import org.jetbrains.anko.rightPadding
+import org.jetbrains.anko.sp
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.themedButton
+import org.jetbrains.anko.verticalLayout
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -60,15 +80,53 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+//        setContentView(R.layout.activity_main)
 
-        setupButtons()
+        verticalLayout {
+            gravity = Gravity.CENTER_HORIZONTAL
+            padding = resources.getDimension(R.dimen.activity_vertical_margin).toInt()
+
+            imageView {
+                imageResource = R.drawable.icon
+                scaleType = ImageView.ScaleType.CENTER_INSIDE
+                isClickable = false
+                adjustViewBounds = true
+            }.lparams(width = matchParent, height = matchParent, weight = 14f) { margin = dip(10) }
+
+            someButton(resources.getString(R.string.train_button_name),  { startActivity<ListCategoriesActivity>() })
+            someButton(resources.getString(R.string.race_button_name),  { startActivity<LevelRaceActivity>() })
+            someButton(resources.getString(R.string.hole_button_name),  { startActivity<HoleGameActivity>() })
+
+        }
+
+//        setAllButtonsSameWidth()
+//        setupButtons()
 
         if (!prefs.isImported) {
             // remove old preferences to avoid duplicates, todo remove later
             getSharedPreferences(Constant.SHARED_PREFS_FILE, Context.MODE_PRIVATE).edit().clear().apply()
             importDataAsynchronously()
         }
+    }
+
+    private fun setAllButtonsSameWidth() {
+        val layout = activity_main as LinearLayout
+        layout.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                layout.viewTreeObserver.removeOnGlobalLayoutListener(this)
+
+                val maxButtonWidth = (0 until layout.childCount)
+                        .map { layout.getChildAt(it) }
+                        .filterIsInstance<Button>()
+                        .map { it.width }
+                        .max()!!
+
+                (0 until layout.childCount)
+                        .map { layout.getChildAt(it) }
+                        .filterIsInstance<Button>()
+                        .forEach { it.width = maxButtonWidth }
+            }
+        })
     }
 
     private fun importDataAsynchronously() {
@@ -217,5 +275,17 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
+    private fun _LinearLayout.someButton(buttonText: String, f: () -> Unit) =
+            themedButton(text = buttonText, theme = R.style.PrimaryButton) {
+                textSize = px2dip(sp(32f))
+                allCaps = false
+                setOnClickListener { f() }
+            }.lparams(height = matchParent, weight = 15f) {
+                leftPadding = dip(20)
+                rightPadding = dip(20)
+                margin = dip(10)
+            }
+
 
 }

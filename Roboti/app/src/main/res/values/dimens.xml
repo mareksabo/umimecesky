@@ -12,6 +12,6 @@
     <dimen name="text_padding">15sp</dimen>
     <dimen name="title_padding">10sp</dimen>
     <dimen name="level_text_size">20sp</dimen>
-    <dimen name="main_buttons_padding">40dp</dimen>
+    <dimen name="main_buttons_padding">20dp</dimen>
     <dimen name="robot_padding">3dp</dimen>
 </resources>
