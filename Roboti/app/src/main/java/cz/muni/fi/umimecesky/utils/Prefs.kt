@@ -3,6 +3,7 @@ package cz.muni.fi.umimecesky.utils
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import cz.muni.fi.umimecesky.labyrinth.Constant.isTablet
 import cz.muni.fi.umimecesky.labyrinth.SimulationView.Companion.EMPTY_WORD
 import cz.muni.fi.umimecesky.pojo.FillWord
 import cz.muni.fi.umimecesky.pojo.RaceConcept
@@ -82,7 +83,7 @@ class Prefs(context: Context) {
         set(value) = prefs.edit().putInt(HOLE_WORD_GRADE, value).apply()
 
     var ballWeight: Int
-        get() = prefs.getInt(BALL_WEIGHT, 2)
+        get() = prefs.getInt(BALL_WEIGHT, 2 + if (isTablet()) 1 else 0)
         set(value) = prefs.edit().putInt(BALL_WEIGHT, value).apply()
 
 }

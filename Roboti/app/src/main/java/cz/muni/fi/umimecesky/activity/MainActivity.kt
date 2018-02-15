@@ -6,12 +6,11 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.LinearLayout
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.db.DbContract.CATEGORY_TABLE_NAME
@@ -33,6 +32,7 @@ import cz.muni.fi.umimecesky.db.DbContract.WordColumn.WORD_ID
 import cz.muni.fi.umimecesky.db.helper.categoryOpenHelper
 import cz.muni.fi.umimecesky.db.helper.joinCategoryWordOpenHelper
 import cz.muni.fi.umimecesky.db.helper.wordOpenHelper
+import cz.muni.fi.umimecesky.labyrinth.Constant.isTablet
 import cz.muni.fi.umimecesky.labyrinth.HoleGameActivity
 import cz.muni.fi.umimecesky.pojo.Category
 import cz.muni.fi.umimecesky.pojo.FillWord
@@ -42,30 +42,20 @@ import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_main.activity_main
 import kotlinx.android.synthetic.main.activity_main.holeButton
 import kotlinx.android.synthetic.main.activity_main.raceButton
+import kotlinx.android.synthetic.main.activity_main.robotIcon
 import kotlinx.android.synthetic.main.activity_main.trainingButton
 import me.toptas.fancyshowcase.FancyShowCaseView
-import org.jetbrains.anko._LinearLayout
-import org.jetbrains.anko.allCaps
+import org.jetbrains.anko.configuration
 import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.transaction
-import org.jetbrains.anko.dip
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.imageResource
-import org.jetbrains.anko.imageView
 import org.jetbrains.anko.indeterminateProgressDialog
-import org.jetbrains.anko.leftPadding
-import org.jetbrains.anko.margin
-import org.jetbrains.anko.matchParent
-import org.jetbrains.anko.padding
-import org.jetbrains.anko.px2dip
-import org.jetbrains.anko.rightPadding
-import org.jetbrains.anko.sp
+import org.jetbrains.anko.landscape
 import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.themedButton
-import org.jetbrains.anko.verticalLayout
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
+import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 
 
@@ -77,30 +67,17 @@ class MainActivity : AppCompatActivity() {
 // grade 2: 1916
 // grade 3: 957
 
+    private var dialog: ProgressDialog? = null
+    private var doAsyncTask: Future<Unit>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_main)
 
-        verticalLayout {
-            gravity = Gravity.CENTER_HORIZONTAL
-            padding = resources.getDimension(R.dimen.activity_vertical_margin).toInt()
+        setupButtons()
+        setAllButtonsSameWidth()
 
-            imageView {
-                imageResource = R.drawable.icon
-                scaleType = ImageView.ScaleType.CENTER_INSIDE
-                isClickable = false
-                adjustViewBounds = true
-            }.lparams(width = matchParent, height = matchParent, weight = 14f) { margin = dip(10) }
-
-            someButton(resources.getString(R.string.train_button_name),  { startActivity<ListCategoriesActivity>() })
-            someButton(resources.getString(R.string.race_button_name),  { startActivity<LevelRaceActivity>() })
-            someButton(resources.getString(R.string.hole_button_name),  { startActivity<HoleGameActivity>() })
-
-        }
-
-//        setAllButtonsSameWidth()
-//        setupButtons()
+        if (configuration.landscape && !isTablet()) robotIcon.visibility = View.GONE
 
         if (!prefs.isImported) {
             // remove old preferences to avoid duplicates, todo remove later
@@ -109,6 +86,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupButtons() {
+        trainingButton.setOnClickListener { startActivity<ListCategoriesActivity>() }
+        raceButton.setOnClickListener { startActivity<LevelRaceActivity>() }
+        holeButton.setOnClickListener { startActivity<HoleGameActivity>() }
+    }
     private fun setAllButtonsSameWidth() {
         val layout = activity_main as LinearLayout
         layout.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
@@ -130,11 +112,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun importDataAsynchronously() {
-        doAsync {
-            lateinit var dialog: ProgressDialog
+        doAsyncTask = doAsync {
             runOnUiThread {
                 dialog = indeterminateProgressDialog(getString(R.string.loading_data))
-                dialog.setCancelable(false)
+                dialog?.setCancelable(false)
             }
             createTables()
             importCategories()
@@ -143,13 +124,14 @@ class MainActivity : AppCompatActivity() {
             prefs.isImported = true
 
             runOnUiThread({
-                dialog.cancel()
+                dialog?.isShowing.let { dialog?.dismiss() }
                 showHintOnce()
             })
 
             Category(1, "aa")
             FillWord(1, "", "", "", "", 0, "", 1)
         }
+
     }
 
     private fun showHintOnce() {
@@ -253,12 +235,6 @@ class MainActivity : AppCompatActivity() {
         return buffer
     }
 
-    private fun setupButtons() {
-        trainingButton.setOnClickListener { startActivity<ListCategoriesActivity>() }
-        raceButton.setOnClickListener { startActivity<LevelRaceActivity>() }
-        holeButton.setOnClickListener { startActivity<HoleGameActivity>() }
-    }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return true
@@ -276,16 +252,10 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun _LinearLayout.someButton(buttonText: String, f: () -> Unit) =
-            themedButton(text = buttonText, theme = R.style.PrimaryButton) {
-                textSize = px2dip(sp(32f))
-                allCaps = false
-                setOnClickListener { f() }
-            }.lparams(height = matchParent, weight = 15f) {
-                leftPadding = dip(20)
-                rightPadding = dip(20)
-                margin = dip(10)
-            }
-
+    override fun onDestroy() {
+        super.onDestroy()
+        dialog?.let { it.isShowing.let { dialog?.dismiss() } }
+        doAsyncTask?.cancel(true)
+    }
 
 }

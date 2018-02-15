@@ -15,6 +15,12 @@ object Constant {
     fun metersToPixelsX() = metrics().xdpi / 0.0254f
     fun metersToPixelsY() = metrics().ydpi / 0.0254f
 
+    fun isTablet(): Boolean {
+        val xInches = displayWidth() / metrics().xdpi.toDouble()
+        val yInches = displayHeight() / metrics().ydpi.toDouble()
+        val diagonalInches = Math.hypot(xInches, yInches)
+        return diagonalInches >= 7.0
+        }
 
     const val ballSize = 150
     const val holeSize = ballSize

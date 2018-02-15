@@ -10,10 +10,12 @@ import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.labyrinth.headingTextView
 import cz.muni.fi.umimecesky.prefs
 import org.jetbrains.anko._LinearLayout
+import org.jetbrains.anko.configuration
 import org.jetbrains.anko.ctx
 import org.jetbrains.anko.dip
 import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.imageView
+import org.jetbrains.anko.landscape
 import org.jetbrains.anko.linearLayout
 import org.jetbrains.anko.matchParent
 import org.jetbrains.anko.padding
@@ -114,6 +116,10 @@ class SettingsActivity : AppCompatActivity() {
     private fun _LinearLayout.adjustedDrawable(image: Int) = imageView {
         imageResource = image
         adjustViewBounds = true
+        if (configuration.landscape) {
+            scaleX /= 1.5f
+            scaleY /= 1.5f
+        }
     }.lparams(weight = 1f)
 
     override fun onPause() {

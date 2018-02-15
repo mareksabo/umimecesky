@@ -7,6 +7,7 @@
     <string name="train_button_name">Procvičování</string>
     <string name="race_button_name">Robotí závody</string>
     <string name="hole_button_name">Kulička</string>
+    <string name="settings_title">Nastavení kuličky</string>
     <string name="none">Žádné</string>
     <string name="all">Všechny</string>
     <string name="next">Další</string>
