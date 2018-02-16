@@ -6,6 +6,16 @@
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorAccent">@color/color_accent</item>
+        <item name="actionBarStyle">@style/CustomActionBar</item>
+    </style>
+
+    <style name="CustomActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">
+        <item name="titleTextStyle">@style/ConstantTextStyle</item>
+    </style>
+
+    <style name="ConstantTextStyle" parent="@style/TextAppearance.AppCompat.Title">
+        <!-- Default for portrait is 20sp and for landscape 14sp-->
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="AppTheme.NoActionBar.FullScreen" parent="AppTheme">

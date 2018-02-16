@@ -1,11 +1,13 @@
 package cz.muni.fi.umimecesky.activity
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.db.helper.joinCategoryWordOpenHelper
+import cz.muni.fi.umimecesky.labyrinth.Constant.isTablet
 import cz.muni.fi.umimecesky.pojo.Category
 import cz.muni.fi.umimecesky.pojo.FillWord
 import cz.muni.fi.umimecesky.utils.Constant.TICKED_CATEGORIES
@@ -17,6 +19,8 @@ import kotlinx.android.synthetic.main.activity_training.firstButton
 import kotlinx.android.synthetic.main.activity_training.secondButton
 import kotlinx.android.synthetic.main.activity_training.seriesProgressBar
 import kotlinx.android.synthetic.main.activity_training.word
+import org.jetbrains.anko.configuration
+import org.jetbrains.anko.landscape
 
 class TrainingActivity : BaseAbstractActivity() {
 
@@ -28,6 +32,10 @@ class TrainingActivity : BaseAbstractActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_training)
         super.initUI(word, firstButton, secondButton)
+
+        // TODO: make XML on small displays in landscape mode durable
+        if (configuration.landscape && !isTablet())
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         @Suppress("UNCHECKED_CAST")
         checkedCategories = intent.getSerializableExtra(TICKED_CATEGORIES) as List<Category>

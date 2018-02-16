@@ -7,7 +7,7 @@ object Constant {
 
     const val TRAINING_NEW_WORD_DELAY_MS = 800L
     const val RACE_NEW_WORD_DELAY_MS = 200L
-    const val ROBOT_MOVE_ANIMATION_MS = 450L
+    const val ROBOT_MOVE_ANIMATION_MS = 500L
 
     const val RAW_HOPS_TO_WIN = 5
     const val STROKE_WIDTH = 8

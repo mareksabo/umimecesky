@@ -33,7 +33,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="@dimen/robot_padding"
-            android:layout_below="@id/usersRobotView"
             android:src="@drawable/robot2"
             tools:ignore="ContentDescription" />
 
@@ -43,7 +42,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="@dimen/robot_padding"
-            android:layout_below="@id/botView1"
             android:src="@drawable/robot5"
             tools:ignore="ContentDescription" />
 
@@ -53,7 +51,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="@dimen/robot_padding"
-            android:layout_below="@id/botView2"
             android:src="@drawable/robot12"
             tools:ignore="ContentDescription" />
     </LinearLayout>
@@ -85,9 +82,9 @@
             android:layout_height="wrap_content"
             android:padding="2dp"
             android:gravity="center"
-            android:text="Vědecké výzkumy přinesl_ překvapivé výsledky."
-            android:minLines="3"
-            android:maxLines="3"
+            android:text="Přijaté smlouvy mezi mocnostmi vedl_ k uzavření míru."
+            android:minLines="2"
+            android:maxLines="2"
             android:textSize="@dimen/text_size" />
 
         <LinearLayout

@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.ImageView
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.db.helper.joinCategoryWordOpenHelper
+import cz.muni.fi.umimecesky.labyrinth.Constant.isTablet
 import cz.muni.fi.umimecesky.logic.BotLogicQuick
 import cz.muni.fi.umimecesky.logic.BotLogicSlow
 import cz.muni.fi.umimecesky.logic.MoveLogic
@@ -23,6 +24,8 @@ import kotlinx.android.synthetic.main.activity_race.firstButton
 import kotlinx.android.synthetic.main.activity_race.secondButton
 import kotlinx.android.synthetic.main.activity_race.usersRobotView
 import kotlinx.android.synthetic.main.activity_race.word
+import org.jetbrains.anko.configuration
+import org.jetbrains.anko.landscape
 
 // for RobotAnimator
 
@@ -48,6 +51,7 @@ class RaceActivity : BaseAbstractActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_race)
         super.initUI(word, firstButton, secondButton)
+        if (configuration.landscape && !isTablet()) supportActionBar?.hide()
 
         robotMovePx = ((screenWidthDp - robotWidthDp) / totalMovesToWin()).px
         finishLine.x = (screenWidthDp - robotWidthDp - 2).px // 2 dp is line thickness
