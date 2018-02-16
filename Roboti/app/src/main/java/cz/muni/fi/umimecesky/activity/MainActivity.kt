@@ -48,14 +48,15 @@ import kotlinx.android.synthetic.main.activity_main.raceButton
 import kotlinx.android.synthetic.main.activity_main.robotIcon
 import kotlinx.android.synthetic.main.activity_main.trainingButton
 import me.toptas.fancyshowcase.FancyShowCaseView
+import org.jetbrains.anko.browse
 import org.jetbrains.anko.configuration
 import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.transaction
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.email
 import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.landscape
 import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.toast
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -255,8 +256,8 @@ class MainActivity : AppCompatActivity() {
                 openPlayStore()
                 true
             }
-            R.id.send_bug_item -> {
-                sendFeedback()
+            R.id.send_feedback_item -> {
+                email("marek.sabo.gvpt@gmail.com", "Umíme česky - feedback")
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -272,21 +273,7 @@ class MainActivity : AppCompatActivity() {
         try {
             startActivity(goToMarket)
         } catch (e: ActivityNotFoundException) {
-            startActivity(Intent(Intent.ACTION_VIEW,
-                    Uri.parse("http://play.google.com/store/apps/details?id=$packageName")))
-        }
-    }
-
-    private fun sendFeedback() {
-
-        val i = Intent(Intent.ACTION_SEND)
-                .putExtra(Intent.EXTRA_EMAIL, arrayOf("marek.sabo.gvpt@gmail.com"))
-                .putExtra(Intent.EXTRA_SUBJECT, "Umíme česky - feedback")
-        i.type = "message/rfc822"
-        try {
-            startActivity(Intent.createChooser(i, "Pošli mail"))
-        } catch (_: android.content.ActivityNotFoundException) {
-            toast("Nedokážu poslat email.")
+            browse("http://play.google.com/store/apps/details?id=$packageName")
         }
     }
 

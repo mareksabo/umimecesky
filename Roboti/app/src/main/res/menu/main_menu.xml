@@ -15,7 +15,7 @@
           android:orderInCategory="100"
           app:showAsAction="never" />
 
-    <item android:id="@+id/send_bug_item"
+    <item android:id="@+id/send_feedback_item"
           android:title="@string/send_feedback"
           android:orderInCategory="100"
           app:showAsAction="never" />
