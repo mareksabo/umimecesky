@@ -1,6 +1,6 @@
 package cz.muni.fi.umimecesky.labyrinth
 
-import cz.muni.fi.umimecesky.labyrinth.Constant.ballRadius
+import cz.muni.fi.umimecesky.labyrinth.Dimensions.ballRadius
 
 /**
  * @author Marek Sabo

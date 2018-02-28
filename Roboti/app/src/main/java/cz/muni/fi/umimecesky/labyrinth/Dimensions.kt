@@ -6,7 +6,7 @@ import android.content.res.Resources
  * @author Marek Sabo
  */
 // TODO: Make as usual class with singleton. Object will be created Every time settings are changed.
-object Constant {
+object Dimensions {
 
     private fun metrics() = Resources.getSystem().displayMetrics
     private fun displayWidth() = metrics().widthPixels
@@ -20,25 +20,26 @@ object Constant {
         val yInches = displayHeight() / metrics().ydpi.toDouble()
         val diagonalInches = Math.hypot(xInches, yInches)
         return diagonalInches >= 7.0
-        }
+    }
 
-    const val ballSize = 150
-    const val holeSize = ballSize
-    const val holeRadius = holeSize / 2
-    const val ballRadius = ballSize / 2
+    private fun dip(value: Int): Int = (value * metrics().density).toInt()
+    private fun sp(value: Int): Float = value * metrics().scaledDensity
 
-    fun maxBallPosition() =
-            Point2Df(
-                    displayWidth() - ballSize.toFloat(),
-                    displayHeight() - ballSize.toFloat()
-            )
+    val defaultTextSize = if (isTablet()) sp(20) else sp(10)
+
+    val ballSize = if (isTablet()) dip(80) else dip(56)
+    val holeSize = ballSize
+    val holeRadius = holeSize / 2
+    val ballRadius = ballSize / 2
 
     val minHolePosition = Point2Df(0f, 0f)
 
-    fun maxHolePosition() = Point2Df(
-            displayWidth() - holeSize.toFloat(),
-            displayHeight() - holeSize.toFloat()
-    )
+    fun maxBallPosition() = maxPosition(ballSize)
+    fun maxHolePosition() = maxPosition(holeSize)
 
+    private fun maxPosition(objectSize: Int) = Point2Df(
+            displayWidth() - objectSize.toFloat(),
+            displayHeight() - objectSize.toFloat()
+    )
 
 }

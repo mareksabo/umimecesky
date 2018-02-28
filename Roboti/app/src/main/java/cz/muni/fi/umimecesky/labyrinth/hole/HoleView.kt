@@ -7,6 +7,7 @@ import android.view.Gravity
 import android.view.View
 import android.widget.TextView
 import cz.muni.fi.umimecesky.R
+import cz.muni.fi.umimecesky.labyrinth.Dimensions
 
 /**
  * @author Marek Sabo
@@ -14,7 +15,7 @@ import cz.muni.fi.umimecesky.R
 @SuppressLint("ViewConstructor")
 class HoleView(hole: Hole, context: Context?) : View(context) {
 
-    val textInside: TextView
+    val textViewInside: TextView
 
 
     init {
@@ -22,17 +23,14 @@ class HoleView(hole: Hole, context: Context?) : View(context) {
         translationX = hole.middle().x
         translationY = hole.middle().y
 
-        if (hole is ResultHole) {
-            textInside = createTextInside(hole.result)
-            textInside.textSize += 1f
-        } else {
-            textInside = createTextInside("")
-        }
+        val textInside = if (hole is ResultHole) hole.result else ""
+        textViewInside = createTextInside(textInside)
     }
 
     private fun createTextInside(text: String): TextView {
         val textView = TextView(context)
         textView.text = text
+        textView.textSize = Dimensions.defaultTextSize
         textView.setTextColor(Color.WHITE)
         textView.gravity = Gravity.CENTER
 

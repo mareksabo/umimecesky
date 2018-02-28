@@ -18,12 +18,13 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 import android.widget.TextView
 import cz.muni.fi.umimecesky.db.helper.wordOpenHelper
-import cz.muni.fi.umimecesky.labyrinth.Constant.ballRadius
-import cz.muni.fi.umimecesky.labyrinth.Constant.ballSize
-import cz.muni.fi.umimecesky.labyrinth.Constant.holeRadius
-import cz.muni.fi.umimecesky.labyrinth.Constant.holeSize
-import cz.muni.fi.umimecesky.labyrinth.Constant.maxHolePosition
-import cz.muni.fi.umimecesky.labyrinth.Constant.minHolePosition
+import cz.muni.fi.umimecesky.labyrinth.Dimensions.ballRadius
+import cz.muni.fi.umimecesky.labyrinth.Dimensions.ballSize
+import cz.muni.fi.umimecesky.labyrinth.Dimensions.defaultTextSize
+import cz.muni.fi.umimecesky.labyrinth.Dimensions.holeRadius
+import cz.muni.fi.umimecesky.labyrinth.Dimensions.holeSize
+import cz.muni.fi.umimecesky.labyrinth.Dimensions.maxHolePosition
+import cz.muni.fi.umimecesky.labyrinth.Dimensions.minHolePosition
 import cz.muni.fi.umimecesky.labyrinth.hole.Hole
 import cz.muni.fi.umimecesky.labyrinth.hole.HoleCircle
 import cz.muni.fi.umimecesky.labyrinth.hole.HoleView
@@ -35,6 +36,7 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import org.jetbrains.anko.padding
 import org.jetbrains.anko.rightPadding
+import org.jetbrains.anko.sp
 import org.jetbrains.anko.textColor
 import org.jetbrains.anko.toast
 import java.util.*
@@ -119,7 +121,7 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
         setupView()
         layoutTransition = LayoutTransition()
         textView.textColor = Color.WHITE
-        textView.textSize += 4f
+        textView.textSize = (defaultTextSize + sp(5))
     }
 
     private fun setupView() {
@@ -187,7 +189,7 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
     private fun setupHoleView(hole: Hole): HoleView {
         val holeView = HoleView(hole, context)
         addView(holeView, ViewGroup.LayoutParams(holeSize, holeSize))
-        addView(holeView.textInside, ViewGroup.LayoutParams(holeSize, holeSize))
+        addView(holeView.textViewInside, ViewGroup.LayoutParams(holeSize, holeSize))
         return holeView
     }
 
@@ -212,6 +214,8 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
                 sensor.y = -event.values[0]
             }
         }
+        // fixes bug - stuck ball after falling
+        invalidate()
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -220,23 +224,21 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
         when {
             ball.checkTouching(incorrectHole) -> {
                 ball.reverseVelocity()
-                incorrectHoleView.textInside.setTextColor(Color.parseColor("#FF4500")) // #FFA500
+                incorrectHoleView.textViewInside.setTextColor(Color.parseColor("#FF4500")) // #FFA500
             }
             ball.checkInside(correctHole) -> {
-                correctHoleView.textInside.setTextColor(Color.parseColor("#30d330"))
+                correctHoleView.textViewInside.setTextColor(Color.parseColor("#30d330"))
                 runFallingBallAnimation(correctHole, {
                     removeAllViews()
                     currentWord = EMPTY_WORD
                     setupView()
-                })
+                }, {})
             }
             else -> holes
                     .singleOrNull { ball.checkInside(it) }
                     .let {
                         it?.let { it1 ->
-                            runFallingBallAnimation(it1, {
-                                canRoll.set(true)
-                            })
+                            runFallingBallAnimation(it1, {}, { canRoll.set(true) })
                         }
                     }
         }
@@ -246,7 +248,7 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
         invalidate()
     }
 
-    private fun runFallingBallAnimation(hole: Hole, f: () -> Unit) {
+    private fun runFallingBallAnimation(hole: Hole, fBefore: () -> Unit, fAfter: () -> Unit) {
         canRoll.set(false)
         val animator = ball.animate()
         animator.translationX(hole.middle().x + holeRadius - ballRadius)
@@ -255,8 +257,8 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
                 .scaleY(0.5f)
                 .alpha(0f)
                 .withEndAction {
-                    ball.recreateBall()
-                    f()
+                    fBefore()
+                    ball.recreateBall(fAfter)
                 }
         animator.duration = 800L
         animator.interpolator = interpolator

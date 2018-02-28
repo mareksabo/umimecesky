@@ -3,11 +3,11 @@ package cz.muni.fi.umimecesky.labyrinth
 import android.content.Context
 import android.view.View
 import cz.muni.fi.umimecesky.R
-import cz.muni.fi.umimecesky.labyrinth.Constant.holeRadius
-import cz.muni.fi.umimecesky.labyrinth.Constant.holeSize
-import cz.muni.fi.umimecesky.labyrinth.Constant.maxBallPosition
-import cz.muni.fi.umimecesky.labyrinth.Constant.metersToPixelsX
-import cz.muni.fi.umimecesky.labyrinth.Constant.metersToPixelsY
+import cz.muni.fi.umimecesky.labyrinth.Dimensions.holeRadius
+import cz.muni.fi.umimecesky.labyrinth.Dimensions.holeSize
+import cz.muni.fi.umimecesky.labyrinth.Dimensions.maxBallPosition
+import cz.muni.fi.umimecesky.labyrinth.Dimensions.metersToPixelsX
+import cz.muni.fi.umimecesky.labyrinth.Dimensions.metersToPixelsY
 import cz.muni.fi.umimecesky.labyrinth.hole.Hole
 import cz.muni.fi.umimecesky.prefs
 
@@ -79,12 +79,15 @@ class Ball(context: Context) : View(context) {
         velocity.y += ay * dT
     }
 
-    fun recreateBall() {
+    fun recreateBall(actionAfter: () -> Unit) {
         synchronized(this) {
             setInitialAttributes()
             val animator = animate()
             animator.withStartAction { visibility = View.VISIBLE }
-                    .withEndAction { invalidate() }
+                    .withEndAction {
+                        actionAfter()
+                        invalidate()
+                    }
                     .scaleX(1f)
                     .scaleY(1f)
                     .alpha(1f)

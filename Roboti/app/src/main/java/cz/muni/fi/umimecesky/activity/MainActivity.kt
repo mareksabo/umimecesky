@@ -35,7 +35,7 @@ import cz.muni.fi.umimecesky.db.DbContract.WordColumn.WORD_ID
 import cz.muni.fi.umimecesky.db.helper.categoryOpenHelper
 import cz.muni.fi.umimecesky.db.helper.joinCategoryWordOpenHelper
 import cz.muni.fi.umimecesky.db.helper.wordOpenHelper
-import cz.muni.fi.umimecesky.labyrinth.Constant.isTablet
+import cz.muni.fi.umimecesky.labyrinth.Dimensions.isTablet
 import cz.muni.fi.umimecesky.labyrinth.HoleGameActivity
 import cz.muni.fi.umimecesky.pojo.Category
 import cz.muni.fi.umimecesky.pojo.FillWord

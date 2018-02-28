@@ -1,7 +1,7 @@
 package cz.muni.fi.umimecesky.labyrinth.hole
 
 import cz.muni.fi.umimecesky.labyrinth.Circle
-import cz.muni.fi.umimecesky.labyrinth.Constant.holeRadius
+import cz.muni.fi.umimecesky.labyrinth.Dimensions.holeRadius
 import cz.muni.fi.umimecesky.labyrinth.Point2Df
 
 /**
