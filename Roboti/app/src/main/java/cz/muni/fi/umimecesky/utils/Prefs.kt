@@ -22,16 +22,13 @@ private const val HOLES_AMOUNT = "holesAmount"
 private const val ROTATION_MODE = "rotationMode"
 private const val HOLE_WORD_GRADE = "holeWordGrade"
 private const val BALL_WEIGHT = "ballWeight"
+private const val WAS_INTRODUCED = "wasIntroduced"
 
 class Prefs(context: Context) {
     private val gson = Gson()
 
     private val prefs =
             context.getSharedPreferences(Constant.SHARED_PREFS_FILE, Context.MODE_PRIVATE)
-
-    var isImported: Boolean
-        get() = prefs.getBoolean(IS_IMPORTED, false)
-        set(value) = prefs.edit().putBoolean(IS_IMPORTED, value).apply()
 
     var seriesAmount: String
         get() = prefs.getString(LAST_SPINNER_VALUE, Constant.ROUND_POSSIBILITIES[0])
@@ -86,4 +83,7 @@ class Prefs(context: Context) {
         get() = prefs.getInt(BALL_WEIGHT, 2 + if (isTablet()) 1 else 0)
         set(value) = prefs.edit().putInt(BALL_WEIGHT, value).apply()
 
+    var wasBallGameIntroduced: Boolean
+        get() = prefs.getBoolean(WAS_INTRODUCED, false)
+        set(value) = prefs.edit().putBoolean(WAS_INTRODUCED, value).apply()
 }

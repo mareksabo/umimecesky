@@ -57,8 +57,19 @@ class HoleGameActivity : Activity() {
         simulationView.setBackgroundResource(R.drawable.wood)
         setContentView(simulationView)
 
+        dialog = if (prefs.wasBallGameIntroduced) gameSettingsDialog() else introduceGameDialog()
+    }
 
-        dialog = alert {
+    private fun introduceGameDialog(): DialogInterface = alert {
+        title = getString(R.string.introduce_ball_dialog)
+        positiveButton("Rozumím") { prefs.wasBallGameIntroduced = true }
+        message = "1. Hra se spustí dotykem obrazovky." + "\n" +
+                "2. Kulička se ovládá náklaněním zařízení."
+
+    }.show()
+
+    private fun gameSettingsDialog(): DialogInterface {
+        return alert {
             title = resources.getString(R.string.action_settings)
             positiveButton("Ok") { }
             customView {
@@ -132,7 +143,7 @@ class HoleGameActivity : Activity() {
             if (oldValue != newValue) {
                 val bundle = Bundle()
                 bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, difficultyTypes[newValue])
-                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
+                firebaseAnalytics.logEvent("difficulty_level", bundle)
                 logBoth()
                 alreadyLogged = true
             }
@@ -140,7 +151,7 @@ class HoleGameActivity : Activity() {
         if (isHoleCountChanged) {
             val bundle = Bundle()
             bundle.putInt(FirebaseAnalytics.Param.QUANTITY, prefs.holesAmount)
-            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
+            firebaseAnalytics.logEvent("holes_quantity", bundle)
             if (!alreadyLogged) logBoth()
         }
     }
@@ -149,7 +160,7 @@ class HoleGameActivity : Activity() {
         val bundle = Bundle()
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE,
                 difficultyTypes[prefs.holeWordGrade] + prefs.holesAmount)
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
+        firebaseAnalytics.logEvent("difficulty_with_quantity", bundle)
     }
 
 }

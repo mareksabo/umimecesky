@@ -63,7 +63,7 @@ class WordOpenHelper(context: Context) : ManagedSQLiteOpenHelper(
         onCreate(db)
     }
 
-    fun getRandomWord(grade: Int) : FillWord = use {
+    private fun getRandomWord(grade: Int) : FillWord = use {
         select(WORD_TABLE_NAME)
                 .whereSimple("$GRADE = ?", "$grade")
                 .orderBy("RANDOM()")

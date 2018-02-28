@@ -34,7 +34,7 @@
         android:paddingLeft="@dimen/main_buttons_padding"
         android:paddingRight="@dimen/main_buttons_padding"
         android:layout_margin="10dp"
-        android:text="@string/train_button_name"
+        android:text="@string/train_game_name"
         android:textAllCaps="false"
         android:textSize="32sp"
         android:theme="@style/PrimaryButton"/>
@@ -47,7 +47,7 @@
         android:paddingLeft="@dimen/main_buttons_padding"
         android:paddingRight="@dimen/main_buttons_padding"
         android:layout_margin="10dp"
-        android:text="@string/race_button_name"
+        android:text="@string/race_game_name"
         android:textAllCaps="false"
         android:textSize="32sp"
         android:theme="@style/PrimaryButton"/>
@@ -60,7 +60,7 @@
         android:paddingLeft="@dimen/main_buttons_padding"
         android:paddingRight="@dimen/main_buttons_padding"
         android:layout_margin="10dp"
-        android:text="@string/hole_button_name"
+        android:text="@string/hole_game_name"
         android:textAllCaps="false"
         android:textSize="32sp"
         android:theme="@style/PrimaryButton"/>

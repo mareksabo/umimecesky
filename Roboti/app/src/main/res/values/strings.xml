@@ -1,12 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE resources [
+    <!ENTITY holegame "Kulička">
+    ]>
+
 <resources>
     <string name="image_showing_robot">Image showing robot</string>
 
     <string name="app_name">Umíme česky</string>
     <string name="action_settings">Nastavení</string>
 
-    <string name="train_button_name">Procvičování</string>
-    <string name="race_button_name">Robotí závody</string>
-    <string name="hole_button_name">Kulička</string>
+    <string name="train_game_name">Procvičování</string>
+    <string name="race_game_name">Robotí závody</string>
+    <string name="hole_game_name">&holegame;</string>
     <string name="settings_title">Nastavení kuličky</string>
     <string name="none">Žádné</string>
     <string name="all">Všechny</string>
@@ -35,6 +41,7 @@
     <string name="display_rotation">Rotace displeje</string>
     <string name="ball_weight_explanation">Lehčí má větší citlivost a zrychlení</string>
     <string name="rate_app">Ohodnotit aplikaci</string>
-    <string name="send_feedback">Poslat zpětnou vazbu</string>
+    <string name="report_problem">Nahlásit problém</string>
+    <string name="introduce_ball_dialog">Ovládání hry &holegame;</string>
 
 </resources>

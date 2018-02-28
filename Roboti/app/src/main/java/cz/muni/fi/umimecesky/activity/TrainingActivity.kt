@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
+import com.google.firebase.analytics.FirebaseAnalytics
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.db.helper.joinCategoryWordOpenHelper
 import cz.muni.fi.umimecesky.labyrinth.Constant.isTablet
@@ -24,7 +25,9 @@ import org.jetbrains.anko.landscape
 
 class TrainingActivity : BaseAbstractActivity() {
 
-    companion object {        private const val LAST_SEEN_WORD = "lastSeenWord" }
+    companion object {
+        private const val LAST_SEEN_WORD = "lastSeenWord"
+    }
 
     private lateinit var trainingProgressBar: TrainingProgressBar
 
@@ -39,6 +42,7 @@ class TrainingActivity : BaseAbstractActivity() {
 
         @Suppress("UNCHECKED_CAST")
         checkedCategories = intent.getSerializableExtra(TICKED_CATEGORIES) as List<Category>
+        logCheckedCategories()
 
         setNewRandomWord()
 
@@ -63,6 +67,12 @@ class TrainingActivity : BaseAbstractActivity() {
         variant1.setOnTouchListener(touchListener)
         variant2.setOnTouchListener(touchListener)
 
+    }
+
+    private fun logCheckedCategories() {
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, checkedCategories.toString())
+        FirebaseAnalytics.getInstance(this).logEvent("checked_categories", bundle)
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -110,8 +120,15 @@ class TrainingActivity : BaseAbstractActivity() {
     }
 
     private fun setNewRandomWord() {
-        val word = joinCategoryWordOpenHelper.getRandomCategoryWord(checkedCategories)
-        setWord(word)
+        try {
+            setWord(joinCategoryWordOpenHelper.getRandomCategoryWord(checkedCategories))
+        } catch (e: IllegalArgumentException) {
+            // TODO: remove later, just for better exception info
+            val bundle = Bundle()
+            bundle.putString("exception_message", e.message)
+            bundle.putString("which_categories", checkedCategories.toString())
+            FirebaseAnalytics.getInstance(this).logEvent("db_problem", bundle)
+        }
     }
 
     override fun setWord(word: FillWord?) {

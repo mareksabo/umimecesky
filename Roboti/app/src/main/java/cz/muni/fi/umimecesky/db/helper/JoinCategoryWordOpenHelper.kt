@@ -25,7 +25,6 @@ import org.jetbrains.anko.db.dropTable
 import org.jetbrains.anko.db.parseList
 import org.jetbrains.anko.db.parseSingle
 import org.jetbrains.anko.db.select
-import java.util.*
 
 val Context.joinCategoryWordOpenHelper: JoinCategoryWordOpenHelper
     get() = JoinCategoryWordOpenHelper.getInstance(applicationContext)
@@ -82,7 +81,7 @@ class JoinCategoryWordOpenHelper(context: Context) : ManagedSQLiteOpenHelper(
 
     private fun randomCategoryWord(categories: List<Int>): FillWord {
         if (categories != storedCategories) {
-            storedWords = getWordsInCategories(categories) as MutableList<FillWord>
+            storedWords = ArrayList()
             storedCategories = categories
         }
         return getRandomWord(categories)
@@ -92,8 +91,9 @@ class JoinCategoryWordOpenHelper(context: Context) : ManagedSQLiteOpenHelper(
     private var storedCategories: List<Int> = ArrayList() // TODO: use UniqueRandom
 
     private fun getWordsInCategories(categoryIds: List<Int>): List<FillWord> = use {
+        val stringIds = categoryIds.joinToString(",")
         select(JOIN_ALL_TABLES, ALL_WORD_COLUMNS)
-                .whereSimple("$JOIN_SAME_ROWS AND ($JOIN_TABLE_NAME.$JOIN_CATEGORY_ID IN (${categoryIds.joinToString()}) )")
+                .whereArgs("$JOIN_SAME_ROWS AND ($JOIN_TABLE_NAME.$JOIN_CATEGORY_ID IN ($stringIds) )")
                 .exec { parseList(classParser()) }
     }
 

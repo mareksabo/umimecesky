@@ -4,8 +4,8 @@ package cz.muni.fi.umimecesky.activity
 
 import android.app.ProgressDialog
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
+import android.database.sqlite.SQLiteException
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -39,8 +39,6 @@ import cz.muni.fi.umimecesky.labyrinth.Constant.isTablet
 import cz.muni.fi.umimecesky.labyrinth.HoleGameActivity
 import cz.muni.fi.umimecesky.pojo.Category
 import cz.muni.fi.umimecesky.pojo.FillWord
-import cz.muni.fi.umimecesky.prefs
-import cz.muni.fi.umimecesky.utils.Constant
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_main.activity_main
 import kotlinx.android.synthetic.main.activity_main.holeButton
@@ -84,11 +82,7 @@ class MainActivity : AppCompatActivity() {
 
         if (configuration.landscape && !isTablet()) robotIcon.visibility = View.GONE
 
-        if (!prefs.isImported) {
-            // remove old preferences to avoid duplicates, todo remove later
-            getSharedPreferences(Constant.SHARED_PREFS_FILE, Context.MODE_PRIVATE).edit().clear().apply()
-            importDataAsynchronously()
-        }
+        if (!isDbImported()) importDataAsynchronously()
     }
 
     private fun setupButtons() {
@@ -96,6 +90,7 @@ class MainActivity : AppCompatActivity() {
         raceButton.setOnClickListener { startActivity<LevelRaceActivity>() }
         holeButton.setOnClickListener { startActivity<HoleGameActivity>() }
     }
+
     private fun setAllButtonsSameWidth() {
         val layout = activity_main as LinearLayout
         layout.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
@@ -116,6 +111,13 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    private fun isDbImported(): Boolean = try {
+        val categories = categoryOpenHelper.allCategories()
+        !categories.isEmpty()
+    } catch (e: SQLiteException) {
+        false
+    }
+
     private fun importDataAsynchronously() {
         doAsyncTask = doAsync {
             runOnUiThread {
@@ -126,7 +128,6 @@ class MainActivity : AppCompatActivity() {
             importCategories()
             importWords()
             importConversions()
-            prefs.isImported = true
 
             runOnUiThread({
                 dialog?.isShowing.let { dialog?.dismiss() }
@@ -256,8 +257,8 @@ class MainActivity : AppCompatActivity() {
                 openPlayStore()
                 true
             }
-            R.id.send_feedback_item -> {
-                email("marek.sabo.gvpt@gmail.com", "Umíme česky - feedback")
+            R.id.send_email_item -> {
+                email("marek.sabo.gvpt@gmail.com", "Umíme česky - problém")
                 true
             }
             else -> super.onOptionsItemSelected(item)
