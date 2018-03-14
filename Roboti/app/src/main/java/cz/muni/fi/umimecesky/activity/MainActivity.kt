@@ -48,6 +48,7 @@ import kotlinx.android.synthetic.main.activity_main.trainingButton
 import me.toptas.fancyshowcase.FancyShowCaseView
 import org.jetbrains.anko.browse
 import org.jetbrains.anko.configuration
+import org.jetbrains.anko.db.delete
 import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.transaction
 import org.jetbrains.anko.doAsync
@@ -82,7 +83,7 @@ class MainActivity : AppCompatActivity() {
 
         if (configuration.landscape && !isTablet()) robotIcon.visibility = View.GONE
 
-        if (!isDbImported()) importDataAsynchronously()
+        if (!isDbImported()) importDataAsynchronously() else removeEmptyCategory()
     }
 
     private fun setupButtons() {
@@ -228,6 +229,12 @@ class MainActivity : AppCompatActivity() {
                     )
                 }
             }
+        }
+    }
+
+    private fun removeEmptyCategory() {
+        categoryOpenHelper.use {
+            delete(CATEGORY_TABLE_NAME, "$CATEGORY_ID = 37")
         }
     }
 

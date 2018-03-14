@@ -83,7 +83,7 @@ private constructor(val name: String, val categoryIDs: List<Int>, val numberOfLe
                         5),
 
                 RaceConcept("Zkratky a typografie",
-                        Arrays.asList(34, 35, 36, 37),
+                        Arrays.asList(34, 35, 36),
                         5),
 
                 RaceConcept("Velká písmena – lidé, skupiny, organizace, čas",
