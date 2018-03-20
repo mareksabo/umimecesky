@@ -84,14 +84,11 @@ class Ball(context: Context) : View(context) {
             setInitialAttributes()
             val animator = animate()
             animator.withStartAction { visibility = View.VISIBLE }
-                    .withEndAction {
-                        actionAfter()
-                        invalidate()
-                    }
+                    .withEndAction { actionAfter() }
                     .scaleX(1f)
                     .scaleY(1f)
                     .alpha(1f)
-            animator.duration = 600L
+                    .duration = 600L
             animator.start()
         }
     }

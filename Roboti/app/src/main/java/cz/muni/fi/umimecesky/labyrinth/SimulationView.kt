@@ -1,19 +1,15 @@
 package cz.muni.fi.umimecesky.labyrinth
 
 import android.animation.LayoutTransition
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
 import android.util.Log
 import android.view.Gravity
 import android.view.MotionEvent
-import android.view.Surface
 import android.view.ViewGroup
-import android.view.WindowManager
+import android.view.ViewPropertyAnimator
 import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 import android.widget.TextView
@@ -46,19 +42,14 @@ import java.util.concurrent.atomic.AtomicBoolean
 /**
  * @author Marek Sabo
  */
-class SimulationView(context: Context) : FrameLayout(context), SensorEventListener {
+class SimulationView(context: Context) : FrameLayout(context) {
 
     companion object {
         private val interpolator = DecelerateInterpolator(1.5f)
         val EMPTY_WORD = FillWord(1, "", "", "", "", 0, "", 1)
     }
 
-    private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-    private val defaultDisplay by lazy { (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay }
-
-    private val accelerometer: Sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-
-    private var sensor = Point2Df(0f, 0f)
+    private val sensorListener = BallSensorListener(context)
 
     private val ball by lazy { Ball(context) }
     private lateinit var correctHole: ResultHole
@@ -105,17 +96,8 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
     private fun validateHolePosition(circles: List<Circle>, holeCircle: Circle) =
             circles.none { it.isRelativelyClose(holeCircle) }
 
-    /*
-     * It is not necessary to get accelerometer events at a very high
-     * rate, by using a slower rate (SENSOR_DELAY_UI), we get an
-     * automatic low-pass filter, which "extracts" the gravity component
-     * of the acceleration. As an added benefit, we use less power and
-     * CPU resources.
-     */
-    fun startSimulation() =
-            sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME)
-
-    fun stopSimulation() = sensorManager.unregisterListener(this)
+    fun startSimulation() = sensorListener.startSimulation()
+    fun stopSimulation() = sensorListener.stopSimulation()
 
     init {
         setupView()
@@ -137,7 +119,6 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
     }
 
     private fun setupHolesAndBall() {
-        Log.i("prefs.holesAmount", "${prefs.holesAmount}")
         holes = createHoles(prefs.holesAmount)
         for (hole in holes) setupHoleView(hole)
         textView.parent?.let {
@@ -151,6 +132,7 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
         addView(ball, ViewGroup.LayoutParams(ballSize, ballSize))
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         Log.w("onTouchEvent, can press", "${canPressScreen.get()}")
         if (event?.action == MotionEvent.ACTION_DOWN && canPressScreen.get()) {
@@ -193,31 +175,6 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
         return holeView
     }
 
-    override fun onSensorChanged(event: SensorEvent) {
-        if (event.sensor.type != Sensor.TYPE_ACCELEROMETER) return
-
-        when (defaultDisplay.rotation) {
-            Surface.ROTATION_0 -> {
-                sensor.x = event.values[0]
-                sensor.y = event.values[1]
-            }
-            Surface.ROTATION_90 -> {
-                sensor.x = -event.values[1]
-                sensor.y = event.values[0]
-            }
-            Surface.ROTATION_180 -> {
-                sensor.x = -event.values[0]
-                sensor.y = -event.values[1]
-            }
-            Surface.ROTATION_270 -> {
-                sensor.x = event.values[1]
-                sensor.y = -event.values[0]
-            }
-        }
-        // fixes bug - stuck ball after falling
-        invalidate()
-    }
-
     override fun onDraw(canvas: Canvas) {
         if (!canRoll.get()) return
 
@@ -227,44 +184,54 @@ class SimulationView(context: Context) : FrameLayout(context), SensorEventListen
                 incorrectHoleView.textViewInside.setTextColor(Color.parseColor("#FF4500")) // #FFA500
             }
             ball.checkInside(correctHole) -> {
-                correctHoleView.textViewInside.setTextColor(Color.parseColor("#30d330"))
-                runFallingBallAnimation(correctHole, {
-                    removeAllViews()
-                    currentWord = EMPTY_WORD
-                    setupView()
-                }, {})
+                correctHoleAction()
             }
-            else -> holes
-                    .singleOrNull { ball.checkInside(it) }
-                    .let {
-                        it?.let { it1 ->
-                            runFallingBallAnimation(it1, {}, { canRoll.set(true) })
-                        }
-                    }
+            else -> {
+                holes.singleOrNull { ball.checkInside(it) }
+                        ?.let { otherHolesAction(it) }
+            }
         }
 
-        ball.computeMove(sensor.x, sensor.y)
+        ball.computeMove(sensorListener.sensor.x, sensorListener.sensor.y)
 
         invalidate()
     }
 
-    private fun runFallingBallAnimation(hole: Hole, fBefore: () -> Unit, fAfter: () -> Unit) {
+    private fun correctHoleAction() {
+        correctHoleView.textViewInside.setTextColor(Color.parseColor("#30d330"))
         canRoll.set(false)
-        val animator = ball.animate()
+        val animator = createAnimation(correctHole)
+        animator.withEndAction {
+            removeAllViews()
+            currentWord = EMPTY_WORD
+            setupView()
+            ball.recreateBall({})
+        }
+        animator.start()
+    }
+
+    private fun otherHolesAction(holeWithBall: Hole) {
+        canRoll.set(false)
+        val animator = createAnimation(holeWithBall)
+        animator.withEndAction {
+            ball.recreateBall {
+                canRoll.set(true)
+                invalidate()
+            }
+        }
+        animator.start()
+    }
+
+    private fun createAnimation(hole: Hole): ViewPropertyAnimator {
+        val animator = ball.animate()!!
         animator.translationX(hole.middle().x + holeRadius - ballRadius)
                 .translationY(hole.middle().y + holeRadius - ballRadius)
                 .scaleX(0.5f)
                 .scaleY(0.5f)
                 .alpha(0f)
-                .withEndAction {
-                    fBefore()
-                    ball.recreateBall(fAfter)
-                }
         animator.duration = 800L
         animator.interpolator = interpolator
-        animator.start()
+        return animator
     }
-
-    override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
 
 }
