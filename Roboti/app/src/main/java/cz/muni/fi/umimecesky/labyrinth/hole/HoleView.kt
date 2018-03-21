@@ -20,8 +20,8 @@ class HoleView(hole: Hole, context: Context?) : View(context) {
 
     init {
         setBackgroundResource(R.drawable.hole)
-        translationX = hole.middle().x
-        translationY = hole.middle().y
+        translationX = hole.middle.x
+        translationY = hole.middle.y
 
         val textInside = if (hole is ResultHole) hole.result else ""
         textViewInside = createTextInside(textInside)

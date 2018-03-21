@@ -1,6 +1,8 @@
 package cz.muni.fi.umimecesky.labyrinth.hole
 
+import cz.muni.fi.umimecesky.labyrinth.Point2Df
+
 /**
  * @author Marek Sabo
  */
-class ResultHole(circle: HoleCircle, val result: String, val correct: Boolean) : Hole(circle)
+class ResultHole(middlePoint: Point2Df, val result: String) : Hole(middlePoint)

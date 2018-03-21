@@ -16,13 +16,11 @@ import android.widget.TextView
 import cz.muni.fi.umimecesky.db.helper.wordOpenHelper
 import cz.muni.fi.umimecesky.labyrinth.Dimensions.ballRadius
 import cz.muni.fi.umimecesky.labyrinth.Dimensions.ballSize
-import cz.muni.fi.umimecesky.labyrinth.Dimensions.defaultTextSize
 import cz.muni.fi.umimecesky.labyrinth.Dimensions.holeRadius
 import cz.muni.fi.umimecesky.labyrinth.Dimensions.holeSize
 import cz.muni.fi.umimecesky.labyrinth.Dimensions.maxHolePosition
 import cz.muni.fi.umimecesky.labyrinth.Dimensions.minHolePosition
 import cz.muni.fi.umimecesky.labyrinth.hole.Hole
-import cz.muni.fi.umimecesky.labyrinth.hole.HoleCircle
 import cz.muni.fi.umimecesky.labyrinth.hole.HoleView
 import cz.muni.fi.umimecesky.labyrinth.hole.ResultHole
 import cz.muni.fi.umimecesky.pojo.FillWord
@@ -35,7 +33,6 @@ import org.jetbrains.anko.rightPadding
 import org.jetbrains.anko.sp
 import org.jetbrains.anko.textColor
 import org.jetbrains.anko.toast
-import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -50,8 +47,8 @@ class SimulationView(context: Context) : FrameLayout(context) {
     }
 
     private val sensorListener = BallSensorListener(context)
-
     private val ball by lazy { Ball(context) }
+
     private lateinit var correctHole: ResultHole
     private lateinit var incorrectHole: ResultHole
     private lateinit var holes: List<Hole>
@@ -66,35 +63,28 @@ class SimulationView(context: Context) : FrameLayout(context) {
     private var currentWord: FillWord = prefs.lastRandomWord
 
     private fun createHoles(amount: Int): List<Hole> {
-        val circles = ArrayList<Circle>(amount + 3)
-        circles.add(Circle(ball.initialPosition, ballRadius))
-        circles.add(correctHole.circle)
-        circles.add(incorrectHole.circle)
-        val holes = ArrayList<Hole>(amount)
-        val maxHolePosition = maxHolePosition()
+        val initialPosition = Hole(ball.initialPosition)
+        val temporaryHoles = listOf(initialPosition, correctHole, incorrectHole)
+        val holes = temporaryHoles.toMutableList()
 
-        loop@ for (i in 0 until amount) {
-            var randomPoint: Point2Df
-            var holeCircle: HoleCircle
-            var j = 0
-            do {
-                randomPoint = Point2Df(random.nextFloat() * maxHolePosition.x,
-                        random.nextFloat() * maxHolePosition.y)
-                holeCircle = HoleCircle(randomPoint)
-                j++
-                if (j > 1000) {
-                    context.toast("Nemůžu vytvořit tolik děr!")
-                    break@loop
-                }
-            } while (!validateHolePosition(circles, holeCircle))
-            circles.add(holeCircle)
-            holes.add(Hole(holeCircle))
+        for (i in 1..amount) {
+            val hole = generateRandomHole(maxHolePosition(), holes)
+            hole?.let { holes.add(it) } ?: break
         }
+        holes.removeAll(temporaryHoles)
         return holes
     }
 
-    private fun validateHolePosition(circles: List<Circle>, holeCircle: Circle) =
-            circles.none { it.isRelativelyClose(holeCircle) }
+    private fun generateRandomHole(maxHolePosition: Point2Df, holes: MutableList<Hole>): Hole? {
+        var hole: Hole
+
+        repeat (1000) {
+            hole = Hole(Point2Df(random.nextFloat() * maxHolePosition.x,
+                    random.nextFloat() * maxHolePosition.y))
+            if (holes.none { it.isRelativelyClose(hole) }) return hole
+        }
+        return null
+    }
 
     fun startSimulation() = sensorListener.startSimulation()
     fun stopSimulation() = sensorListener.stopSimulation()
@@ -102,8 +92,6 @@ class SimulationView(context: Context) : FrameLayout(context) {
     init {
         setupView()
         layoutTransition = LayoutTransition()
-        textView.textColor = Color.WHITE
-        textView.textSize = (defaultTextSize + sp(5))
     }
 
     private fun setupView() {
@@ -111,25 +99,37 @@ class SimulationView(context: Context) : FrameLayout(context) {
         correctHoleView = setupHoleView(correctHole)
         incorrectHoleView = setupHoleView(incorrectHole)
 
-        textView.text = currentWord.wordMissing
-        textView.gravity = Gravity.CENTER
-        textView.padding = 10
-        addView(textView)
+        setupMainText()
         canPressScreen.set(true)
     }
 
-    private fun setupHolesAndBall() {
-        holes = createHoles(prefs.holesAmount)
-        for (hole in holes) setupHoleView(hole)
-        textView.parent?.let {
-            (textView.parent as ViewGroup).removeView(textView)
-            textView.gravity = Gravity.START or Gravity.BOTTOM
-            textView.rightPadding += holeSize
-            addView(textView)
+    private fun setResultHoles() {
+        if (currentWord == EMPTY_WORD) {
+            currentWord = context.wordOpenHelper.getRandomWordWithSmallVariants(prefs.holeWordGrade)
+            prefs.lastRandomWord = currentWord
         }
+        val (variant1, variant2) = currentWord.variants()
+        val (pos, pos2) =
+                if (random.nextBoolean()) minHolePosition to maxHolePosition()
+                else (maxHolePosition() to minHolePosition)
+        correctHole = ResultHole(pos, variant1)
+        incorrectHole = ResultHole(pos2, variant2)
+    }
 
-        ball.parent?.let { (ball.parent as ViewGroup).removeView(ball) }
-        addView(ball, ViewGroup.LayoutParams(ballSize, ballSize))
+    private fun setupHoleView(hole: Hole): HoleView {
+        val holeView = HoleView(hole, context)
+        addView(holeView, ViewGroup.LayoutParams(holeSize, holeSize))
+        addView(holeView.textViewInside, ViewGroup.LayoutParams(holeSize, holeSize))
+        return holeView
+    }
+
+    private fun setupMainText() {
+        textView.text = currentWord.wordMissing
+        textView.textColor = Color.WHITE
+        textView.textSize = (Dimensions.defaultTextSize + sp(5))
+        textView.gravity = Gravity.CENTER
+        textView.padding = 10
+        addView(textView)
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -151,33 +151,23 @@ class SimulationView(context: Context) : FrameLayout(context) {
         return super.onTouchEvent(event)
     }
 
-    private fun setResultHoles() {
-        if (currentWord == EMPTY_WORD) {
-            currentWord = context.wordOpenHelper.getRandomWordWithSmallVariants(prefs.holeWordGrade)
-            prefs.lastRandomWord = currentWord
+    private fun setupHolesAndBall() {
+        holes = createHoles(prefs.holesAmount)
+        if (holes.size < prefs.holesAmount) context.toast("Nemůžu vytvořit tolik děr!")
+        for (hole in holes) setupHoleView(hole)
+        textView.parent?.apply {
+            (textView.parent as ViewGroup).removeView(textView)
+            textView.gravity = Gravity.START or Gravity.BOTTOM
+            textView.rightPadding += holeSize
+            addView(textView)
         }
-        val (variant1, variant2) = currentWord.variants()
-        val pos = if (random.nextBoolean()) minHolePosition else maxHolePosition()
-        val pos2 = if (pos == minHolePosition) maxHolePosition() else minHolePosition
-        if (currentWord.correctVariant == 0) {
-            correctHole = ResultHole(HoleCircle(pos), variant1, true)
-            incorrectHole = ResultHole(HoleCircle(pos2), variant2, false)
-        } else {
-            correctHole = ResultHole(HoleCircle(pos), variant2, true)
-            incorrectHole = ResultHole(HoleCircle(pos2), variant1, false)
-        }
-    }
 
-    private fun setupHoleView(hole: Hole): HoleView {
-        val holeView = HoleView(hole, context)
-        addView(holeView, ViewGroup.LayoutParams(holeSize, holeSize))
-        addView(holeView.textViewInside, ViewGroup.LayoutParams(holeSize, holeSize))
-        return holeView
+        ball.parent?.let { (ball.parent as ViewGroup).removeView(ball) }
+        addView(ball, ViewGroup.LayoutParams(ballSize, ballSize))
     }
 
     override fun onDraw(canvas: Canvas) {
         if (!canRoll.get()) return
-
         when {
             ball.checkTouching(incorrectHole) -> {
                 ball.reverseVelocity()
@@ -224,8 +214,8 @@ class SimulationView(context: Context) : FrameLayout(context) {
 
     private fun createAnimation(hole: Hole): ViewPropertyAnimator {
         val animator = ball.animate()!!
-        animator.translationX(hole.middle().x + holeRadius - ballRadius)
-                .translationY(hole.middle().y + holeRadius - ballRadius)
+        animator.translationX(hole.middle.x + holeRadius - ballRadius)
+                .translationY(hole.middle.y + holeRadius - ballRadius)
                 .scaleX(0.5f)
                 .scaleY(0.5f)
                 .alpha(0f)

@@ -100,9 +100,9 @@ class Ball(context: Context) : View(context) {
         stop()
     }
 
-    fun checkInside(hole: Hole): Boolean = hole.middle().distance(posX, posY) <= holeRadius
+    fun checkInside(hole: Hole): Boolean = hole.middle.distance(posX, posY) <= holeRadius
 
-    fun checkTouching(hole: Hole): Boolean = hole.middle().distance(posX, posY) <= holeSize
+    fun checkTouching(hole: Hole): Boolean = hole.middle.distance(posX, posY) <= holeSize
 
     private fun stop() = velocity.setTo(zeroVelocity)
 

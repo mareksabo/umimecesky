@@ -77,7 +77,7 @@ class Prefs(context: Context) {
 
     var holeWordGrade: Int
         get() = prefs.getInt(HOLE_WORD_GRADE, 1)
-        set(value) = prefs.edit().putInt(HOLE_WORD_GRADE, value).apply()
+        set(value) = if (value >= 0) prefs.edit().putInt(HOLE_WORD_GRADE, value).apply() else {}
 
     var ballWeight: Int
         get() = prefs.getInt(BALL_WEIGHT, 2 + if (isTablet()) 1 else 0)

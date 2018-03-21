@@ -1,12 +1,14 @@
 package cz.muni.fi.umimecesky.labyrinth.hole
 
+import cz.muni.fi.umimecesky.labyrinth.Circle
+import cz.muni.fi.umimecesky.labyrinth.Dimensions.holeRadius
+import cz.muni.fi.umimecesky.labyrinth.Point2Df
+
 /**
  * @author Marek Sabo
  */
-open class Hole(val circle: HoleCircle) {
+open class Hole(middlePoint: Point2Df) : Circle(middlePoint, holeRadius) {
 
-    fun middle() = circle.middle
-
-    override fun toString(): String = "Hole [$circle.middle.x, $circle.middle.y]"
+    override fun toString(): String = "Hole [$middle.x, $middle.y]"
 
 }
