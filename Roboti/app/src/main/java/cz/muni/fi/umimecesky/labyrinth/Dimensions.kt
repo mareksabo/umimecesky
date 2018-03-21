@@ -16,10 +16,21 @@ object Dimensions {
     fun metersToPixelsY() = metrics().ydpi / 0.0254f
 
     fun isTablet(): Boolean {
+        return diagonalInches() >= 7.0
+    }
+
+    private fun diagonalInches(): Double {
         val xInches = displayWidth() / metrics().xdpi.toDouble()
         val yInches = displayHeight() / metrics().ydpi.toDouble()
-        val diagonalInches = Math.hypot(xInches, yInches)
-        return diagonalInches >= 7.0
+        return Math.hypot(xInches, yInches)
+    }
+
+    fun deviceDpi(): Int {
+        return (Math.hypot(
+                displayWidth().toDouble(),
+                displayHeight().toDouble())
+                / diagonalInches()
+                ).toInt()
     }
 
     private fun dip(value: Int): Int = (value * metrics().density).toInt()

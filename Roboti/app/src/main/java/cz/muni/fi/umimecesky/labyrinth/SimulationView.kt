@@ -46,6 +46,7 @@ class SimulationView(context: Context) : FrameLayout(context) {
         val EMPTY_WORD = FillWord(1, "", "", "", "", 0, "", 1)
     }
 
+    private val logger = HoleGameLogger(context)
     private val sensorListener = BallSensorListener(context)
     private val ball by lazy { Ball(context) }
 
@@ -54,37 +55,12 @@ class SimulationView(context: Context) : FrameLayout(context) {
     private lateinit var holes: List<Hole>
     private lateinit var correctHoleView: HoleView
     private lateinit var incorrectHoleView: HoleView
+    private val textView = TextView(context)
 
     private var canRoll = AtomicBoolean(false)
     private var canPressScreen = AtomicBoolean(false)
 
-    private val textView = TextView(context)
-
     private var currentWord: FillWord = prefs.lastRandomWord
-
-    private fun createHoles(amount: Int): List<Hole> {
-        val initialPosition = Hole(ball.initialPosition)
-        val temporaryHoles = listOf(initialPosition, correctHole, incorrectHole)
-        val holes = temporaryHoles.toMutableList()
-
-        for (i in 1..amount) {
-            val hole = generateRandomHole(maxHolePosition(), holes)
-            hole?.let { holes.add(it) } ?: break
-        }
-        holes.removeAll(temporaryHoles)
-        return holes
-    }
-
-    private fun generateRandomHole(maxHolePosition: Point2Df, holes: MutableList<Hole>): Hole? {
-        var hole: Hole
-
-        repeat (1000) {
-            hole = Hole(Point2Df(random.nextFloat() * maxHolePosition.x,
-                    random.nextFloat() * maxHolePosition.y))
-            if (holes.none { it.isRelativelyClose(hole) }) return hole
-        }
-        return null
-    }
 
     fun startSimulation() = sensorListener.startSimulation()
     fun stopSimulation() = sensorListener.stopSimulation()
@@ -145,6 +121,7 @@ class SimulationView(context: Context) : FrameLayout(context) {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
                         canRoll.set(true)
+                        logger.startNewWord()
                         invalidate()
                     }
         }
@@ -166,20 +143,37 @@ class SimulationView(context: Context) : FrameLayout(context) {
         addView(ball, ViewGroup.LayoutParams(ballSize, ballSize))
     }
 
+    private fun createHoles(amount: Int): List<Hole> {
+        val initialPosition = Hole(ball.initialPosition)
+        val temporaryHoles = listOf(initialPosition, correctHole, incorrectHole)
+        val holes = temporaryHoles.toMutableList()
+
+        for (i in 1..amount) {
+            val hole = generateRandomHole(maxHolePosition(), holes)
+            hole?.let { holes.add(it) } ?: break
+        }
+        holes.removeAll(temporaryHoles)
+        return holes
+    }
+
+    private fun generateRandomHole(maxHolePosition: Point2Df, holes: MutableList<Hole>): Hole? {
+        var hole: Hole
+
+        repeat (1000) {
+            hole = Hole(Point2Df(random.nextFloat() * maxHolePosition.x,
+                    random.nextFloat() * maxHolePosition.y))
+            if (holes.none { it.isRelativelyClose(hole) }) return hole
+        }
+        return null
+    }
+
     override fun onDraw(canvas: Canvas) {
         if (!canRoll.get()) return
         when {
-            ball.checkTouching(incorrectHole) -> {
-                ball.reverseVelocity()
-                incorrectHoleView.textViewInside.setTextColor(Color.parseColor("#FF4500")) // #FFA500
-            }
-            ball.checkInside(correctHole) -> {
-                correctHoleAction()
-            }
-            else -> {
-                holes.singleOrNull { ball.checkInside(it) }
-                        ?.let { otherHolesAction(it) }
-            }
+            ball.checkTouching(incorrectHole) -> incorrectHoleAction()
+            ball.checkInside(correctHole) -> correctHoleAction()
+            else -> holes.singleOrNull { ball.checkInside(it) }
+                    ?.let { otherHoleAction(it) }
         }
 
         ball.computeMove(sensorListener.sensor.x, sensorListener.sensor.y)
@@ -187,9 +181,16 @@ class SimulationView(context: Context) : FrameLayout(context) {
         invalidate()
     }
 
+    private fun incorrectHoleAction() {
+        ball.reverseVelocity()
+        incorrectHoleView.textViewInside.setTextColor(Color.parseColor("#FF4500")) // #FFA500
+        logger.touchedWrongAnswer()
+    }
+
     private fun correctHoleAction() {
         correctHoleView.textViewInside.setTextColor(Color.parseColor("#30d330"))
         canRoll.set(false)
+        logger.finishHoleWordPuzzle()
         val animator = createAnimation(correctHole)
         animator.withEndAction {
             removeAllViews()
@@ -200,8 +201,9 @@ class SimulationView(context: Context) : FrameLayout(context) {
         animator.start()
     }
 
-    private fun otherHolesAction(holeWithBall: Hole) {
+    private fun otherHoleAction(holeWithBall: Hole) {
         canRoll.set(false)
+        logger.incrementHolesFallAmount()
         val animator = createAnimation(holeWithBall)
         animator.withEndAction {
             ball.recreateBall {

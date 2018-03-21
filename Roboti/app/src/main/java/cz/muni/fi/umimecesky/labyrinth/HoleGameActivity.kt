@@ -11,7 +11,6 @@ import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.SeekBar
 import android.widget.TextView
-import com.google.firebase.analytics.FirebaseAnalytics
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.prefs
 import org.jetbrains.anko.alert
@@ -30,12 +29,11 @@ import kotlin.math.roundToInt
 class HoleGameActivity : Activity() {
 
     companion object {
-        private val difficultyTypes = arrayOf("Lehké", "Mírné", "Težší", "Náročné")
+        val difficultyTypes = arrayOf("Lehké", "Težší", "Náročné")
     }
 
     private lateinit var simulationView: SimulationView
     private var hardnessRB: Array<RadioButton> = emptyArray()
-    private lateinit var firebaseAnalytics: FirebaseAnalytics
     private var isHoleCountChanged: Boolean = false
     private var dialog: DialogInterface? = null
 
@@ -51,7 +49,6 @@ class HoleGameActivity : Activity() {
                 }
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        firebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
         simulationView = SimulationView(this)
         simulationView.setBackgroundResource(R.drawable.wood)
@@ -110,11 +107,12 @@ class HoleGameActivity : Activity() {
                         textView(difficultyTypes[1])
                         val hard = radioButton()
                         textView(difficultyTypes[2])
-                        val extreme = radioButton()
-                        textView(difficultyTypes[3])
 
-                        hardnessRB = arrayOf(easy, medium, hard, extreme)
+                        hardnessRB = arrayOf(easy, medium, hard)
                         hardnessRB[prefs.holeWordGrade].isChecked = true
+                        hardnessRB.forEachIndexed { index, button ->
+                            button.setOnClickListener { prefs.holeWordGrade = index }
+                        }
                     }
                 }
             }
@@ -130,37 +128,7 @@ class HoleGameActivity : Activity() {
         super.onPause()
         simulationView.stopSimulation()
         dialog?.cancel()
-        logChangedButtons()
-    }
-
-    private fun logChangedButtons() {
-        var alreadyLogged = false
-        if (hardnessRB.isNotEmpty()) {
-            val oldValue = prefs.holeWordGrade
-            val newValue = hardnessRB.map { it.isChecked }.indexOf(true)
-
-            prefs.holeWordGrade = newValue
-            if (oldValue != newValue) {
-                val bundle = Bundle()
-                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, difficultyTypes[newValue])
-                firebaseAnalytics.logEvent("difficulty_level", bundle)
-                logBoth()
-                alreadyLogged = true
-            }
-        }
-        if (isHoleCountChanged) {
-            val bundle = Bundle()
-            bundle.putInt(FirebaseAnalytics.Param.QUANTITY, prefs.holesAmount)
-            firebaseAnalytics.logEvent("holes_quantity", bundle)
-            if (!alreadyLogged) logBoth()
-        }
-    }
-
-    private fun logBoth() {
-        val bundle = Bundle()
-        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE,
-                difficultyTypes[prefs.holeWordGrade] + prefs.holesAmount)
-        firebaseAnalytics.logEvent("difficulty_with_quantity", bundle)
+        HoleGameLogger(this).logGameSettings()
     }
 
 }

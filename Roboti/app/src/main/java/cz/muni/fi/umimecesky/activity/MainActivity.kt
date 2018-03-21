@@ -37,6 +37,7 @@ import cz.muni.fi.umimecesky.db.helper.joinCategoryWordOpenHelper
 import cz.muni.fi.umimecesky.db.helper.wordOpenHelper
 import cz.muni.fi.umimecesky.labyrinth.Dimensions.isTablet
 import cz.muni.fi.umimecesky.labyrinth.HoleGameActivity
+import cz.muni.fi.umimecesky.labyrinth.HoleGameLogger
 import cz.muni.fi.umimecesky.pojo.Category
 import cz.muni.fi.umimecesky.pojo.FillWord
 import io.reactivex.Observable
@@ -84,6 +85,7 @@ class MainActivity : AppCompatActivity() {
         if (configuration.landscape && !isTablet()) robotIcon.visibility = View.GONE
 
         if (!isDbImported()) importDataAsynchronously() else removeEmptyCategory()
+        HoleGameLogger(this).userPropertiesSetup()
     }
 
     private fun setupButtons() {
