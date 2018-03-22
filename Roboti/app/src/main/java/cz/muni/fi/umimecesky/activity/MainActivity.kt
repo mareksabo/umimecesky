@@ -40,6 +40,7 @@ import cz.muni.fi.umimecesky.labyrinth.HoleGameActivity
 import cz.muni.fi.umimecesky.labyrinth.HoleGameLogger
 import cz.muni.fi.umimecesky.pojo.Category
 import cz.muni.fi.umimecesky.pojo.FillWord
+import cz.muni.fi.umimecesky.prefs
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_main.activity_main
 import kotlinx.android.synthetic.main.activity_main.holeButton
@@ -84,7 +85,11 @@ class MainActivity : AppCompatActivity() {
 
         if (configuration.landscape && !isTablet()) robotIcon.visibility = View.GONE
 
-        if (!isDbImported()) importDataAsynchronously() else removeEmptyCategory()
+        if (!isDbImported()) importDataAsynchronously()
+        else {
+            removeEmptyCategory()
+            prefs.holeWordGrade = 1 // todo: to be removed
+        }
         HoleGameLogger(this).userPropertiesSetup()
     }
 

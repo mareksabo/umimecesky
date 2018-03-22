@@ -19,15 +19,17 @@ object GuiUtil {
      * @param promptDialog dialog which is shown
      */
     fun Activity.showDialogImmersive(promptDialog: PromptDialog) {
-        promptDialog.window!!.setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+        if (this.isFinishing) return
+
+        promptDialog.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
 
         promptDialog.show()
 
         //Set the promptDialog to immersive
-        promptDialog.window!!.decorView.systemUiVisibility = window.decorView.systemUiVisibility
+        promptDialog.window?.decorView?.systemUiVisibility = window.decorView.systemUiVisibility
         //Clear the not focusable flag from the window
-        promptDialog.window!!.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
+        promptDialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
     }
 
     fun Activity.hideNavigationBar() {
