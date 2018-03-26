@@ -9,12 +9,6 @@
 
 # Add any project specific keep options here:
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
 -dontwarn com.akexorcist.roundcornerprogressbar.TextRoundCornerProgressBar
 -assumenosideeffects class android.util.Log {
     public static *** v(...);
@@ -23,3 +17,11 @@
     public static *** w(...);
     public static *** e(...);
 }
+
+# Firebase Crashlytics
+-keepattributes *Annotation*
+-keepattributes SourceFile,LineNumberTable
+-keep public class * extends java.lang.Exception
+# Exclude Crashlytics for faster builds
+-keep class com.crashlytics.** { *; }
+-dontwarn com.crashlytics.**
