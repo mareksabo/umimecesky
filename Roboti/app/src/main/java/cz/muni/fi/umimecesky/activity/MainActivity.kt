@@ -85,8 +85,10 @@ class MainActivity : AppCompatActivity() {
 
         if (configuration.landscape && !isTablet()) robotIcon.visibility = View.GONE
 
-        if (!isDbImported()) importDataAsynchronously()
-        else {
+        if (!isDbImported()) {
+            prefs.userId = System.currentTimeMillis()
+            importDataAsynchronously()
+        } else {
             removeEmptyCategory()
             prefs.holeWordGrade = 1 // todo: to be removed
         }

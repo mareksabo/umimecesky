@@ -191,6 +191,7 @@ class SimulationView(context: Context) : FrameLayout(context) {
         correctHoleView.textViewInside.setTextColor(Color.parseColor("#30d330"))
         canRoll.set(false)
         logger.finishHoleWordPuzzle()
+        logger.finishHoleWordPuzzle2()
         val animator = createAnimation(correctHole)
         animator.withEndAction {
             removeAllViews()

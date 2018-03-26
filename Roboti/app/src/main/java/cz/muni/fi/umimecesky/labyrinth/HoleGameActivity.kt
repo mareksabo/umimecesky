@@ -54,7 +54,13 @@ class HoleGameActivity : Activity() {
         simulationView.setBackgroundResource(R.drawable.wood)
         setContentView(simulationView)
 
-        dialog = if (prefs.wasBallGameIntroduced) gameSettingsDialog() else introduceGameDialog()
+        dialog = if (prefs.wasBallGameIntroduced) {
+            prefs.isFirstTimeRun = false
+            gameSettingsDialog()
+        } else {
+            prefs.isFirstTimeRun = true
+            introduceGameDialog()
+        }
     }
 
     private fun introduceGameDialog(): DialogInterface = alert {

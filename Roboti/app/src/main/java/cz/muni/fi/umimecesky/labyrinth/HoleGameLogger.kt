@@ -53,6 +53,26 @@ class HoleGameLogger(context: Context) {
             )
             firebaseAnalytics.logEvent("hole_word_finished", bundle)
         }
-        startingTime = null
+    }
+
+    // UserId;DeviceDpi;ElapsedSeconds;WordDifficultyGrade;HolesAmount;HolesFallAmount;IsWrongHoleTouched;IsFirstTimeRun;RotationType;BallWeightType;FinishedTime;
+    fun finishHoleWordPuzzle2() {
+        startingTime?.run {
+            val elapsedSeconds = (System.nanoTime() - this) / 1_000_000_000
+            firebaseAnalytics.logEvent("log_everything", bundleOf(
+                    "all_in_one" to
+                            "${prefs.userId};" +
+                            "${Dimensions.deviceDpi()};" +
+                            "$elapsedSeconds;" +
+                            "${HoleGameActivity.difficultyTypes[prefs.holeWordGrade]};" +
+                            "${prefs.holesAmount};" +
+                            "$holesFallAmount;" +
+                            "$touchedWrongAnswer;" +
+                            "${prefs.isFirstTimeRun};" +
+                            "${prefs.rotationMode};" +
+                            "${prefs.ballWeight};" +
+                            "${System.currentTimeMillis()};" // time to make every row unique
+            ) )
+        }
     }
 }

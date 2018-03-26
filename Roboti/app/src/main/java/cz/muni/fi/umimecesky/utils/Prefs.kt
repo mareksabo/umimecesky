@@ -12,7 +12,6 @@ import cz.muni.fi.umimecesky.pojo.RaceConcept.Companion.initConcepts
 /**
  * @author Marek Sabo
  */
-private const val IS_IMPORTED = "isImported"
 private const val LAST_SPINNER_VALUE = "lastSpinnerValue"
 private const val CHECKED_STATES = "checkedStates"
 private const val RACE_CONCEPTS = "raceConcepts"
@@ -23,6 +22,8 @@ private const val ROTATION_MODE = "rotationMode"
 private const val HOLE_WORD_GRADE = "holeWordGrade"
 private const val BALL_WEIGHT = "ballWeight"
 private const val WAS_INTRODUCED = "wasIntroduced"
+private const val FIRST_HOLE_RUN = "firstHoleRun"
+private const val USER_ID = "userId"
 
 class Prefs(context: Context) {
     private val gson = Gson()
@@ -86,4 +87,12 @@ class Prefs(context: Context) {
     var wasBallGameIntroduced: Boolean
         get() = prefs.getBoolean(WAS_INTRODUCED, false)
         set(value) = prefs.edit().putBoolean(WAS_INTRODUCED, value).apply()
+
+    var isFirstTimeRun: Boolean
+        get() = prefs.getBoolean(FIRST_HOLE_RUN, true)
+        set(value) = prefs.edit().putBoolean(FIRST_HOLE_RUN, value).apply()
+
+    var userId: Long
+        get() = prefs.getLong(USER_ID, System.currentTimeMillis()) // todo: -1 when everybody has ID
+        set(value) = prefs.edit().putLong(USER_ID, value).apply()
 }
