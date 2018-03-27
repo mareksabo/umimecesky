@@ -25,8 +25,8 @@ android {
 
         resConfigs "cs", "sk", "en"
 
-        versionCode 11
-        versionName "3.3"
+        versionCode 12
+        versionName "3.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }

@@ -71,7 +71,9 @@ class HoleGameLogger(context: Context) {
                             "${prefs.isFirstTimeRun};" +
                             "${prefs.rotationMode};" +
                             "${prefs.ballWeight};" +
-                            "${System.currentTimeMillis()};" // time to make every row unique
+                            "${System.currentTimeMillis()};" + // time to make every row unique
+                            "${Dimensions.isTablet()};" +
+                            ""
             ) )
         }
     }
