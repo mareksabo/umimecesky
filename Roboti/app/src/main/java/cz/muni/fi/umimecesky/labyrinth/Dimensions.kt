@@ -19,10 +19,12 @@ object Dimensions {
         return diagonalInches() >= 7.0
     }
 
-    private fun diagonalInches(): Double {
+    fun diagonalInches(): Double {
         val xInches = displayWidth() / metrics().xdpi.toDouble()
         val yInches = displayHeight() / metrics().ydpi.toDouble()
-        return Math.hypot(xInches, yInches)
+
+        val doubleInches = Math.hypot(xInches, yInches) * metrics().scaledDensity / 2.54
+        return (doubleInches * 10).toInt().toDouble() / 10
     }
 
     fun deviceDpi(): Int {

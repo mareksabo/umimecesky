@@ -72,7 +72,7 @@ class HoleGameLogger(context: Context) {
                             "${prefs.rotationMode};" +
                             "${prefs.ballWeight};" +
                             "${System.currentTimeMillis()};" + // time to make every row unique
-                            "${Dimensions.isTablet()};" +
+                            "${Dimensions.diagonalInches()};" +
                             ""
             ) )
         }
