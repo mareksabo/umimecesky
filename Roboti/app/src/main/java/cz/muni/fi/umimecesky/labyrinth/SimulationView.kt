@@ -63,7 +63,10 @@ class SimulationView(context: Context) : FrameLayout(context) {
     private var currentWord: FillWord = prefs.lastRandomWord
 
     fun startSimulation() = sensorListener.startSimulation()
-    fun stopSimulation() = sensorListener.stopSimulation()
+    fun stopSimulation() {
+        sensorListener.stopSimulation()
+        if (canRoll.get()) logger.logUnfinished() // TODO temporary check if any word is problematic
+    }
 
     init {
         setupView()
@@ -121,7 +124,7 @@ class SimulationView(context: Context) : FrameLayout(context) {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
                         canRoll.set(true)
-                        logger.startNewWord()
+                        logger.startNewWord(currentWord)
                         invalidate()
                     }
         }
@@ -190,8 +193,7 @@ class SimulationView(context: Context) : FrameLayout(context) {
     private fun correctHoleAction() {
         correctHoleView.textViewInside.setTextColor(Color.parseColor("#30d330"))
         canRoll.set(false)
-        logger.finishHoleWordPuzzle()
-        logger.finishHoleWordPuzzle2()
+        logger.logFinished()
         val animator = createAnimation(correctHole)
         animator.withEndAction {
             removeAllViews()

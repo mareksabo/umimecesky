@@ -2,6 +2,7 @@ package cz.muni.fi.umimecesky.labyrinth
 
 import android.content.Context
 import com.google.firebase.analytics.FirebaseAnalytics
+import cz.muni.fi.umimecesky.pojo.FillWord
 import cz.muni.fi.umimecesky.prefs
 import org.jetbrains.anko.bundleOf
 
@@ -15,6 +16,8 @@ class HoleGameLogger(context: Context) {
     private var startingTime: Long? = null
     private var touchedWrongAnswer = false
     private var holesFallAmount = 0
+
+    private var wordToFill: FillWord? = null
 
     fun touchedWrongAnswer() {
         touchedWrongAnswer = true
@@ -37,44 +40,41 @@ class HoleGameLogger(context: Context) {
         firebaseAnalytics.logEvent("difficulty_with_quantity", bundle)
     }
 
-    fun startNewWord() {
+    fun startNewWord(currentWord: FillWord) {
         startingTime = System.nanoTime()
+        this.wordToFill = currentWord
     }
 
-    fun finishHoleWordPuzzle() {
-        startingTime?.run {
-            val elapsedSeconds = (System.nanoTime() - this) / 1_000_000_000
-            val bundle = bundleOf(
-                    "elapsed_seconds" to elapsedSeconds,
-                    "difficulty_type" to HoleGameActivity.difficultyTypes[prefs.holeWordGrade],
-                    "holes_amount" to prefs.holesAmount,
-                    "wrong_hole_touch" to touchedWrongAnswer,
-                    "holes_fall_amount" to holesFallAmount
-            )
-            firebaseAnalytics.logEvent("hole_word_finished", bundle)
-        }
+    // UserId;DeviceDpi;ElapsedSeconds;WordDifficultyGrade;HolesAmount;HolesFallAmount;IsWrongHoleTouched;IsFirstTimeRun;RotationType;BallWeightType;FinishedTime;ScreenInches;WordToFill;
+    fun logFinished() {
+        firebaseAnalytics.logEvent("log_everything", bundleOf(
+                "all_in_one" to generateLogData()
+        ))
     }
 
-    // UserId;DeviceDpi;ElapsedSeconds;WordDifficultyGrade;HolesAmount;HolesFallAmount;IsWrongHoleTouched;IsFirstTimeRun;RotationType;BallWeightType;FinishedTime;
-    fun finishHoleWordPuzzle2() {
-        startingTime?.run {
+    fun logUnfinished() {
+        firebaseAnalytics.logEvent("unfinished_hole", bundleOf(
+                "all_unfinished" to generateLogData()
+        ))
+    }
+
+    private fun generateLogData(): String {
+        return startingTime?.run {
             val elapsedSeconds = (System.nanoTime() - this) / 1_000_000_000
-            firebaseAnalytics.logEvent("log_everything", bundleOf(
-                    "all_in_one" to
-                            "${prefs.userId};" +
-                            "${Dimensions.deviceDpi()};" +
-                            "$elapsedSeconds;" +
-                            "${HoleGameActivity.difficultyTypes[prefs.holeWordGrade]};" +
-                            "${prefs.holesAmount};" +
-                            "$holesFallAmount;" +
-                            "$touchedWrongAnswer;" +
-                            "${prefs.isFirstTimeRun};" +
-                            "${prefs.rotationMode};" +
-                            "${prefs.ballWeight};" +
-                            "${System.currentTimeMillis()};" + // time to make every row unique
-                            "${Dimensions.diagonalInches()};" +
-                            ""
-            ) )
-        }
+            "${prefs.userId};" +
+                    "${Dimensions.deviceDpi()};" +
+                    "$elapsedSeconds;" +
+                    "${HoleGameActivity.difficultyTypes[prefs.holeWordGrade]};" +
+                    "${prefs.holesAmount};" +
+                    "$holesFallAmount;" +
+                    "$touchedWrongAnswer;" +
+                    "${prefs.isFirstTimeRun};" +
+                    "${prefs.rotationMode};" +
+                    "${prefs.ballWeight};" +
+                    "${System.currentTimeMillis()};" + // time to make every row unique
+                    "${Dimensions.diagonalInches()};" +
+                    "${wordToFill?.wordFilled};" +
+                    ""
+        } ?: ""
     }
 }

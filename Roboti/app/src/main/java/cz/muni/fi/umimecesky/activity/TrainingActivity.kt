@@ -42,7 +42,6 @@ class TrainingActivity : BaseAbstractActivity() {
 
         @Suppress("UNCHECKED_CAST")
         checkedCategories = intent.getSerializableExtra(TICKED_CATEGORIES) as List<Category>
-        logCheckedCategories()
 
         setNewRandomWord()
 
@@ -67,12 +66,6 @@ class TrainingActivity : BaseAbstractActivity() {
         variant1.setOnTouchListener(touchListener)
         variant2.setOnTouchListener(touchListener)
 
-    }
-
-    private fun logCheckedCategories() {
-        val bundle = Bundle()
-        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, checkedCategories.toString())
-        FirebaseAnalytics.getInstance(this).logEvent("checked_categories", bundle)
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
