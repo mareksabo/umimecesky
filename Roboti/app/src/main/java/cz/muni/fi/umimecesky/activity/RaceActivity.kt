@@ -6,7 +6,7 @@ import android.widget.Button
 import android.widget.ImageView
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.db.helper.joinCategoryWordOpenHelper
-import cz.muni.fi.umimecesky.labyrinth.Dimensions.isTablet
+import cz.muni.fi.umimecesky.ballgame.Dimensions.isTablet
 import cz.muni.fi.umimecesky.logic.BotLogicQuick
 import cz.muni.fi.umimecesky.logic.BotLogicSlow
 import cz.muni.fi.umimecesky.logic.MoveLogic

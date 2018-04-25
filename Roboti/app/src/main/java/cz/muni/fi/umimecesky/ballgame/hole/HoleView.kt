@@ -1,4 +1,4 @@
-package cz.muni.fi.umimecesky.labyrinth.hole
+package cz.muni.fi.umimecesky.ballgame.hole
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -7,7 +7,7 @@ import android.view.Gravity
 import android.view.View
 import android.widget.TextView
 import cz.muni.fi.umimecesky.R
-import cz.muni.fi.umimecesky.labyrinth.Dimensions
+import cz.muni.fi.umimecesky.ballgame.Dimensions
 
 /**
  * @author Marek Sabo

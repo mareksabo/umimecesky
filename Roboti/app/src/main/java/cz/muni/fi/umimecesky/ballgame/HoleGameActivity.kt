@@ -1,4 +1,4 @@
-package cz.muni.fi.umimecesky.labyrinth
+package cz.muni.fi.umimecesky.ballgame
 
 import android.app.Activity
 import android.content.DialogInterface

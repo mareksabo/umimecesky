@@ -3,8 +3,8 @@ package cz.muni.fi.umimecesky.utils
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import cz.muni.fi.umimecesky.labyrinth.Dimensions.isTablet
-import cz.muni.fi.umimecesky.labyrinth.SimulationView.Companion.EMPTY_WORD
+import cz.muni.fi.umimecesky.ballgame.Dimensions.isTablet
+import cz.muni.fi.umimecesky.ballgame.SimulationView.Companion.EMPTY_WORD
 import cz.muni.fi.umimecesky.pojo.FillWord
 import cz.muni.fi.umimecesky.pojo.RaceConcept
 import cz.muni.fi.umimecesky.pojo.RaceConcept.Companion.initConcepts

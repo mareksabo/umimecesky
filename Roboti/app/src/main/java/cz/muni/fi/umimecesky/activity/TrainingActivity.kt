@@ -8,7 +8,7 @@ import android.widget.Button
 import com.google.firebase.analytics.FirebaseAnalytics
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.db.helper.joinCategoryWordOpenHelper
-import cz.muni.fi.umimecesky.labyrinth.Dimensions.isTablet
+import cz.muni.fi.umimecesky.ballgame.Dimensions.isTablet
 import cz.muni.fi.umimecesky.pojo.Category
 import cz.muni.fi.umimecesky.pojo.FillWord
 import cz.muni.fi.umimecesky.utils.Constant.TICKED_CATEGORIES

@@ -1,4 +1,4 @@
-package cz.muni.fi.umimecesky.labyrinth
+package cz.muni.fi.umimecesky.ballgame
 
 import android.animation.LayoutTransition
 import android.annotation.SuppressLint
@@ -14,15 +14,15 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 import android.widget.TextView
 import cz.muni.fi.umimecesky.db.helper.wordOpenHelper
-import cz.muni.fi.umimecesky.labyrinth.Dimensions.ballRadius
-import cz.muni.fi.umimecesky.labyrinth.Dimensions.ballSize
-import cz.muni.fi.umimecesky.labyrinth.Dimensions.holeRadius
-import cz.muni.fi.umimecesky.labyrinth.Dimensions.holeSize
-import cz.muni.fi.umimecesky.labyrinth.Dimensions.maxHolePosition
-import cz.muni.fi.umimecesky.labyrinth.Dimensions.minHolePosition
-import cz.muni.fi.umimecesky.labyrinth.hole.Hole
-import cz.muni.fi.umimecesky.labyrinth.hole.HoleView
-import cz.muni.fi.umimecesky.labyrinth.hole.ResultHole
+import cz.muni.fi.umimecesky.ballgame.Dimensions.ballRadius
+import cz.muni.fi.umimecesky.ballgame.Dimensions.ballSize
+import cz.muni.fi.umimecesky.ballgame.Dimensions.holeRadius
+import cz.muni.fi.umimecesky.ballgame.Dimensions.holeSize
+import cz.muni.fi.umimecesky.ballgame.Dimensions.maxHolePosition
+import cz.muni.fi.umimecesky.ballgame.Dimensions.minHolePosition
+import cz.muni.fi.umimecesky.ballgame.hole.Hole
+import cz.muni.fi.umimecesky.ballgame.hole.HoleView
+import cz.muni.fi.umimecesky.ballgame.hole.ResultHole
 import cz.muni.fi.umimecesky.pojo.FillWord
 import cz.muni.fi.umimecesky.prefs
 import cz.muni.fi.umimecesky.random

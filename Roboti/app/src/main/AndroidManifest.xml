@@ -41,7 +41,7 @@
             android:label="@string/race_game_name"
             android:parentActivityName=".activity.MainActivity"/>
         <activity
-            android:name=".labyrinth.HoleGameActivity"
+            android:name=".ballgame.HoleGameActivity"
             android:parentActivityName=".activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar.FullScreen"/>
         <activity

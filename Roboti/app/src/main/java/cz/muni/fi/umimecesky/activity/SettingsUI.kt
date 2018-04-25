@@ -6,7 +6,7 @@ import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.SeekBar
 import cz.muni.fi.umimecesky.R
-import cz.muni.fi.umimecesky.labyrinth.headingTextView
+import cz.muni.fi.umimecesky.ballgame.headingTextView
 import cz.muni.fi.umimecesky.prefs
 import org.jetbrains.anko.AnkoComponent
 import org.jetbrains.anko.AnkoContext

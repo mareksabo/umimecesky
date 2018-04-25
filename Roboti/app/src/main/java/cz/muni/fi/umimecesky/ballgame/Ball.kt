@@ -1,14 +1,14 @@
-package cz.muni.fi.umimecesky.labyrinth
+package cz.muni.fi.umimecesky.ballgame
 
 import android.content.Context
 import android.view.View
 import cz.muni.fi.umimecesky.R
-import cz.muni.fi.umimecesky.labyrinth.Dimensions.holeRadius
-import cz.muni.fi.umimecesky.labyrinth.Dimensions.holeSize
-import cz.muni.fi.umimecesky.labyrinth.Dimensions.maxBallPosition
-import cz.muni.fi.umimecesky.labyrinth.Dimensions.metersToPixelsX
-import cz.muni.fi.umimecesky.labyrinth.Dimensions.metersToPixelsY
-import cz.muni.fi.umimecesky.labyrinth.hole.Hole
+import cz.muni.fi.umimecesky.ballgame.Dimensions.holeRadius
+import cz.muni.fi.umimecesky.ballgame.Dimensions.holeSize
+import cz.muni.fi.umimecesky.ballgame.Dimensions.maxBallPosition
+import cz.muni.fi.umimecesky.ballgame.Dimensions.metersToPixelsX
+import cz.muni.fi.umimecesky.ballgame.Dimensions.metersToPixelsY
+import cz.muni.fi.umimecesky.ballgame.hole.Hole
 import cz.muni.fi.umimecesky.prefs
 
 /**

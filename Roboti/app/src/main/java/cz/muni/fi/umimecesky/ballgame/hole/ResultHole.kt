@@ -1,6 +1,6 @@
-package cz.muni.fi.umimecesky.labyrinth.hole
+package cz.muni.fi.umimecesky.ballgame.hole
 
-import cz.muni.fi.umimecesky.labyrinth.Point2Df
+import cz.muni.fi.umimecesky.ballgame.Point2Df
 
 /**
  * @author Marek Sabo

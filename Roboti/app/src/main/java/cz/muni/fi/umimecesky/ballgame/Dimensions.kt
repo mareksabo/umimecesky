@@ -1,4 +1,4 @@
-package cz.muni.fi.umimecesky.labyrinth
+package cz.muni.fi.umimecesky.ballgame
 
 import android.content.res.Resources
 
