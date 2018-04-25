@@ -4,9 +4,8 @@ import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Rect
 import cz.muni.fi.umimecesky.R
-
-import cz.muni.fi.umimecesky.flappygame.BitmapHelper
-import cz.muni.fi.umimecesky.flappygame.screenHeight
+import cz.muni.fi.umimecesky.ballgame.Dimensions.displayHeight
+import cz.muni.fi.umimecesky.flappygame.GraphicsHelper
 
 /**
  * Bee has its X position same all the time, only Y is changing.
@@ -19,11 +18,12 @@ class BeeSprite(resources: Resources) {
         private const val WIDTH = 150
         private const val HEIGHT = 130
         private const val MAX_VELOCITY = 6
-        private const val STARTING_X = 100f
+
+        const val STARTING_X = 100f
         private const val STARTING_Y = 100f
     }
 
-    private val image = BitmapHelper.generateImage(resources, R.drawable.bee, WIDTH, HEIGHT)
+    private val image = GraphicsHelper.generateImage(resources, R.drawable.bee, WIDTH, HEIGHT)
 
     private var currY: Float = STARTING_Y
     private var velocityY: Int = MAX_VELOCITY
@@ -47,7 +47,7 @@ class BeeSprite(resources: Resources) {
         currY = STARTING_Y
     }
 
-    fun isOutsideScreen() = screenHeight < currY || currY < -HEIGHT
+    fun isOutsideScreen() = displayHeight() < currY || currY < -HEIGHT
 
     fun createRect(): Rect {
         val beeX = STARTING_X.toInt()

@@ -9,8 +9,8 @@ import android.content.res.Resources
 object Dimensions {
 
     private fun metrics() = Resources.getSystem().displayMetrics
-    private fun displayWidth() = metrics().widthPixels
-    private fun displayHeight() = metrics().heightPixels
+    fun displayWidth() = metrics().widthPixels
+    fun displayHeight() = metrics().heightPixels
 
     fun metersToPixelsX() = metrics().xdpi / 0.0254f
     fun metersToPixelsY() = metrics().ydpi / 0.0254f

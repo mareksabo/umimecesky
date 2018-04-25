@@ -4,9 +4,9 @@ import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Rect
 import cz.muni.fi.umimecesky.R
-import cz.muni.fi.umimecesky.flappygame.BitmapHelper
-import cz.muni.fi.umimecesky.flappygame.screenHeight
-import cz.muni.fi.umimecesky.flappygame.screenWidth
+import cz.muni.fi.umimecesky.ballgame.Dimensions.displayHeight
+import cz.muni.fi.umimecesky.ballgame.Dimensions.displayWidth
+import cz.muni.fi.umimecesky.flappygame.GraphicsHelper
 import java.util.*
 
 /**
@@ -17,14 +17,20 @@ class PipeSprite(resources: Resources) {
     companion object {
         private const val GAP_HEIGHT = 300
         private const val WIDTH = 200
-        private val HEIGHT = screenHeight / 4
+        private val HEIGHT = displayHeight() / 4
         private val MID_HEIGHT = 2 * HEIGHT - GAP_HEIGHT
-        private val beforeScreenX = screenWidth.toFloat()
+        private val beforeScreenX = displayWidth().toFloat()
+
+        private val paint = GraphicsHelper.createAnswersPaint()
     }
 
-    private val topPipe = BitmapHelper.generateImage(resources, R.drawable.pipe_down, WIDTH, HEIGHT)
-    private val midPipe = BitmapHelper.generateImage(resources, R.drawable.pipe_mid, WIDTH, MID_HEIGHT)
-    private val botPipe = BitmapHelper.generateImage(resources, R.drawable.pipe_up, WIDTH, HEIGHT)
+    var answers: Pair<String, String> = Pair("", "")
+
+    private var canChangeWord = true
+
+    private val topPipe = GraphicsHelper.generateImage(resources, R.drawable.pipe_down, WIDTH, HEIGHT)
+    private val midPipe = GraphicsHelper.generateImage(resources, R.drawable.pipe_mid, WIDTH, MID_HEIGHT)
+    private val botPipe = GraphicsHelper.generateImage(resources, R.drawable.pipe_up, WIDTH, HEIGHT)
 
     private var shiftY: Float = generateShiftY()
 
@@ -34,6 +40,7 @@ class PipeSprite(resources: Resources) {
             if (value < -WIDTH) {
                 field = beforeScreenX
                 shiftY = generateShiftY()
+                canChangeWord = true
             }
         }
 
@@ -47,6 +54,9 @@ class PipeSprite(resources: Resources) {
         canvas.drawBitmap(topPipe, currX, topPipeShiftY(), null)
         canvas.drawBitmap(midPipe, currX, midPipeShiftY(), null)
         canvas.drawBitmap(botPipe, currX, botPipeShiftY(), null)
+
+        canvas.drawText(answers.first, currX + WIDTH / 2, midPipeShiftY() - GAP_HEIGHT / 2, paint)
+        canvas.drawText(answers.second, currX + WIDTH / 2, botPipeShiftY() - GAP_HEIGHT / 2, paint)
     }
 
     fun move() {
@@ -56,6 +66,11 @@ class PipeSprite(resources: Resources) {
     fun resetPosition() {
         currX = beforeScreenX
     }
+
+    fun canChangeWordBehindBee() = if (BeeSprite.STARTING_X > currX + WIDTH && canChangeWord) {
+        canChangeWord = false
+        true
+    } else false
 
     fun createTopRect(): Rect =
             createRect(currX.toInt(), topPipeShiftY().toInt(), WIDTH, HEIGHT)

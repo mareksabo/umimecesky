@@ -2,17 +2,20 @@ package cz.muni.fi.umimecesky.flappygame
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.Canvas
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import cz.muni.fi.umimecesky.db.helper.wordOpenHelper
 import cz.muni.fi.umimecesky.flappygame.sprite.BeeSprite
+import cz.muni.fi.umimecesky.flappygame.sprite.FillWordSprite
 import cz.muni.fi.umimecesky.flappygame.sprite.FlowerSprite
 import cz.muni.fi.umimecesky.flappygame.sprite.PipeSprite
+import cz.muni.fi.umimecesky.pojo.FillWord
+import cz.muni.fi.umimecesky.random
+import java.util.*
+import kotlin.concurrent.schedule
 
-val screenHeight by lazy { Resources.getSystem().displayMetrics.heightPixels }
-val screenWidth by lazy { Resources.getSystem().displayMetrics.widthPixels }
 
 /**
  * @author Marek Sabo
@@ -23,6 +26,17 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback 
     private lateinit var beeSprite: BeeSprite
     private lateinit var flowerSprite: FlowerSprite
     private lateinit var pipe: PipeSprite
+    private lateinit var textSprite: FillWordSprite
+
+    private var currentWord: FillWord = context.wordOpenHelper.getRandomWord(1) // todo
+        set(value) {
+            field = value
+            textSprite.text = value.wordMissing
+            Timer().schedule(300) {
+            pipe.answers = if (random.nextBoolean()) Pair(value.variant1, value.variant2)  // todo RandomPair
+                           else Pair(value.variant1, value.variant2)
+            }
+        }
 
     private val movementSimulator: MovementSimulator
 
@@ -43,6 +57,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback 
 
     override fun surfaceCreated(holder: SurfaceHolder) {
         createSprites()
+        currentWord = context.wordOpenHelper.getRandomWord(1)
         movementSimulator.running = true
         thread.start()
     }
@@ -51,6 +66,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback 
         beeSprite = BeeSprite(resources)
         flowerSprite = FlowerSprite(resources)
         pipe = PipeSprite(resources)
+        textSprite = FillWordSprite()
         resetLevel()
     }
 
@@ -69,9 +85,10 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback 
         if (canvas != null) {
             super.draw(canvas)
             canvas.drawRGB(140, 195, 255)
-            beeSprite.draw(canvas)
             flowerSprite.draw(canvas)
             pipe.draw(canvas)
+            textSprite.draw(canvas)
+            beeSprite.draw(canvas)
         }
     }
 
@@ -82,6 +99,8 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback 
         beeSprite.move()
         flowerSprite.move()
         pipe.move()
+
+        if (pipe.canChangeWordBehindBee()) currentWord = context.wordOpenHelper.getRandomWord(1)
     }
 
     private fun resetLevel() {
