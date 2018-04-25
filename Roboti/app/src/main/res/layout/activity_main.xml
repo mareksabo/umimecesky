@@ -65,4 +65,17 @@
         android:textSize="32sp"
         android:theme="@style/PrimaryButton"/>
 
+    <Button
+        android:id="@+id/jumpButton"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="15"
+        android:paddingLeft="@dimen/main_buttons_padding"
+        android:paddingRight="@dimen/main_buttons_padding"
+        android:layout_margin="10dp"
+        android:text="@string/flying_bee"
+        android:textAllCaps="false"
+        android:textSize="32sp"
+        android:theme="@style/PrimaryButton"/>
+
 </LinearLayout>

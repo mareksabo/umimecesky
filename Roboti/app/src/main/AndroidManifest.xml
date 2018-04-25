@@ -48,6 +48,11 @@
             android:name=".activity.SettingsActivity"
             android:label="@string/settings_title"
             android:parentActivityName=".activity.MainActivity"/>
+        <activity
+            android:name=".flappygame.JumpGameActivity"
+            android:screenOrientation="sensorLandscape"
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar.FullScreen"/>
 
     </application>
 
