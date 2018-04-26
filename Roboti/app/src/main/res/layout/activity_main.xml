@@ -73,7 +73,7 @@
         android:paddingLeft="@dimen/main_buttons_padding"
         android:paddingRight="@dimen/main_buttons_padding"
         android:layout_margin="10dp"
-        android:text="@string/flying_bee"
+        android:text="@string/flappy_game"
         android:textAllCaps="false"
         android:textSize="32sp"
         android:theme="@style/PrimaryButton"/>

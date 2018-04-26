@@ -1,23 +1,23 @@
 package cz.muni.fi.umimecesky.adapterlistener
 
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.pojo.RaceConcept
+import cz.muni.fi.umimecesky.utils.GuiUtil.inflate
 
-class LevelAdapter(val items: List<RaceConcept>, val listener: (RaceConcept) -> Unit) :
+class LevelAdapter(private val items: List<RaceConcept>,
+                   private val listener: (RaceConcept) -> Unit) :
         RecyclerView.Adapter<LevelAdapter.ViewHolder>() {
 
-    fun ViewGroup.inflate(layoutRes: Int): View =
-            LayoutInflater.from(context).inflate(layoutRes, this, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+            ViewHolder(parent.inflate(R.layout.column_category_race))
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(parent.inflate(R.layout.column_category_race))
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(items[position], listener)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
+            holder.bind(items[position], listener)
 
     override fun getItemCount(): Int = items.size
 

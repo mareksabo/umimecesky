@@ -11,6 +11,8 @@ import cz.muni.fi.umimecesky.db.DbContract.JOIN_SAME_ROWS
 import cz.muni.fi.umimecesky.db.DbContract.JOIN_TABLE_NAME
 import cz.muni.fi.umimecesky.db.DbContract.JoinColumn.JOIN_CATEGORY_ID
 import cz.muni.fi.umimecesky.db.DbContract.JoinColumn.JOIN_WORD_ID
+import cz.muni.fi.umimecesky.db.DbContract.WORD_TABLE_NAME
+import cz.muni.fi.umimecesky.db.DbContract.WordColumn.GRADE
 import cz.muni.fi.umimecesky.pojo.Category
 import cz.muni.fi.umimecesky.pojo.FillWord
 import cz.muni.fi.umimecesky.pojo.RaceConcept
@@ -25,6 +27,7 @@ import org.jetbrains.anko.db.dropTable
 import org.jetbrains.anko.db.parseList
 import org.jetbrains.anko.db.parseSingle
 import org.jetbrains.anko.db.select
+import java.util.*
 
 val Context.joinCategoryWordOpenHelper: JoinCategoryWordOpenHelper
     get() = JoinCategoryWordOpenHelper.getInstance(applicationContext)
@@ -58,11 +61,13 @@ class JoinCategoryWordOpenHelper(context: Context) : ManagedSQLiteOpenHelper(
         onCreate(db)
     }
 
-    fun getWords(category: Category): List<FillWord> = use {
+    fun getWords(category: Category, grade: Int): List<FillWord> = use {
         select(JOIN_ALL_TABLES, ALL_WORD_COLUMNS)
                 .whereArgs(
-                        "$JOIN_SAME_ROWS AND $JOIN_TABLE_NAME.$JOIN_CATEGORY_ID = {categoryId}",
-                        "categoryId" to category.id)
+                        "$JOIN_SAME_ROWS AND $JOIN_TABLE_NAME.$JOIN_CATEGORY_ID = {categoryId}" +
+                                " AND $GRADE = {grade}",
+                        "categoryId" to category.id, "grade" to grade)
+
                 .exec { parseList(classParser()) }
     }
 
@@ -71,6 +76,13 @@ class JoinCategoryWordOpenHelper(context: Context) : ManagedSQLiteOpenHelper(
                 .whereArgs("$JOIN_SAME_ROWS AND $JOIN_TABLE_NAME.$JOIN_WORD_ID = {wordId}",
                         "wordId" to fillWord.id)
                 .exec { parseSingle(classParser()) }
+    }
+
+    fun getRandomCategoryWords(categoryIds: List<Int>, grade: Int): Stack<FillWord> {
+        val result: List<FillWord> = selectWordsInCategory(categoryIds, grade)
+        val stack = Stack<FillWord>()
+        stack.addAll(result)
+        return stack
     }
 
     fun getRandomCategoryWord(raceConcept: RaceConcept): FillWord =
@@ -94,6 +106,18 @@ class JoinCategoryWordOpenHelper(context: Context) : ManagedSQLiteOpenHelper(
         val stringIds = categoryIds.joinToString(",")
         select(JOIN_ALL_TABLES, ALL_WORD_COLUMNS)
                 .whereArgs("$JOIN_SAME_ROWS AND ($JOIN_TABLE_NAME.$JOIN_CATEGORY_ID IN ($stringIds) )")
+                .orderBy("RANDOM()")
+                .exec { parseList(classParser()) }
+    }
+
+    private fun selectWordsInCategory(categoryIds: List<Int>, grade: Int): List<FillWord> = use {
+        val stringIds = categoryIds.joinToString(",")
+        select(JOIN_ALL_TABLES, ALL_WORD_COLUMNS)
+                .whereArgs("$JOIN_SAME_ROWS AND ($JOIN_TABLE_NAME.$JOIN_CATEGORY_ID " +
+                        " IN ($stringIds) ) AND $WORD_TABLE_NAME.$GRADE = {grade}",
+                        "grade" to grade)
+                .orderBy("RANDOM()")
+
                 .exec { parseList(classParser()) }
     }
 

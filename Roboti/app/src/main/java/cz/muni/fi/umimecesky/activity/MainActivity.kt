@@ -38,7 +38,7 @@ import cz.muni.fi.umimecesky.db.DbContract.WordColumn.WORD_ID
 import cz.muni.fi.umimecesky.db.helper.categoryOpenHelper
 import cz.muni.fi.umimecesky.db.helper.joinCategoryWordOpenHelper
 import cz.muni.fi.umimecesky.db.helper.wordOpenHelper
-import cz.muni.fi.umimecesky.flappygame.JumpGameActivity
+import cz.muni.fi.umimecesky.flappygame.FlappyListCategoriesActivity
 import cz.muni.fi.umimecesky.pojo.Category
 import cz.muni.fi.umimecesky.pojo.FillWord
 import cz.muni.fi.umimecesky.prefs
@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity() {
         trainingButton.setOnClickListener { startActivity<ListCategoriesActivity>() }
         raceButton.setOnClickListener { startActivity<LevelRaceActivity>() }
         holeButton.setOnClickListener { startActivity<HoleGameActivity>() }
-        jumpButton.setOnClickListener { startActivity<JumpGameActivity>() }
+        jumpButton.setOnClickListener { startActivity<FlappyListCategoriesActivity>() }
     }
 
     private fun setAllButtonsSameWidth() {

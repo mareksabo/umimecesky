@@ -43,6 +43,7 @@
     <string name="rate_app">Ohodnotit aplikaci</string>
     <string name="report_problem">Nahlásit problém</string>
     <string name="introduce_ball_dialog">Ovládání hry &holegame;</string>
-    <string name="flying_bee">Létající včela</string>
+    <string name="flappy_game">Pilná včela</string>
+    <string name="highest_score">Nejvyšší skóre</string>
 
 </resources>

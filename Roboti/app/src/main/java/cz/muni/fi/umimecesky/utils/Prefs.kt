@@ -14,8 +14,10 @@ import cz.muni.fi.umimecesky.pojo.RaceConcept.Companion.initConcepts
  */
 private const val LAST_SPINNER_VALUE = "lastSpinnerValue"
 private const val CHECKED_STATES = "checkedStates"
+
 private const val RACE_CONCEPTS = "raceConcepts"
 private const val CURRENT_ROBOT_CONCEPT = "currentRobotConcept"
+
 private const val LAST_RANDOM_WORD = "lastRandomWord"
 private const val HOLES_AMOUNT = "holesAmount"
 private const val ROTATION_MODE = "rotationMode"
@@ -24,7 +26,9 @@ private const val BALL_WEIGHT = "ballWeight"
 private const val WAS_INTRODUCED = "wasIntroduced"
 private const val FIRST_HOLE_RUN = "firstHoleRun"
 private const val USER_ID = "userId"
-private const val BEST_USER_COUNT = "bestUserCount"
+
+private const val BEST_USER_SCORE = "bestUserScore"
+private const val FLAPPY_WORD_GRADE = "flappyWordGrade"
 
 class Prefs(context: Context) {
     private val gson = Gson()
@@ -84,7 +88,8 @@ class Prefs(context: Context) {
 
     var holeWordGrade: Int
         get() = prefs.getInt(HOLE_WORD_GRADE, 1)
-        set(value) = if (value >= 0) prefs.edit().putInt(HOLE_WORD_GRADE, value).apply() else {}
+        set(value) = if (value >= 0) prefs.edit().putInt(HOLE_WORD_GRADE, value).apply() else {
+        }
 
     var ballWeight: Int
         get() = prefs.getInt(BALL_WEIGHT, 2 + if (isTablet()) 1 else 0)
@@ -104,8 +109,26 @@ class Prefs(context: Context) {
 
     /// FLAPPY BIRD GAME ///
 
-    var bestUserCount: Int
-        get() = prefs.getInt(BEST_USER_COUNT, 0)
-        set(value) = prefs.edit().putInt(HOLE_WORD_GRADE, value).apply()
+    fun getBestScore(raceConcept: RaceConcept): Int =
+            bestUserCountArray()[RaceConcept.conceptNames.indexOf(raceConcept.name)]
+
+    fun setBestScore(raceConcept: RaceConcept, count: Int) {
+        val bestUserCountArray = bestUserCountArray()
+        bestUserCountArray[RaceConcept.conceptNames.indexOf(raceConcept.name)] = count
+        prefs.edit().putString(BEST_USER_SCORE, bestUserCountArray.joinToString(",")).apply()
+    }
+
+    private fun bestUserCountArray(): IntArray {
+        return prefs.getString(BEST_USER_SCORE,
+                IntArray(RaceConcept.conceptNames.size).joinToString(","))
+                .split(",")
+                .map { it.toInt() }
+                .toIntArray()
+    }
+
+    var flappyWordGrade: Int
+        get() = prefs.getInt(FLAPPY_WORD_GRADE, 2)
+        set(value) = if (value in 1..3) prefs.edit().putInt(HOLE_WORD_GRADE, value).apply() else {
+        }
 
 }

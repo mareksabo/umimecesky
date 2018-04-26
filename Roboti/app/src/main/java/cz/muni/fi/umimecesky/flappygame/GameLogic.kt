@@ -6,13 +6,13 @@ import android.graphics.Canvas
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-import cz.muni.fi.umimecesky.db.helper.wordOpenHelper
 import cz.muni.fi.umimecesky.flappygame.sprite.BeeSprite
 import cz.muni.fi.umimecesky.flappygame.sprite.CounterSprite
 import cz.muni.fi.umimecesky.flappygame.sprite.FillWordSprite
 import cz.muni.fi.umimecesky.flappygame.sprite.FlowerSprite
 import cz.muni.fi.umimecesky.flappygame.sprite.PipeSprite
 import cz.muni.fi.umimecesky.pojo.FillWord
+import cz.muni.fi.umimecesky.pojo.RaceConcept
 import java.util.*
 import kotlin.concurrent.schedule
 
@@ -20,7 +20,9 @@ import kotlin.concurrent.schedule
 /**
  * @author Marek Sabo
  */
-class GameLogic(context: Context) : SurfaceView(context), SurfaceHolder.Callback {
+@SuppressLint("ViewConstructor")
+class GameLogic(context: Context, private val raceConcept: RaceConcept)
+    : SurfaceView(context), SurfaceHolder.Callback {
     private val thread: Thread
 
     private lateinit var beeSprite: BeeSprite
@@ -29,18 +31,15 @@ class GameLogic(context: Context) : SurfaceView(context), SurfaceHolder.Callback
     private lateinit var textSprite: FillWordSprite
     private lateinit var counterSprite: CounterSprite
 
+    private val wordGenerator = WordGenerator(context, raceConcept)
     private var incorrectAnswer = false
 
-    companion object {
-        private val timer = Timer()
-    }
-
-    private var currentWord: FillWord = context.wordOpenHelper.getRandomWord(1) // todo
+    private var currentWord: FillWord = FillWord.EMPTY_WORD
         set(value) {
             field = value
             textSprite.text = value.wordMissing
-            timer.schedule(300) {
-            pipe.answers = RandomAnswers(currentWord)
+            Timer().schedule(300) {
+                pipe.answers = RandomAnswers(currentWord)
             }
         }
 
@@ -63,7 +62,7 @@ class GameLogic(context: Context) : SurfaceView(context), SurfaceHolder.Callback
 
     override fun surfaceCreated(holder: SurfaceHolder) {
         createSprites()
-        currentWord = context.wordOpenHelper.getRandomWord(1)
+        currentWord = wordGenerator.getNextWord()
         movementSimulator.running = true
         thread.start()
     }
@@ -73,7 +72,7 @@ class GameLogic(context: Context) : SurfaceView(context), SurfaceHolder.Callback
         flowerSprite = FlowerSprite(resources)
         pipe = PipeSprite(resources)
         textSprite = FillWordSprite()
-        counterSprite = CounterSprite()
+        counterSprite = CounterSprite(raceConcept)
         resetLevel()
     }
 
@@ -92,35 +91,41 @@ class GameLogic(context: Context) : SurfaceView(context), SurfaceHolder.Callback
         if (canvas != null) {
             super.draw(canvas)
             canvas.drawRGB(140, 195, 255)
-            flowerSprite.draw(canvas)
-            pipe.draw(canvas)
-            textSprite.draw(canvas)
-            counterSprite.draw(canvas)
-            beeSprite.draw(canvas)
+            drawSprites(canvas)
         }
     }
 
+    private fun drawSprites(canvas: Canvas) {
+        flowerSprite.draw(canvas)
+        pipe.draw(canvas)
+        textSprite.draw(canvas)
+        counterSprite.draw(canvas)
+        beeSprite.draw(canvas)
+    }
+
     fun update() {
-        if (isInCollision(beeSprite, pipe)) resetLevel()
+        if (beeSprite.isOutsideScreen() || isInCollision(beeSprite, pipe)) resetLevel()
         if (isInWrongAnswer()) {
             pipe.markIncorrectAnswerRed()
             incorrectAnswer = true
         }
 
-        if (beeSprite.isOutsideScreen()) resetLevel()
-
-        beeSprite.move()
-        flowerSprite.move()
-        pipe.move()
+        moveSprites()
 
         if (pipe.canChangeWordBehindBee()) {
             if (incorrectAnswer) {
                 resetLevel()
             } else {
-                currentWord = context.wordOpenHelper.getRandomWord(1)
+                currentWord = wordGenerator.getNextWord()
                 counterSprite.increaseCounter()
             }
         }
+    }
+
+    private fun moveSprites() {
+        beeSprite.move()
+        flowerSprite.move()
+        pipe.move()
     }
 
     private fun resetLevel() {

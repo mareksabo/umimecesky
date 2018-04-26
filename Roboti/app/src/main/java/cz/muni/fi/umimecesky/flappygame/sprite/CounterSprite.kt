@@ -3,12 +3,13 @@ package cz.muni.fi.umimecesky.flappygame.sprite
 import android.graphics.Canvas
 import cz.muni.fi.umimecesky.ballgame.Dimensions
 import cz.muni.fi.umimecesky.flappygame.GraphicsHelper
+import cz.muni.fi.umimecesky.pojo.RaceConcept
 import cz.muni.fi.umimecesky.prefs
 
 /**
  * @author Marek Sabo
  */
-class CounterSprite {
+class CounterSprite(private val raceConcept: RaceConcept) {
 
     companion object {
         private val paint = GraphicsHelper.createThickWordPaint()
@@ -21,11 +22,11 @@ class CounterSprite {
             if (maxCount < value) maxCount = value
         }
 
-    private var maxCount = prefs.bestUserCount
+    private var maxCount = prefs.getBestScore(raceConcept)
         set(value) {
             field = value
-            prefs.bestUserCount = value
             updateText()
+            prefs.setBestScore(raceConcept, value)
         }
 
     private var text: String = ""

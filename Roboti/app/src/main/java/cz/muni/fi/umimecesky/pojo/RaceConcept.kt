@@ -98,5 +98,6 @@ private constructor(val name: String, val categoryIDs: List<Int>, val numberOfLe
                         Arrays.asList(19, 20, 21),
                         5)
         )
+        val conceptNames = initConcepts.map { it.name }.toTypedArray()
     }
 }
