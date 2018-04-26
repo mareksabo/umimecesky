@@ -11,7 +11,7 @@ import cz.muni.fi.umimecesky.flappygame.GraphicsHelper
 class FillWordSprite {
 
     companion object {
-        private val paint = GraphicsHelper.createFillWordPaint()
+        private val paint = GraphicsHelper.createThickWordPaint()
     }
 
     var text: String = ""

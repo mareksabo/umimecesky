@@ -8,11 +8,11 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import cz.muni.fi.umimecesky.db.helper.wordOpenHelper
 import cz.muni.fi.umimecesky.flappygame.sprite.BeeSprite
+import cz.muni.fi.umimecesky.flappygame.sprite.CounterSprite
 import cz.muni.fi.umimecesky.flappygame.sprite.FillWordSprite
 import cz.muni.fi.umimecesky.flappygame.sprite.FlowerSprite
 import cz.muni.fi.umimecesky.flappygame.sprite.PipeSprite
 import cz.muni.fi.umimecesky.pojo.FillWord
-import cz.muni.fi.umimecesky.random
 import java.util.*
 import kotlin.concurrent.schedule
 
@@ -27,14 +27,20 @@ class GameLogic(context: Context) : SurfaceView(context), SurfaceHolder.Callback
     private lateinit var flowerSprite: FlowerSprite
     private lateinit var pipe: PipeSprite
     private lateinit var textSprite: FillWordSprite
+    private lateinit var counterSprite: CounterSprite
+
+    private var incorrectAnswer = false
+
+    companion object {
+        private val timer = Timer()
+    }
 
     private var currentWord: FillWord = context.wordOpenHelper.getRandomWord(1) // todo
         set(value) {
             field = value
             textSprite.text = value.wordMissing
-            Timer().schedule(300) {
-            pipe.answers = if (random.nextBoolean()) Pair(value.variant1, value.variant2)  // todo RandomPair
-                           else Pair(value.variant1, value.variant2)
+            timer.schedule(300) {
+            pipe.answers = RandomAnswers(currentWord)
             }
         }
 
@@ -67,6 +73,7 @@ class GameLogic(context: Context) : SurfaceView(context), SurfaceHolder.Callback
         flowerSprite = FlowerSprite(resources)
         pipe = PipeSprite(resources)
         textSprite = FillWordSprite()
+        counterSprite = CounterSprite()
         resetLevel()
     }
 
@@ -88,19 +95,32 @@ class GameLogic(context: Context) : SurfaceView(context), SurfaceHolder.Callback
             flowerSprite.draw(canvas)
             pipe.draw(canvas)
             textSprite.draw(canvas)
+            counterSprite.draw(canvas)
             beeSprite.draw(canvas)
         }
     }
 
     fun update() {
         if (isInCollision(beeSprite, pipe)) resetLevel()
+        if (isInWrongAnswer()) {
+            pipe.markIncorrectAnswerRed()
+            incorrectAnswer = true
+        }
+
         if (beeSprite.isOutsideScreen()) resetLevel()
 
         beeSprite.move()
         flowerSprite.move()
         pipe.move()
 
-        if (pipe.canChangeWordBehindBee()) currentWord = context.wordOpenHelper.getRandomWord(1)
+        if (pipe.canChangeWordBehindBee()) {
+            if (incorrectAnswer) {
+                resetLevel()
+            } else {
+                currentWord = context.wordOpenHelper.getRandomWord(1)
+                counterSprite.increaseCounter()
+            }
+        }
     }
 
     private fun resetLevel() {
@@ -108,6 +128,8 @@ class GameLogic(context: Context) : SurfaceView(context), SurfaceHolder.Callback
         beeSprite.resetPosition()
         flowerSprite.resetPosition()
         pipe.resetPosition()
+        counterSprite.resetCounter()
+        incorrectAnswer = false
     }
 
     private fun isInCollision(beeSprite: BeeSprite, pipeSprite: PipeSprite): Boolean {
@@ -117,5 +139,7 @@ class GameLogic(context: Context) : SurfaceView(context), SurfaceHolder.Callback
                 beeBounds.intersect(pipeSprite.createMidRect()) ||
                 beeBounds.intersect(pipeSprite.createBotRect())
     }
+
+    private fun isInWrongAnswer() = beeSprite.createRect().intersect(pipe.createWrongAnswerRect())
 
 }

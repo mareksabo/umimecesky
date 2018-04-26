@@ -13,7 +13,6 @@ import android.view.ViewPropertyAnimator
 import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 import android.widget.TextView
-import cz.muni.fi.umimecesky.db.helper.wordOpenHelper
 import cz.muni.fi.umimecesky.ballgame.Dimensions.ballRadius
 import cz.muni.fi.umimecesky.ballgame.Dimensions.ballSize
 import cz.muni.fi.umimecesky.ballgame.Dimensions.holeRadius
@@ -23,7 +22,9 @@ import cz.muni.fi.umimecesky.ballgame.Dimensions.minHolePosition
 import cz.muni.fi.umimecesky.ballgame.hole.Hole
 import cz.muni.fi.umimecesky.ballgame.hole.HoleView
 import cz.muni.fi.umimecesky.ballgame.hole.ResultHole
+import cz.muni.fi.umimecesky.db.helper.wordOpenHelper
 import cz.muni.fi.umimecesky.pojo.FillWord
+import cz.muni.fi.umimecesky.pojo.FillWord.Companion.EMPTY_WORD
 import cz.muni.fi.umimecesky.prefs
 import cz.muni.fi.umimecesky.random
 import io.reactivex.Observable
@@ -43,7 +44,6 @@ class SimulationView(context: Context) : FrameLayout(context) {
 
     companion object {
         private val interpolator = DecelerateInterpolator(1.5f)
-        val EMPTY_WORD = FillWord(1, "", "", "", "", 0, "", 1)
     }
 
     private val logger = HoleGameLogger(context)

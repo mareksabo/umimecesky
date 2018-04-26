@@ -4,8 +4,8 @@ import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import cz.muni.fi.umimecesky.ballgame.Dimensions.isTablet
-import cz.muni.fi.umimecesky.ballgame.SimulationView.Companion.EMPTY_WORD
 import cz.muni.fi.umimecesky.pojo.FillWord
+import cz.muni.fi.umimecesky.pojo.FillWord.Companion.EMPTY_WORD
 import cz.muni.fi.umimecesky.pojo.RaceConcept
 import cz.muni.fi.umimecesky.pojo.RaceConcept.Companion.initConcepts
 
@@ -24,12 +24,15 @@ private const val BALL_WEIGHT = "ballWeight"
 private const val WAS_INTRODUCED = "wasIntroduced"
 private const val FIRST_HOLE_RUN = "firstHoleRun"
 private const val USER_ID = "userId"
+private const val BEST_USER_COUNT = "bestUserCount"
 
 class Prefs(context: Context) {
     private val gson = Gson()
 
     private val prefs =
             context.getSharedPreferences(Constant.SHARED_PREFS_FILE, Context.MODE_PRIVATE)
+
+    /// TRAINING ///
 
     var seriesAmount: String
         get() = prefs.getString(LAST_SPINNER_VALUE, Constant.ROUND_POSSIBILITIES[0])
@@ -41,6 +44,8 @@ class Prefs(context: Context) {
                 .map { it.toBoolean() }
                 .toBooleanArray()
         set(value) = prefs.edit().putString(CHECKED_STATES, value.joinToString(",")).apply()
+
+    /// ROBOT GAME ///
 
     /**
      * Gets categories with saved player's level state.
@@ -60,6 +65,7 @@ class Prefs(context: Context) {
         }
         set(value) = prefs.edit().putString(CURRENT_ROBOT_CONCEPT, gson.toJson(value)).apply()
 
+    /// HOLE GAME ///
 
     var lastRandomWord: FillWord
         get() {
@@ -95,4 +101,11 @@ class Prefs(context: Context) {
     var userId: Long
         get() = prefs.getLong(USER_ID, System.currentTimeMillis()) // todo: -1 when everybody has ID
         set(value) = prefs.edit().putLong(USER_ID, value).apply()
+
+    /// FLAPPY BIRD GAME ///
+
+    var bestUserCount: Int
+        get() = prefs.getInt(BEST_USER_COUNT, 0)
+        set(value) = prefs.edit().putInt(HOLE_WORD_GRADE, value).apply()
+
 }

@@ -20,7 +20,7 @@ object GraphicsHelper {
                     true
             )
 
-    fun createFillWordPaint(): Paint {
+    fun createThickWordPaint(): Paint {
         val paint = Paint()
         paint.color = Color.BLACK
         paint.isFakeBoldText = true
