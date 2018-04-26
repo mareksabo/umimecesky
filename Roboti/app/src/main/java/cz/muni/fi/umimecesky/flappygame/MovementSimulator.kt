@@ -7,7 +7,7 @@ import android.view.SurfaceHolder
 /**
  * @author Marek Sabo
  */
-class MovementSimulator(private val surfaceHolder: SurfaceHolder, private val gameView: GameView) : Runnable {
+class MovementSimulator(private val surfaceHolder: SurfaceHolder, private val gameLogic: GameLogic) : Runnable {
 
     companion object {
         private const val TARGET_FPS = 40
@@ -25,8 +25,8 @@ class MovementSimulator(private val surfaceHolder: SurfaceHolder, private val ga
             try {
                 canvas = surfaceHolder.lockCanvas()
                 synchronized(surfaceHolder) {
-                    gameView.update()
-                    gameView.draw(canvas)
+                    gameLogic.update()
+                    gameLogic.draw(canvas)
                 }
             } finally {
                 if (canvas != null) surfaceHolder.unlockCanvasAndPost(canvas)

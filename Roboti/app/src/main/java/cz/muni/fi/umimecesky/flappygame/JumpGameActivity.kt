@@ -10,6 +10,6 @@ class JumpGameActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(GameView(this))
+        setContentView(GameLogic(this))
     }
 }

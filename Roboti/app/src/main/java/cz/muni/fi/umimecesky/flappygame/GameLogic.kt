@@ -20,7 +20,7 @@ import kotlin.concurrent.schedule
 /**
  * @author Marek Sabo
  */
-class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback {
+class GameLogic(context: Context) : SurfaceView(context), SurfaceHolder.Callback {
     private val thread: Thread
 
     private lateinit var beeSprite: BeeSprite
