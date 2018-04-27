@@ -17,13 +17,24 @@ class FillWordSprite : Sprite {
         private val paint = GraphicsHelper.createThickWordPaint()
         private val X = displayWidth() / 2f
         private val Y = displayHeight() / 10f
+        private const val MAX_LINE_LETTERS = 28
     }
 
     var text: String = ""
+        set(value) {
+            field = value
+            breakIndex = value.indexOf(string = " ", startIndex = MAX_LINE_LETTERS)
+        }
+    private var breakIndex = -1
 
     override fun draw(canvas: Canvas) {
-        canvas.drawText(text, X, Y, paint)
+        if (isMultiLine()) {
+            canvas.drawText(text, 0, breakIndex, X, Y, paint)
+            canvas.drawText(text, breakIndex, text.length, X, Y + createRect().height(), paint)
+        } else canvas.drawText(text, X, Y, paint)
     }
+
+    private fun isMultiLine() = breakIndex != -1
 
     override fun move() {}
     override fun reset() {}

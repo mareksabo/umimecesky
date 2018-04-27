@@ -29,6 +29,8 @@ private const val USER_ID = "userId"
 
 private const val BEST_USER_SCORE = "bestUserScore"
 private const val FLAPPY_WORD_GRADE = "flappyWordGrade"
+private const val FLAPPY_INTRODUCE = "flappyIntroduce"
+
 
 class Prefs(context: Context) {
     private val gson = Gson()
@@ -125,6 +127,10 @@ class Prefs(context: Context) {
                 .map { it.toInt() }
                 .toIntArray()
     }
+
+    var isFlappyGameIntroduced: Boolean
+        get() = prefs.getBoolean(FLAPPY_INTRODUCE, false)
+        set(value) = prefs.edit().putBoolean(FLAPPY_INTRODUCE, value).apply()
 
     // todo
     var flappyWordGrade: Int

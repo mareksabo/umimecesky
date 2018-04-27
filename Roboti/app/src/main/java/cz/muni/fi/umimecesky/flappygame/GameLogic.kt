@@ -14,6 +14,7 @@ import cz.muni.fi.umimecesky.flappygame.sprite.PipeSprite
 import cz.muni.fi.umimecesky.flappygame.sprite.Sprite
 import cz.muni.fi.umimecesky.pojo.FillWord
 import cz.muni.fi.umimecesky.pojo.RaceConcept
+import cz.muni.fi.umimecesky.prefs
 import java.util.*
 import kotlin.concurrent.schedule
 
@@ -66,13 +67,17 @@ class GameLogic(private val activity: Activity, private val raceConcept: RaceCon
         currentWord = wordGenerator.getNextWord()
         pipe.answers = SortedAnswers(currentWord)
         movementSimulator.running = true
+        if (!prefs.isFlappyGameIntroduced) introduceGame(holder) else thread.start()
+    }
+
+    private fun introduceGame(holder: SurfaceHolder) {
         val canvas = holder.lockCanvas()
         draw(canvas)
         holder.unlockCanvasAndPost(canvas)
         GameIntroduce(activity, sprites) {
+            prefs.isFlappyGameIntroduced = true
             thread.start()
         }
-
     }
 
     private fun createSprites(): List<Sprite> {
