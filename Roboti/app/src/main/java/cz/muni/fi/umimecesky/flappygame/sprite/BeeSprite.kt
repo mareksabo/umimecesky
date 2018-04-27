@@ -22,7 +22,7 @@ class BeeSprite(resources: Resources) : Sprite {
         private const val MAX_VELOCITY = 6
 
         const val STARTING_X = 100f
-        private const val STARTING_Y = 100f
+        private const val STARTING_Y = 150f
     }
 
     private val image = GraphicsHelper.generateImage(resources, R.drawable.bee, WIDTH, HEIGHT)
@@ -61,7 +61,7 @@ class BeeSprite(resources: Resources) : Sprite {
     override fun intro(activity: Activity): FancyShowCaseView = FancyShowCaseView.Builder(activity)
             .focusCircleAtPosition((STARTING_X + WIDTH / 2).toInt(),
                     (STARTING_Y + HEIGHT / 2).toInt(),
-                    WIDTH / 2)
+                    WIDTH / 2 + 10)
             .title("Včela se ovládá dotykem obrazovky")
             .build()
 }

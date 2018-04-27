@@ -45,13 +45,5 @@ class FlowerSprite(resources: Resources) : Sprite {
     }
 
 
-    override fun intro(activity: Activity): FancyShowCaseView = FancyShowCaseView.Builder(activity)
-            .focusRectAtPosition(
-                    currX.toInt() + WIDTH / 2,
-                    STARTING_Y.toInt() + HEIGHT / 2,
-                    WIDTH,
-                    HEIGHT)
-            .roundRectRadius(360)
-            .title("Okrajů a květin se včela dotýkat může")
-            .build()
+    override fun intro(activity: Activity): FancyShowCaseView? = null
 }

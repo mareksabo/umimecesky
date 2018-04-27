@@ -40,7 +40,7 @@ class GameLogic(private val activity: Activity, private val raceConcept: RaceCon
             field = value
             textSprite.text = value.wordMissing
             Timer().schedule(300) {
-                pipe.answers = RandomAnswers(currentWord)
+                pipe.answers = SortedAnswers(currentWord)
             }
         }
 
@@ -64,6 +64,7 @@ class GameLogic(private val activity: Activity, private val raceConcept: RaceCon
     override fun surfaceCreated(holder: SurfaceHolder) {
         sprites = createSprites()
         currentWord = wordGenerator.getNextWord()
+        pipe.answers = SortedAnswers(currentWord)
         movementSimulator.running = true
         val canvas = holder.lockCanvas()
         draw(canvas)

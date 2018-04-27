@@ -12,11 +12,14 @@ import kotlinx.android.synthetic.main.column_category_flappy.view.categoryName
 import kotlinx.android.synthetic.main.column_category_flappy.view.highestScore
 import org.jetbrains.anko.startActivity
 
+
 /**
  * @author Marek Sabo
  */
-class ConceptAdapter(private val concepts: List<RaceConcept>) :
+class ConceptAdapter(concepts: List<RaceConcept>) :
         RecyclerView.Adapter<ConceptAdapter.ConceptHolder>() {
+
+    private val concepts = concepts.toMutableList()
 
     override fun getItemCount() = concepts.size
 
@@ -25,6 +28,14 @@ class ConceptAdapter(private val concepts: List<RaceConcept>) :
 
     override fun onBindViewHolder(holder: ConceptAdapter.ConceptHolder, position: Int) =
             holder.bindConcept(concepts[position])
+
+    // workaround fixing not refreshing score bug
+    fun refreshAllItems() {
+        val list: List<RaceConcept> = concepts.toList()
+        concepts.clear()
+        concepts.addAll(list)
+        notifyDataSetChanged()
+    }
 
     class ConceptHolder(private var v: View) : RecyclerView.ViewHolder(v), View.OnClickListener {
 

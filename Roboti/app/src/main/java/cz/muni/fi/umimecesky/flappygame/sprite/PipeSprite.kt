@@ -9,7 +9,7 @@ import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.ballgame.Dimensions.displayHeight
 import cz.muni.fi.umimecesky.ballgame.Dimensions.displayWidth
 import cz.muni.fi.umimecesky.flappygame.GraphicsHelper
-import cz.muni.fi.umimecesky.flappygame.RandomAnswers
+import cz.muni.fi.umimecesky.flappygame.SortedAnswers
 import cz.muni.fi.umimecesky.pojo.FillWord
 import me.toptas.fancyshowcase.FancyShowCaseView
 import java.util.*
@@ -30,7 +30,7 @@ class PipeSprite(resources: Resources) : Sprite {
         private val paint2 = GraphicsHelper.createAnswersPaint()
     }
 
-    var answers: RandomAnswers = RandomAnswers(FillWord.EMPTY_WORD)
+    var answers: SortedAnswers = SortedAnswers(FillWord.EMPTY_WORD)
 
     private var canChangeWord = true
 
@@ -40,7 +40,7 @@ class PipeSprite(resources: Resources) : Sprite {
 
     private var shiftY: Float = generateShiftY()
 
-    private var currX: Float = beforeScreenX - WIDTH
+    private var currX: Float = beforeScreenX - WIDTH - 20
         set(value) {
             field = value
             if (value < -WIDTH) this.reset()
@@ -105,10 +105,11 @@ class PipeSprite(resources: Resources) : Sprite {
             Rect(pipeX, pipeY, pipeX + pipeWidth, pipeY + pipeHeight)
 
     override fun intro(activity: Activity): FancyShowCaseView = FancyShowCaseView.Builder(activity)
-            .focusRectAtPosition((currX + WIDTH / 2).toInt(),
-                    (midPipeShiftY() + MID_HEIGHT / 2).toInt(),
+            .focusRectAtPosition(currX.toInt() + WIDTH / 2,
+                    displayHeight() / 2,
                     WIDTH,
-                    MID_HEIGHT)
-            .title("Cílem je vyhýbat se překážkám")
+                    displayHeight())
+            .title("Cílem je vyhýbat se překážkám \n" +
+                    "a trefit se do správné mezery")
             .build()
 }

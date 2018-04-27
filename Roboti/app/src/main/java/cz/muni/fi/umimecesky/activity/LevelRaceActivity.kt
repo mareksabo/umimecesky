@@ -28,7 +28,7 @@ class LevelRaceActivity : AppCompatActivity() {
         // TODO: replace with data update - notify?
         super.onStart()
 
-        levelListView.layoutManager = LinearLayoutManager(applicationContext)
+        levelListView.layoutManager = LinearLayoutManager(this)
         levelListView.itemAnimator = DefaultItemAnimator()
 
         levelListView.adapter =
