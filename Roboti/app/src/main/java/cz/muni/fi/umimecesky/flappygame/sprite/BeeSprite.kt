@@ -1,18 +1,20 @@
 package cz.muni.fi.umimecesky.flappygame.sprite
 
+import android.app.Activity
 import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Rect
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.ballgame.Dimensions.displayHeight
 import cz.muni.fi.umimecesky.flappygame.GraphicsHelper
+import me.toptas.fancyshowcase.FancyShowCaseView
 
 /**
  * Bee has its X position same all the time, only Y is changing.
  *
  * @author Marek Sabo
  */
-class BeeSprite(resources: Resources) {
+class BeeSprite(resources: Resources) : Sprite {
 
     companion object {
         private const val WIDTH = 150
@@ -29,22 +31,22 @@ class BeeSprite(resources: Resources) {
     private var velocityY: Int = MAX_VELOCITY
         set(value) = if (value <= MAX_VELOCITY) field = value else {}
 
-    fun draw(canvas: Canvas) {
+    override fun draw(canvas: Canvas) {
         canvas.drawBitmap(image, STARTING_X, currY, null)
     }
 
-    fun move() {
+    override fun move() {
         currY += velocityY
         velocityY += 2
+    }
+
+    override fun reset() {
+        currY = STARTING_Y
     }
 
     fun doJump() {
         velocityY = -20
         currY -= 10
-    }
-
-    fun resetPosition() {
-        currY = STARTING_Y
     }
 
     fun isOutsideScreen() = displayHeight() < currY || currY < -HEIGHT
@@ -55,6 +57,13 @@ class BeeSprite(resources: Resources) {
 
         return Rect(beeX, beeY, beeX + WIDTH, beeY + HEIGHT)
     }
+
+    override fun intro(activity: Activity): FancyShowCaseView = FancyShowCaseView.Builder(activity)
+            .focusCircleAtPosition((STARTING_X + WIDTH / 2).toInt(),
+                    (STARTING_Y + HEIGHT / 2).toInt(),
+                    WIDTH / 2)
+            .title("Včela se ovládá dotykem obrazovky")
+            .build()
 }
 
 

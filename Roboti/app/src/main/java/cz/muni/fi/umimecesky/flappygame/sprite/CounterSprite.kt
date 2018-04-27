@@ -1,23 +1,29 @@
 package cz.muni.fi.umimecesky.flappygame.sprite
 
+import android.app.Activity
 import android.graphics.Canvas
+import android.util.Log
 import cz.muni.fi.umimecesky.ballgame.Dimensions
 import cz.muni.fi.umimecesky.flappygame.GraphicsHelper
 import cz.muni.fi.umimecesky.pojo.RaceConcept
 import cz.muni.fi.umimecesky.prefs
+import me.toptas.fancyshowcase.FancyShowCaseView
 
 /**
  * @author Marek Sabo
  */
-class CounterSprite(private val raceConcept: RaceConcept) {
+class CounterSprite(private val raceConcept: RaceConcept) : Sprite {
 
     companion object {
         private val paint = GraphicsHelper.createThickWordPaint()
+        private val X = Dimensions.displayWidth() / 10f
+        private val Y = Dimensions.displayHeight() / 10f
     }
 
     private var currentCount = 0
         set(value) {
             field = value
+            Log.i("currentCount ", "$value")
             updateText()
             if (maxCount < value) maxCount = value
         }
@@ -29,19 +35,25 @@ class CounterSprite(private val raceConcept: RaceConcept) {
             prefs.setBestScore(raceConcept, value)
         }
 
-    private var text: String = ""
+    private var text: String = "$currentCount / $maxCount"
 
     private fun updateText() {
         text = "$currentCount / $maxCount"
     }
 
     fun increaseCounter() = currentCount++
-    fun resetCounter() {
+
+    override fun draw(canvas: Canvas) {
+        canvas.drawText(text, X, Y, paint)
+    }
+
+    override fun move() {}
+
+    override fun reset() {
         currentCount = 0
     }
 
-    fun draw(canvas: Canvas) {
-        canvas.drawText(text, Dimensions.displayWidth() / 10f, Dimensions.displayHeight() / 10f, paint)
-    }
+    override fun intro(activity: Activity): FancyShowCaseView? = null
+
 
 }

@@ -1,5 +1,6 @@
 package cz.muni.fi.umimecesky.flappygame.sprite
 
+import android.app.Activity
 import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Color
@@ -10,12 +11,13 @@ import cz.muni.fi.umimecesky.ballgame.Dimensions.displayWidth
 import cz.muni.fi.umimecesky.flappygame.GraphicsHelper
 import cz.muni.fi.umimecesky.flappygame.RandomAnswers
 import cz.muni.fi.umimecesky.pojo.FillWord
+import me.toptas.fancyshowcase.FancyShowCaseView
 import java.util.*
 
 /**
  * @author Marek Sabo
  */
-class PipeSprite(resources: Resources) {
+class PipeSprite(resources: Resources) : Sprite {
 
     companion object {
         private const val GAP_HEIGHT = 300
@@ -38,10 +40,10 @@ class PipeSprite(resources: Resources) {
 
     private var shiftY: Float = generateShiftY()
 
-    private var currX: Float = beforeScreenX
+    private var currX: Float = beforeScreenX - WIDTH
         set(value) {
             field = value
-            if (value < -WIDTH) this.resetPosition()
+            if (value < -WIDTH) this.reset()
         }
 
     private fun generateShiftY() = Random().nextInt(200) - 100f
@@ -53,7 +55,7 @@ class PipeSprite(resources: Resources) {
     private fun upperGapMid() = midPipeShiftY() - GAP_HEIGHT / 2
     private fun lowerGapMid() = botPipeShiftY() - GAP_HEIGHT / 2
 
-    fun draw(canvas: Canvas) {
+    override fun draw(canvas: Canvas) {
         canvas.drawBitmap(topPipe, currX, topPipeShiftY(), null)
         canvas.drawBitmap(midPipe, currX, midPipeShiftY(), null)
         canvas.drawBitmap(botPipe, currX, botPipeShiftY(), null)
@@ -62,11 +64,11 @@ class PipeSprite(resources: Resources) {
         canvas.drawText(answers.second, currX + WIDTH / 2, lowerGapMid(), paint2)
     }
 
-    fun move() {
+    override fun move() {
         currX -= 10 // move closer to left
     }
 
-    fun resetPosition() {
+    override fun reset() {
         currX = beforeScreenX
         paint1.color = Color.BLACK
         paint2.color = Color.BLACK
@@ -101,4 +103,12 @@ class PipeSprite(resources: Resources) {
 
     private fun createRect(pipeX: Int, pipeY: Int, pipeWidth: Int, pipeHeight: Int) =
             Rect(pipeX, pipeY, pipeX + pipeWidth, pipeY + pipeHeight)
+
+    override fun intro(activity: Activity): FancyShowCaseView = FancyShowCaseView.Builder(activity)
+            .focusRectAtPosition((currX + WIDTH / 2).toInt(),
+                    (midPipeShiftY() + MID_HEIGHT / 2).toInt(),
+                    WIDTH,
+                    MID_HEIGHT)
+            .title("Cílem je vyhýbat se překážkám")
+            .build()
 }

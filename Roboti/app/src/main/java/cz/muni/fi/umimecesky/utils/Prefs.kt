@@ -126,6 +126,7 @@ class Prefs(context: Context) {
                 .toIntArray()
     }
 
+    // todo
     var flappyWordGrade: Int
         get() = prefs.getInt(FLAPPY_WORD_GRADE, 2)
         set(value) = if (value in 1..3) prefs.edit().putInt(HOLE_WORD_GRADE, value).apply() else {

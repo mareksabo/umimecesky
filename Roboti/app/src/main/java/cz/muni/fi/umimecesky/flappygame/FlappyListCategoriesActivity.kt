@@ -33,4 +33,9 @@ class FlappyListCategoriesActivity : AppCompatActivity() {
         itemDecorator.setDrawable(ContextCompat.getDrawable(this, R.drawable.accent_divider)!!)
         categories.addItemDecoration(itemDecorator)
     }
+
+    override fun onPause() {
+        categories.adapter.notifyDataSetChanged()
+        super.onPause()
+    }
 }

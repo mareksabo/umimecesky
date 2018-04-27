@@ -1,7 +1,7 @@
 package cz.muni.fi.umimecesky.flappygame
 
 import android.annotation.SuppressLint
-import android.content.Context
+import android.app.Activity
 import android.graphics.Canvas
 import android.view.MotionEvent
 import android.view.SurfaceHolder
@@ -11,6 +11,7 @@ import cz.muni.fi.umimecesky.flappygame.sprite.CounterSprite
 import cz.muni.fi.umimecesky.flappygame.sprite.FillWordSprite
 import cz.muni.fi.umimecesky.flappygame.sprite.FlowerSprite
 import cz.muni.fi.umimecesky.flappygame.sprite.PipeSprite
+import cz.muni.fi.umimecesky.flappygame.sprite.Sprite
 import cz.muni.fi.umimecesky.pojo.FillWord
 import cz.muni.fi.umimecesky.pojo.RaceConcept
 import java.util.*
@@ -21,15 +22,15 @@ import kotlin.concurrent.schedule
  * @author Marek Sabo
  */
 @SuppressLint("ViewConstructor")
-class GameLogic(context: Context, private val raceConcept: RaceConcept)
-    : SurfaceView(context), SurfaceHolder.Callback {
+class GameLogic(private val activity: Activity, private val raceConcept: RaceConcept)
+    : SurfaceView(activity), SurfaceHolder.Callback {
     private val thread: Thread
 
     private lateinit var beeSprite: BeeSprite
-    private lateinit var flowerSprite: FlowerSprite
     private lateinit var pipe: PipeSprite
     private lateinit var textSprite: FillWordSprite
     private lateinit var counterSprite: CounterSprite
+    private lateinit var sprites: List<Sprite>
 
     private val wordGenerator = WordGenerator(context, raceConcept)
     private var incorrectAnswer = false
@@ -61,19 +62,26 @@ class GameLogic(context: Context, private val raceConcept: RaceConcept)
     }
 
     override fun surfaceCreated(holder: SurfaceHolder) {
-        createSprites()
+        sprites = createSprites()
         currentWord = wordGenerator.getNextWord()
         movementSimulator.running = true
-        thread.start()
+        val canvas = holder.lockCanvas()
+        draw(canvas)
+        holder.unlockCanvasAndPost(canvas)
+        GameIntroduce(activity, sprites) {
+            thread.start()
+        }
+
     }
 
-    private fun createSprites() {
-        beeSprite = BeeSprite(resources)
-        flowerSprite = FlowerSprite(resources)
+    private fun createSprites(): List<Sprite> {
+        val flowerSprite = FlowerSprite(resources)
         pipe = PipeSprite(resources)
         textSprite = FillWordSprite()
         counterSprite = CounterSprite(raceConcept)
-        resetLevel()
+        beeSprite = BeeSprite(resources)
+        return listOf(flowerSprite, pipe, textSprite, counterSprite, beeSprite)
+//        resetLevel()
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
@@ -91,16 +99,8 @@ class GameLogic(context: Context, private val raceConcept: RaceConcept)
         if (canvas != null) {
             super.draw(canvas)
             canvas.drawRGB(140, 195, 255)
-            drawSprites(canvas)
+            sprites.forEach { it.draw(canvas) }
         }
-    }
-
-    private fun drawSprites(canvas: Canvas) {
-        flowerSprite.draw(canvas)
-        pipe.draw(canvas)
-        textSprite.draw(canvas)
-        counterSprite.draw(canvas)
-        beeSprite.draw(canvas)
     }
 
     fun update() {
@@ -110,7 +110,7 @@ class GameLogic(context: Context, private val raceConcept: RaceConcept)
             incorrectAnswer = true
         }
 
-        moveSprites()
+        sprites.forEach { it.move() }
 
         if (pipe.canChangeWordBehindBee()) {
             if (incorrectAnswer) {
@@ -122,18 +122,9 @@ class GameLogic(context: Context, private val raceConcept: RaceConcept)
         }
     }
 
-    private fun moveSprites() {
-        beeSprite.move()
-        flowerSprite.move()
-        pipe.move()
-    }
-
     private fun resetLevel() {
         Thread.sleep(500L)
-        beeSprite.resetPosition()
-        flowerSprite.resetPosition()
-        pipe.resetPosition()
-        counterSprite.resetCounter()
+        sprites.forEach { it.reset() }
         incorrectAnswer = false
     }
 
