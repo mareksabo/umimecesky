@@ -13,10 +13,6 @@ class WordGenerator(private val context: Context, private val raceConcept: RaceC
 
     private var words = Stack<FillWord>()
 
-//    unavailable grades
-//     Psaní ě, Zdvojené hlásky  3
-//    Skloňování, Zkratky a typografie 1
-
     fun getNextWord(): FillWord {
         if (words.empty()) {
             words = context.joinCategoryWordOpenHelper

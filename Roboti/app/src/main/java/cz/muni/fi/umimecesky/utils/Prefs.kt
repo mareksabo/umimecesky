@@ -4,6 +4,8 @@ import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import cz.muni.fi.umimecesky.ballgame.Dimensions.isTablet
+import cz.muni.fi.umimecesky.enums.Difficulty
+import cz.muni.fi.umimecesky.enums.toDifficulty
 import cz.muni.fi.umimecesky.pojo.FillWord
 import cz.muni.fi.umimecesky.pojo.FillWord.Companion.EMPTY_WORD
 import cz.muni.fi.umimecesky.pojo.RaceConcept
@@ -28,8 +30,9 @@ private const val FIRST_HOLE_RUN = "firstHoleRun"
 private const val USER_ID = "userId"
 
 private const val BEST_USER_SCORE = "bestUserScore"
-private const val FLAPPY_WORD_GRADE = "flappyWordGrade"
+private const val FLAPPY_GRADE_NAME = "flappyGradeName"
 private const val FLAPPY_INTRODUCE = "flappyIntroduce"
+private const val FLAPPY_FPS = "flappyFPS"
 
 
 class Prefs(context: Context) {
@@ -133,9 +136,12 @@ class Prefs(context: Context) {
         set(value) = prefs.edit().putBoolean(FLAPPY_INTRODUCE, value).apply()
 
     // todo
-    var flappyWordGrade: Int
-        get() = prefs.getInt(FLAPPY_WORD_GRADE, 2)
-        set(value) = if (value in 1..3) prefs.edit().putInt(HOLE_WORD_GRADE, value).apply() else {
-        }
+    var flappyGradeName: Difficulty
+        get() = prefs.getString(FLAPPY_GRADE_NAME, Difficulty.Medium.name).toDifficulty()
+        set(value) = prefs.edit().putString(FLAPPY_GRADE_NAME, value.name).apply()
+
+    var flappyFps: Int
+        get() = prefs.getInt(FLAPPY_FPS, 35)
+        set(value) = prefs.edit().putInt(FLAPPY_FPS, value).apply()
 
 }

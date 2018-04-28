@@ -8,7 +8,7 @@
     <string name="image_showing_robot">Image showing robot</string>
 
     <string name="app_name">Umíme česky</string>
-    <string name="action_settings">Nastavení</string>
+    <string name="settings">Nastavení</string>
 
     <string name="train_game_name">Procvičování</string>
     <string name="race_game_name">Robotí závody</string>
@@ -45,5 +45,6 @@
     <string name="introduce_ball_dialog">Ovládání hry &holegame;</string>
     <string name="flappy_game">Pilná včela</string>
     <string name="highest_score">Nejvyšší skóre</string>
+    <string name="fps_per_second">Počet snímků za vteřinu:</string>
 
 </resources>

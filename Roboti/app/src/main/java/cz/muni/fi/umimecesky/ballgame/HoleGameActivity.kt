@@ -8,10 +8,10 @@ import android.os.Bundle
 import android.view.ViewManager
 import android.view.WindowManager
 import android.widget.LinearLayout
-import android.widget.RadioButton
 import android.widget.SeekBar
 import android.widget.TextView
 import cz.muni.fi.umimecesky.R
+import cz.muni.fi.umimecesky.enums.Difficulty.Companion.difficultyNames
 import cz.muni.fi.umimecesky.prefs
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.customView
@@ -28,13 +28,7 @@ import kotlin.math.roundToInt
 
 class HoleGameActivity : Activity() {
 
-    companion object {
-        val difficultyTypes = arrayOf("Lehké", "Težší", "Náročné")
-    }
-
     private lateinit var simulationView: SimulationView
-    private var hardnessRB: Array<RadioButton> = emptyArray()
-    private var isHoleCountChanged: Boolean = false
     private var dialog: DialogInterface? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,7 +67,7 @@ class HoleGameActivity : Activity() {
 
     private fun gameSettingsDialog(): DialogInterface {
         return alert {
-            title = resources.getString(R.string.action_settings)
+            title = resources.getString(R.string.settings)
             positiveButton("Ok") { }
             customView {
                 verticalLayout {
@@ -95,7 +89,6 @@ class HoleGameActivity : Activity() {
                                 val currentValue = progress + realMin
                                 holesCount.text = "$currentValue"
                                 prefs.holesAmount = currentValue
-                                isHoleCountChanged = true
                             }
 
                             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -108,13 +101,13 @@ class HoleGameActivity : Activity() {
                     radioGroup {
                         orientation = LinearLayout.HORIZONTAL
                         val easy = radioButton()
-                        textView(difficultyTypes[0])
+                        textView(difficultyNames[0])
                         val medium = radioButton()
-                        textView(difficultyTypes[1])
+                        textView(difficultyNames[1])
                         val hard = radioButton()
-                        textView(difficultyTypes[2])
+                        textView(difficultyNames[2])
 
-                        hardnessRB = arrayOf(easy, medium, hard)
+                        val hardnessRB = arrayOf(easy, medium, hard)
                         hardnessRB[prefs.holeWordGrade].isChecked = true
                         hardnessRB.forEachIndexed { index, button ->
                             button.setOnClickListener { prefs.holeWordGrade = index }

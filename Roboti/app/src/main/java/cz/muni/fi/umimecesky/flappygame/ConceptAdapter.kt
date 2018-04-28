@@ -6,11 +6,9 @@ import android.view.ViewGroup
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.pojo.RaceConcept
 import cz.muni.fi.umimecesky.prefs
-import cz.muni.fi.umimecesky.utils.Constant.FLAPPY_CHOSEN_CATEGORY
 import cz.muni.fi.umimecesky.utils.GuiUtil.inflate
 import kotlinx.android.synthetic.main.column_category_flappy.view.categoryName
 import kotlinx.android.synthetic.main.column_category_flappy.view.highestScore
-import org.jetbrains.anko.startActivity
 
 
 /**
@@ -45,9 +43,12 @@ class ConceptAdapter(concepts: List<RaceConcept>) :
             v.setOnClickListener(this)
         }
 
-        override fun onClick(v: View?) =
-                itemView.context.startActivity<JumpGameActivity>(
-                        FLAPPY_CHOSEN_CATEGORY to raceConcept)
+        override fun onClick(v: View?) {
+            try {
+                FlappySettingsDialog(itemView.context, raceConcept)
+            } catch (ignored: IllegalArgumentException) {
+            }
+        }
 
 
         fun bindConcept(raceConcept: RaceConcept) {

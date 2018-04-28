@@ -51,6 +51,10 @@ private constructor(val name: String, val categoryIDs: List<Int>, val numberOfLe
     }
 
     companion object {
+        val SPECIAL_E = "Psaní ě"
+        val CASES = "Skloňování"
+        val DOUBLED = "Zdvojené hlásky"
+        val SHORTCUTS = "Zkratky a typografie"
         /**
          * Categories are bundled into testable groups, taken from original website.
          * Now sorted according to the most popular.
@@ -66,7 +70,7 @@ private constructor(val name: String, val categoryIDs: List<Int>, val numberOfLe
                         Arrays.asList(8, 9, 10, 11, 12, 13, 14),
                         7),
 
-                RaceConcept("Psaní ě",
+                RaceConcept(SPECIAL_E,
                         Arrays.asList(15, 16, 17, 18),
                         6),
 
@@ -78,11 +82,11 @@ private constructor(val name: String, val categoryIDs: List<Int>, val numberOfLe
                         Arrays.asList(26, 27, 28, 29),
                         7),
 
-                RaceConcept("Skloňování",
+                RaceConcept(CASES,
                         Arrays.asList(30, 31, 32, 33),
                         5),
 
-                RaceConcept("Zkratky a typografie",
+                RaceConcept(SHORTCUTS,
                         Arrays.asList(34, 35, 36),
                         5),
 
@@ -94,7 +98,7 @@ private constructor(val name: String, val categoryIDs: List<Int>, val numberOfLe
                         Arrays.asList(42, 43, 44, 45),
                         5),
 
-                RaceConcept("Zdvojené hlásky",
+                RaceConcept(DOUBLED,
                         Arrays.asList(19, 20, 21),
                         5)
         )

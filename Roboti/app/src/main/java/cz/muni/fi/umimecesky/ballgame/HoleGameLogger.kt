@@ -2,6 +2,7 @@ package cz.muni.fi.umimecesky.ballgame
 
 import android.content.Context
 import com.google.firebase.analytics.FirebaseAnalytics
+import cz.muni.fi.umimecesky.enums.Difficulty
 import cz.muni.fi.umimecesky.pojo.FillWord
 import cz.muni.fi.umimecesky.prefs
 import org.jetbrains.anko.bundleOf
@@ -34,7 +35,7 @@ class HoleGameLogger(context: Context) {
 
     fun logGameSettings() {
         val bundle = bundleOf(
-                "difficulty_type" to HoleGameActivity.difficultyTypes[prefs.holeWordGrade],
+                "difficulty_type" to Difficulty.difficultyNames[prefs.holeWordGrade],
                 "holes_amount" to prefs.holesAmount
         )
         firebaseAnalytics.logEvent("difficulty_with_quantity", bundle)
@@ -64,7 +65,7 @@ class HoleGameLogger(context: Context) {
             "${prefs.userId};" +
                     "${Dimensions.deviceDpi()};" +
                     "$elapsedSeconds;" +
-                    "${HoleGameActivity.difficultyTypes[prefs.holeWordGrade]};" +
+                    "${Difficulty.difficultyNames[prefs.holeWordGrade]};" +
                     "${prefs.holesAmount};" +
                     "$holesFallAmount;" +
                     "$touchedWrongAnswer;" +
