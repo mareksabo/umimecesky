@@ -44,7 +44,7 @@ class BeeSprite(resources: Resources) : Sprite {
 
     fun doJump() {
         velocityY = -20
-        currY -= 10
+        currY -= defaultMoveX
     }
 
     fun isOutsideScreen() = displayHeight() < currY || currY < -HEIGHT

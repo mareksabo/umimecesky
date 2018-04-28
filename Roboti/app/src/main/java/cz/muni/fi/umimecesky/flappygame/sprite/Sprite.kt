@@ -2,12 +2,16 @@ package cz.muni.fi.umimecesky.flappygame.sprite
 
 import android.app.Activity
 import android.graphics.Canvas
+import cz.muni.fi.umimecesky.ballgame.Dimensions
 import me.toptas.fancyshowcase.FancyShowCaseView
 
 /**
  * @author Marek Sabo
  */
 interface Sprite {
+
+    val defaultMoveX: Int
+        get() = Dimensions.displayWidth() / 200
 
     /**
      * Draws sprite on canvas.

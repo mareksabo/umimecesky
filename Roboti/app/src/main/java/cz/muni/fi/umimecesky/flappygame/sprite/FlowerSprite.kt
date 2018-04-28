@@ -37,7 +37,7 @@ class FlowerSprite(resources: Resources) : Sprite {
     }
 
     override fun move() {
-        currX -= 10 // move closer to left
+        currX -= defaultMoveX // move closer to left
     }
 
     override fun reset() {
