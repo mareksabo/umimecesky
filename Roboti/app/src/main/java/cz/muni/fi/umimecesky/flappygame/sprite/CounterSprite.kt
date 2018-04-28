@@ -2,7 +2,6 @@ package cz.muni.fi.umimecesky.flappygame.sprite
 
 import android.app.Activity
 import android.graphics.Canvas
-import android.util.Log
 import cz.muni.fi.umimecesky.ballgame.Dimensions
 import cz.muni.fi.umimecesky.flappygame.GraphicsHelper
 import cz.muni.fi.umimecesky.pojo.RaceConcept
@@ -20,10 +19,9 @@ class CounterSprite(private val raceConcept: RaceConcept) : Sprite {
         private val Y = Dimensions.displayHeight() / 10f
     }
 
-    private var currentCount = 0
-        set(value) {
+    var currentCount = 0
+        private set(value) {
             field = value
-            Log.i("currentCount ", "$value")
             updateText()
             if (maxCount < value) maxCount = value
         }

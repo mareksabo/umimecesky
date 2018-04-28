@@ -4,6 +4,7 @@ package cz.muni.fi.umimecesky.flappygame
 import android.graphics.Canvas
 import android.view.SurfaceHolder
 import cz.muni.fi.umimecesky.prefs
+import kotlin.system.measureTimeMillis
 
 /**
  * @author Marek Sabo
@@ -21,20 +22,19 @@ class MovementSimulator(private val surfaceHolder: SurfaceHolder, private val ga
 
     override fun run() {
         while (running) {
-            val startTime = System.nanoTime()
-
-            try {
-                canvas = surfaceHolder.lockCanvas()
-                synchronized(surfaceHolder) {
-                    gameLogic.update()
-                    gameLogic.draw(canvas)
+            val timeMs = measureTimeMillis {
+                try {
+                    canvas = surfaceHolder.lockCanvas()
+                    synchronized(surfaceHolder) {
+                        gameLogic.update()
+                        gameLogic.draw(canvas)
+                    }
+                } finally {
+                    if (canvas != null) surfaceHolder.unlockCanvasAndPost(canvas)
                 }
-            } finally {
-                if (canvas != null) surfaceHolder.unlockCanvasAndPost(canvas)
             }
 
-            val timeMillis = (System.nanoTime() - startTime) / 1_000_000
-            val waitTime = targetTime - timeMillis
+            val waitTime = targetTime - timeMs
             if (waitTime > 0) Thread.sleep(waitTime)
         }
 
