@@ -17,7 +17,7 @@ sealed class Gap(val name: String, val size: Int) {
     object Unknown : Gap(Big.name, Big.size)
 
     companion object {
-        val gaps by lazy { arrayOf(Small, Medium, Big, Huge) }
+        val gaps by lazy { arrayOf(Huge, Big, Medium, Small) }
     }
 
     override fun toString(): String = "$size"

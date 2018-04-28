@@ -57,8 +57,8 @@ class FlappySettingsDialog {
                         padding = dip(10)
 
                         difficultyBlock()
-                        gapBlock()
                         fpsBlock()
+                        gapBlock()
                     }
                 }
             }
@@ -75,13 +75,13 @@ class FlappySettingsDialog {
     }
 
     private fun @AnkoViewDslMarker _LinearLayout.fpsBlock() {
+        val speedNames = mapOf(30 to "Pomalá", 35 to "Normální", 40 to "Rychlá", 45 to "Turbo")
         lateinit var fps: TextView
         linearLayout {
-            heading(context.getString(R.string.fps_per_second))
-            fps = heading("${prefs.flappyFps}")
+            heading(context.getString(R.string.flappy_speed))
+            fps = heading("${speedNames[prefs.flappyFps]}")
         }
-        addSeekBar(fps, min = 30, max = 50, step = 5)
-        textView(context.getString(R.string.fps_hint)) { padding = dip(5) }
+        addSeekBar(fps, min = 30, max = 45, step = 5, speedNames = speedNames)
     }
 
     private fun @AnkoViewDslMarker _LinearLayout.difficultyBlock() {
@@ -93,7 +93,8 @@ class FlappySettingsDialog {
         })
     }
 
-    private fun @AnkoViewDslMarker _LinearLayout.addSeekBar(fps: TextView, min: Int, max: Int, step: Int) {
+    private fun @AnkoViewDslMarker _LinearLayout.addSeekBar(fps: TextView, min: Int, max: Int,
+                                                            step: Int, speedNames: Map<Int, String>) {
         seekBar {
             this.max = (max - min) / step
             progress = (prefs.flappyFps - min) / step
@@ -101,7 +102,7 @@ class FlappySettingsDialog {
             setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                     val currentValue = progress * step + min
-                    fps.text = "$currentValue"
+                    fps.text = speedNames[currentValue]
                     prefs.flappyFps = currentValue
                 }
 
@@ -127,8 +128,9 @@ class FlappySettingsDialog {
         }
     }
 
-    private fun storedDifficulty(): Difficulty = prefs.flappyGradeName.let {
-        if (it == unavailableDifficulty()) Difficulty.Medium else it
+    private fun storedDifficulty(): Difficulty {
+        if (prefs.flappyGradeName == unavailableDifficulty()) prefs.flappyGradeName = Difficulty.Medium
+        return prefs.flappyGradeName
     }
 
     /**
