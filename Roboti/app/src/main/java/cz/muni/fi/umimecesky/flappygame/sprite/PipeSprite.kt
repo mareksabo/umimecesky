@@ -11,6 +11,7 @@ import cz.muni.fi.umimecesky.ballgame.Dimensions.displayWidth
 import cz.muni.fi.umimecesky.flappygame.GraphicsHelper
 import cz.muni.fi.umimecesky.flappygame.SortedAnswers
 import cz.muni.fi.umimecesky.pojo.FillWord
+import cz.muni.fi.umimecesky.prefs
 import me.toptas.fancyshowcase.FancyShowCaseView
 import java.util.*
 
@@ -19,11 +20,12 @@ import java.util.*
  */
 class PipeSprite(resources: Resources) : Sprite {
 
+    private val gapHeight = prefs.flappyGap.size
+    private val midHeight = 2 * HEIGHT - gapHeight
+
     companion object {
-        private const val GAP_HEIGHT = 300
         private const val WIDTH = 200
         private val HEIGHT = displayHeight() / 4
-        private val MID_HEIGHT = 2 * HEIGHT - GAP_HEIGHT
         private val beforeScreenX = displayWidth().toFloat()
 
         private val paint1 = GraphicsHelper.createAnswersPaint()
@@ -35,7 +37,7 @@ class PipeSprite(resources: Resources) : Sprite {
     private var canChangeWord = true
 
     private val topPipe = GraphicsHelper.generateImage(resources, R.drawable.pipe_down, WIDTH, HEIGHT)
-    private val midPipe = GraphicsHelper.generateImage(resources, R.drawable.pipe_mid, WIDTH, MID_HEIGHT)
+    private val midPipe = GraphicsHelper.generateImage(resources, R.drawable.pipe_mid, WIDTH, midHeight)
     private val botPipe = GraphicsHelper.generateImage(resources, R.drawable.pipe_up, WIDTH, HEIGHT)
 
     private var shiftY: Float = generateShiftY()
@@ -48,12 +50,12 @@ class PipeSprite(resources: Resources) : Sprite {
 
     private fun generateShiftY() = Random().nextInt(200) - 100f
 
-    private fun topPipeShiftY() = shiftY - GAP_HEIGHT / 2
-    private fun midPipeShiftY() = topPipeShiftY() + HEIGHT + GAP_HEIGHT
-    private fun botPipeShiftY() = midPipeShiftY() + MID_HEIGHT + GAP_HEIGHT
+    private fun topPipeShiftY() = shiftY - gapHeight / 2
+    private fun midPipeShiftY() = topPipeShiftY() + HEIGHT + gapHeight
+    private fun botPipeShiftY() = midPipeShiftY() + midHeight + gapHeight
 
-    private fun upperGapMid() = midPipeShiftY() - GAP_HEIGHT / 2
-    private fun lowerGapMid() = botPipeShiftY() - GAP_HEIGHT / 2
+    private fun upperGapMid() = midPipeShiftY() - gapHeight / 2
+    private fun lowerGapMid() = botPipeShiftY() - gapHeight / 2
 
     override fun draw(canvas: Canvas) {
         canvas.drawBitmap(topPipe, currX, topPipeShiftY(), null)
@@ -91,14 +93,14 @@ class PipeSprite(resources: Resources) : Sprite {
             createRect(currX.toInt(), topPipeShiftY().toInt(), WIDTH, HEIGHT)
 
     fun createMidRect() =
-            createRect(currX.toInt(), midPipeShiftY().toInt(), WIDTH, MID_HEIGHT)
+            createRect(currX.toInt(), midPipeShiftY().toInt(), WIDTH, midHeight)
 
     fun createBotRect() =
             createRect(currX.toInt(), botPipeShiftY().toInt(), WIDTH, HEIGHT)
 
     fun createWrongAnswerRect(): Rect {
-        val incorrectAnswerY = (if (!answers.isFirstCorrect) upperGapMid() else lowerGapMid()) - GAP_HEIGHT / 2
-        return createRect(currX.toInt(), incorrectAnswerY.toInt(), WIDTH, GAP_HEIGHT)
+        val incorrectAnswerY = (if (!answers.isFirstCorrect) upperGapMid() else lowerGapMid()) - gapHeight / 2
+        return createRect(currX.toInt(), incorrectAnswerY.toInt(), WIDTH, gapHeight)
     }
 
     private fun createRect(pipeX: Int, pipeY: Int, pipeWidth: Int, pipeHeight: Int) =

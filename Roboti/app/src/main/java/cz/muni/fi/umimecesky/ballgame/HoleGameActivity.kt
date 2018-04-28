@@ -132,9 +132,9 @@ class HoleGameActivity : Activity() {
 
 }
 
-fun ViewManager.headingTextView(text: CharSequence): TextView =
+fun ViewManager.headingTextView(text: CharSequence, padding: Int = 10): TextView =
         textView(text) {
-            padding = dip(10)
+            this.padding = dip(padding)
             typeface = Typeface.DEFAULT_BOLD
             textSize = px2dip(textSize.roundToInt()) + 3f
         }

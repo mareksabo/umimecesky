@@ -3,15 +3,16 @@ package cz.muni.fi.umimecesky.flappygame
 
 import android.graphics.Canvas
 import android.view.SurfaceHolder
+import cz.muni.fi.umimecesky.prefs
 
 /**
  * @author Marek Sabo
  */
 class MovementSimulator(private val surfaceHolder: SurfaceHolder, private val gameLogic: GameLogic) : Runnable {
 
+    private val targetTime = 1000L / prefs.flappyFps
+
     companion object {
-        private const val TARGET_FPS = 40
-        private const val TARGET_TIME = 1000L / TARGET_FPS
         private var canvas: Canvas? = null
     }
 
@@ -33,7 +34,7 @@ class MovementSimulator(private val surfaceHolder: SurfaceHolder, private val ga
             }
 
             val timeMillis = (System.nanoTime() - startTime) / 1_000_000
-            val waitTime = TARGET_TIME - timeMillis
+            val waitTime = targetTime - timeMillis
             if (waitTime > 0) Thread.sleep(waitTime)
         }
 

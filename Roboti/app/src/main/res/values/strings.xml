@@ -46,5 +46,8 @@
     <string name="flappy_game">Pilná včela</string>
     <string name="highest_score">Nejvyšší skóre</string>
     <string name="fps_per_second">Počet snímků za vteřinu:</string>
+    <string name="gap_size">Velikost mezery:</string>
+    <string name="fps_hint">Větší hodnota = rychlejší včela</string>
+    <string name="word_difficulty">Náročnost slov</string>
 
 </resources>

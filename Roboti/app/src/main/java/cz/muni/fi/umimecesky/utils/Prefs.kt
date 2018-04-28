@@ -5,7 +5,9 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import cz.muni.fi.umimecesky.ballgame.Dimensions.isTablet
 import cz.muni.fi.umimecesky.enums.Difficulty
+import cz.muni.fi.umimecesky.enums.Gap
 import cz.muni.fi.umimecesky.enums.toDifficulty
+import cz.muni.fi.umimecesky.enums.toGap
 import cz.muni.fi.umimecesky.pojo.FillWord
 import cz.muni.fi.umimecesky.pojo.FillWord.Companion.EMPTY_WORD
 import cz.muni.fi.umimecesky.pojo.RaceConcept
@@ -33,6 +35,7 @@ private const val BEST_USER_SCORE = "bestUserScore"
 private const val FLAPPY_GRADE_NAME = "flappyGradeName"
 private const val FLAPPY_INTRODUCE = "flappyIntroduce"
 private const val FLAPPY_FPS = "flappyFPS"
+private const val FLAPPY_GAP = "flappyGap"
 
 
 class Prefs(context: Context) {
@@ -135,10 +138,13 @@ class Prefs(context: Context) {
         get() = prefs.getBoolean(FLAPPY_INTRODUCE, false)
         set(value) = prefs.edit().putBoolean(FLAPPY_INTRODUCE, value).apply()
 
-    // todo
     var flappyGradeName: Difficulty
         get() = prefs.getString(FLAPPY_GRADE_NAME, Difficulty.Medium.name).toDifficulty()
         set(value) = prefs.edit().putString(FLAPPY_GRADE_NAME, value.name).apply()
+
+    var flappyGap: Gap
+        get() = prefs.getInt(FLAPPY_GAP, Gap.Big.size).toGap()
+        set(value) = prefs.edit().putInt(FLAPPY_GAP, value.size).apply()
 
     var flappyFps: Int
         get() = prefs.getInt(FLAPPY_FPS, 35)

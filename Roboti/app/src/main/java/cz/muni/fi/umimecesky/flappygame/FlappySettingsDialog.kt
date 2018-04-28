@@ -1,7 +1,6 @@
 package cz.muni.fi.umimecesky.flappygame
 
 import android.content.Context
-import android.util.Log
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.SeekBar
@@ -9,7 +8,9 @@ import android.widget.TextView
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.ballgame.headingTextView
 import cz.muni.fi.umimecesky.enums.Difficulty
-import cz.muni.fi.umimecesky.enums.Difficulty.Companion.difficulties
+import cz.muni.fi.umimecesky.enums.Difficulty.Companion.difficultyNames
+import cz.muni.fi.umimecesky.enums.Gap.Companion.gaps
+import cz.muni.fi.umimecesky.enums.toDifficulty
 import cz.muni.fi.umimecesky.pojo.RaceConcept
 import cz.muni.fi.umimecesky.prefs
 import cz.muni.fi.umimecesky.utils.Constant
@@ -22,6 +23,7 @@ import org.jetbrains.anko.linearLayout
 import org.jetbrains.anko.padding
 import org.jetbrains.anko.radioButton
 import org.jetbrains.anko.radioGroup
+import org.jetbrains.anko.scrollView
 import org.jetbrains.anko.seekBar
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.textView
@@ -34,51 +36,71 @@ class FlappySettingsDialog {
 
     @Suppress("ConvertSecondaryConstructorToPrimary")
     constructor(context: Context, raceConcept: RaceConcept?) {
-        this.context = context
         if (raceConcept == null) throw IllegalArgumentException("Race concept is null")
+        this.context = context
         this.raceConcept = raceConcept
 
+        if (!prefs.isFlappyGameIntroduced) runGame()
+        else showDialog()
+    }
+
+    private fun runGame() = context.startActivity<JumpGameActivity>(
+            Constant.FLAPPY_CHOSEN_CATEGORY to raceConcept)
+
+    private fun showDialog() {
         context.alert {
             title = context.resources.getString(R.string.settings)
-            positiveButton("Ok") {
-                context.startActivity<JumpGameActivity>(
-                        Constant.FLAPPY_CHOSEN_CATEGORY to raceConcept)
-            }
+            positiveButton("Ok") { runGame() }
             customView {
-                verticalLayout {
-                    padding = dip(10)
-                    lateinit var fps: TextView
-                    linearLayout {
-                        headingTextView(context.getString(R.string.fps_per_second)).lparams { leftMargin = dip(5) }
-                        fps = headingTextView("${prefs.flappyFps}")
-                    }
-                    textView("Větší hodnota = rychlejší včela") { padding = dip(8) }
+                scrollView {
+                    verticalLayout {
+                        padding = dip(10)
 
-                    addSeekBar(fps)
-
-                    headingTextView("Náročnost slov").lparams { leftMargin = dip(5) }
-
-                    val list = difficulties.toMutableList()
-                    list.remove(unavailableDifficulty())
-
-
-                    createRadioButtons(list.map { it.name }) { index, button ->
-                        button?.setOnClickListener { prefs.flappyGradeName = list[index] }
+                        difficultyBlock()
+                        gapBlock()
+                        fpsBlock()
                     }
                 }
             }
         }.show()
     }
 
-    private fun @AnkoViewDslMarker _LinearLayout.addSeekBar(fps: TextView) {
+    private fun @AnkoViewDslMarker _LinearLayout.gapBlock() {
+        heading(context.getString(R.string.gap_size))
+        createRadioButtons(
+                gaps.map { it.name },
+                prefs.flappyGap.name,
+                { index, button -> button?.setOnClickListener { prefs.flappyGap = gaps[index] } }
+        )
+    }
+
+    private fun @AnkoViewDslMarker _LinearLayout.fpsBlock() {
+        lateinit var fps: TextView
+        linearLayout {
+            heading(context.getString(R.string.fps_per_second))
+            fps = heading("${prefs.flappyFps}")
+        }
+        addSeekBar(fps, min = 30, max = 50, step = 5)
+        textView(context.getString(R.string.fps_hint)) { padding = dip(5) }
+    }
+
+    private fun @AnkoViewDslMarker _LinearLayout.difficultyBlock() {
+        heading(context.getString(R.string.word_difficulty))
+        val list = difficultyNames.toMutableList()
+        list.remove(unavailableDifficulty().name)
+        createRadioButtons(list, storedDifficulty().name, { index, button ->
+            button?.setOnClickListener { prefs.flappyGradeName = list[index].toDifficulty() }
+        })
+    }
+
+    private fun @AnkoViewDslMarker _LinearLayout.addSeekBar(fps: TextView, min: Int, max: Int, step: Int) {
         seekBar {
-            // 25 - 50 by step 5
-            max = 5
-            progress = (prefs.flappyFps - 25) / 5
+            this.max = (max - min) / step
+            progress = (prefs.flappyFps - min) / step
 
             setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                    val currentValue = progress * 5 + 25
+                    val currentValue = progress * step + min
                     fps.text = "$currentValue"
                     prefs.flappyFps = currentValue
                 }
@@ -89,9 +111,9 @@ class FlappySettingsDialog {
         }
     }
 
-    // todo add 3 jump options
-
-    private fun @AnkoViewDslMarker _LinearLayout.createRadioButtons(list: List<String>, function: (Int, RadioButton?) -> Unit) {
+    private fun @AnkoViewDslMarker _LinearLayout.createRadioButtons(list: List<String>,
+                                                                    checkedItem: String,
+                                                                    function: (Int, RadioButton?) -> Unit) {
         val hardnessRB = arrayOfNulls<RadioButton>(list.size)
         radioGroup {
             orientation = LinearLayout.HORIZONTAL
@@ -100,16 +122,13 @@ class FlappySettingsDialog {
                 textView(text)
             }
 
-            hardnessRB[list.indexOf(getDifficulty().name)]?.isChecked = true
+            hardnessRB[list.indexOf(checkedItem)]?.isChecked = true
             hardnessRB.forEachIndexed(function)
         }
     }
 
-    private fun getDifficulty(): Difficulty {
-        val flappyWordGrade = prefs.flappyGradeName
-        Log.i("flappyGradeName", "$flappyWordGrade")
-        return if (flappyWordGrade == unavailableDifficulty()) Difficulty.Medium // grade 2 is always available
-        else flappyWordGrade
+    private fun storedDifficulty(): Difficulty = prefs.flappyGradeName.let {
+        if (it == unavailableDifficulty()) Difficulty.Medium else it
     }
 
     /**
@@ -123,5 +142,8 @@ class FlappySettingsDialog {
         RaceConcept.SHORTCUTS -> Difficulty.Easy
         else -> Difficulty.Unknown
     }
+
+    private fun @AnkoViewDslMarker _LinearLayout.heading(text: CharSequence): TextView =
+            headingTextView(text, 5)
 
 }

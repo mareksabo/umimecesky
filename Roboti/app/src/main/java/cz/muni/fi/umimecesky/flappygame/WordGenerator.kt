@@ -4,6 +4,7 @@ import android.content.Context
 import cz.muni.fi.umimecesky.db.helper.joinCategoryWordOpenHelper
 import cz.muni.fi.umimecesky.pojo.FillWord
 import cz.muni.fi.umimecesky.pojo.RaceConcept
+import cz.muni.fi.umimecesky.prefs
 import java.util.*
 
 /**
@@ -16,7 +17,7 @@ class WordGenerator(private val context: Context, private val raceConcept: RaceC
     fun getNextWord(): FillWord {
         if (words.empty()) {
             words = context.joinCategoryWordOpenHelper
-                    .getRandomCategoryWords(raceConcept.categoryIDs, 2) // TODO add grade
+                    .getRandomCategoryWords(raceConcept.categoryIDs, prefs.flappyGradeName.grade)
         }
         return words.pop()
     }

@@ -22,7 +22,7 @@ class BeeSprite(resources: Resources) : Sprite {
         private const val MAX_VELOCITY = 6
 
         const val STARTING_X = 100f
-        private const val STARTING_Y = 150f
+        private const val STARTING_Y = 300f
     }
 
     private val image = GraphicsHelper.generateImage(resources, R.drawable.bee, WIDTH, HEIGHT)
@@ -31,9 +31,7 @@ class BeeSprite(resources: Resources) : Sprite {
     private var velocityY: Int = MAX_VELOCITY
         set(value) = if (value <= MAX_VELOCITY) field = value else {}
 
-    override fun draw(canvas: Canvas) {
-        canvas.drawBitmap(image, STARTING_X, currY, null)
-    }
+    override fun draw(canvas: Canvas) = canvas.drawBitmap(image, STARTING_X, currY, null)
 
     override fun move() {
         currY += velocityY
