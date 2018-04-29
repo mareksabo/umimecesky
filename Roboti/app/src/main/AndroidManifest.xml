@@ -16,6 +16,10 @@
             android:name="android.max_aspect"
             android:value="2.1"/>
 
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/color_accent"/>
+
         <activity
             android:name=".activity.MainActivity">
             <intent-filter>
@@ -54,9 +58,17 @@
             android:parentActivityName=".activity.MainActivity"/>
         <activity
             android:name=".flappygame.JumpGameActivity"
-            android:screenOrientation="sensorLandscape"
             android:parentActivityName=".flappygame.FlappyListCategoriesActivity"
+            android:screenOrientation="sensorLandscape"
             android:theme="@style/AppTheme.NoActionBar.FullScreen"/>
+
+        <!-- [START firebase_service] -->
+        <service android:name=".MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <!-- [END firebase_service] -->
 
     </application>
 
