@@ -55,7 +55,7 @@ class HoleGameLogger(context: Context) {
 
     fun logUnfinished() {
         firebaseAnalytics.logEvent("unfinished_hole", bundleOf(
-                "all_unfinished" to generateLogData()
+                "all_unfinished" to generateLogData() + "${wordToFill?.wordFilled};"
         ))
     }
 
@@ -74,7 +74,6 @@ class HoleGameLogger(context: Context) {
                     "${prefs.ballWeight};" +
                     "${System.currentTimeMillis()};" + // time to make every row unique
                     "${Dimensions.diagonalInches()};" +
-                    "${wordToFill?.wordFilled};" +
                     ""
         } ?: ""
     }

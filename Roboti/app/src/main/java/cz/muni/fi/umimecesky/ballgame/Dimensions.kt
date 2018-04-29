@@ -5,7 +5,6 @@ import android.content.res.Resources
 /**
  * @author Marek Sabo
  */
-// TODO: Make as usual class with singleton. Object will be created Every time settings are changed.
 object Dimensions {
 
     private fun metrics() = Resources.getSystem().displayMetrics
@@ -19,14 +18,18 @@ object Dimensions {
         return diagonalInches() >= 7.0
     }
 
+    /**
+     * Warning: not exact, returns a bit smaller value
+     */
     fun diagonalInches(): Double {
         val xInches = displayWidth() / metrics().xdpi.toDouble()
         val yInches = displayHeight() / metrics().ydpi.toDouble()
-
-        val doubleInches = Math.hypot(xInches, yInches) * metrics().scaledDensity / 2.54
-        return (doubleInches * 10).toInt().toDouble() / 10
+        return (Math.hypot(xInches, yInches) * 10).toInt().toDouble() / 10
     }
 
+    /**
+     * Warning: not exact, returns a bit smaller value
+     */
     fun deviceDpi(): Int {
         return (Math.hypot(
                 displayWidth().toDouble(),
@@ -36,7 +39,7 @@ object Dimensions {
     }
 
     private fun dip(value: Int): Int = (value * metrics().density).toInt()
-    private fun sp(value: Int): Float = value * metrics().scaledDensity
+    private fun sp(value: Int): Float = value * metrics().density
 
     val defaultTextSize = if (isTablet()) sp(20) else sp(10)
 

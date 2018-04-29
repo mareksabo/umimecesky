@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteException
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -16,7 +17,7 @@ import android.view.ViewTreeObserver
 import android.widget.Button
 import android.widget.LinearLayout
 import cz.muni.fi.umimecesky.R
-import cz.muni.fi.umimecesky.ballgame.Dimensions.isTablet
+import cz.muni.fi.umimecesky.ballgame.Dimensions
 import cz.muni.fi.umimecesky.ballgame.HoleGameActivity
 import cz.muni.fi.umimecesky.ballgame.HoleGameLogger
 import cz.muni.fi.umimecesky.db.DbContract.CATEGORY_TABLE_NAME
@@ -85,7 +86,7 @@ class MainActivity : AppCompatActivity() {
         setupButtons()
         setAllButtonsSameWidth()
 
-        if (configuration.landscape && !isTablet()) robotIcon.visibility = View.GONE
+        if (configuration.landscape) robotIcon.visibility = View.GONE
 
         if (!isDbImported()) {
             prefs.userId = System.currentTimeMillis()
