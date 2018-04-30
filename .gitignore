@@ -1,3 +1,9 @@
+# hide csv tables
+/app/src/main/assets/
+
+# Sensitive keys
+keystore.properties
+
 # Built application files
 *.apk
 *.ap_
@@ -36,10 +42,28 @@ captures/
 *.iml
 .idea/
 
+# Windows thumbnail db
+Thumbs.db
+
+# OSX files
+.DS_Store
+
+# Android Studio
+*.iml
+.idea
+.gradle
+build/
+.navigation
+captures/
+output.json
+
+# NDK
+obj/
+.externalNativeBuild
+
 # Keystore files
 *.jks
 
 #Vim
 *.un~
 
-Roboti/.idea/
