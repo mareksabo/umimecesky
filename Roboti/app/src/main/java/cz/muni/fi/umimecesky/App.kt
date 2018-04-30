@@ -2,7 +2,7 @@ package cz.muni.fi.umimecesky
 
 import android.app.Application
 import android.os.StrictMode
-import cz.muni.fi.umimecesky.utils.Prefs
+import cz.muni.fi.umimecesky.game.shared.util.Prefs
 import java.security.SecureRandom
 
 

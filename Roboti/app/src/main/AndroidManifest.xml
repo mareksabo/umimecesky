@@ -21,7 +21,7 @@
             android:resource="@color/color_accent"/>
 
         <activity
-            android:name=".activity.MainActivity">
+            android:name="cz.muni.fi.umimecesky.game.mainmenu.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -29,41 +29,41 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.TrainingActivity"
+            android:name=".game.practise.TrainingActivity"
             android:label="@string/train_game_name"
-            android:parentActivityName=".activity.ListCategoriesActivity"/>
+            android:parentActivityName=".game.practise.ListCategoriesActivity"/>
         <activity
-            android:name=".activity.ListCategoriesActivity"
+            android:name=".game.practise.ListCategoriesActivity"
             android:label="@string/train_game_name"
-            android:parentActivityName=".activity.MainActivity"/>
+            android:parentActivityName="cz.muni.fi.umimecesky.game.mainmenu.MainActivity"/>
         <activity
-            android:name=".activity.RaceActivity"
+            android:name=".game.robots.RaceActivity"
             android:label="@string/race_game_name"
-            android:parentActivityName=".activity.LevelRaceActivity"/>
+            android:parentActivityName=".game.robots.LevelRaceActivity"/>
         <activity
-            android:name=".activity.LevelRaceActivity"
+            android:name=".game.robots.LevelRaceActivity"
             android:label="@string/race_game_name"
-            android:parentActivityName=".activity.MainActivity"/>
+            android:parentActivityName="cz.muni.fi.umimecesky.game.mainmenu.MainActivity"/>
         <activity
-            android:name=".ballgame.HoleGameActivity"
-            android:parentActivityName=".activity.MainActivity"
+            android:name="cz.muni.fi.umimecesky.game.ball.HoleGameActivity"
+            android:parentActivityName="cz.muni.fi.umimecesky.game.mainmenu.MainActivity"
             android:theme="@style/AppTheme.NoActionBar.FullScreen"/>
         <activity
-            android:name=".activity.SettingsActivity"
+            android:name="cz.muni.fi.umimecesky.game.mainmenu.SettingsActivity"
             android:label="@string/settings_title"
-            android:parentActivityName=".activity.MainActivity"/>
+            android:parentActivityName="cz.muni.fi.umimecesky.game.mainmenu.MainActivity"/>
         <activity
-            android:name=".flappygame.FlappyListCategoriesActivity"
+            android:name="cz.muni.fi.umimecesky.game.flappy.FlappyListCategoriesActivity"
             android:label="@string/flappy_game"
-            android:parentActivityName=".activity.MainActivity"/>
+            android:parentActivityName="cz.muni.fi.umimecesky.game.mainmenu.MainActivity"/>
         <activity
-            android:name=".flappygame.JumpGameActivity"
-            android:parentActivityName=".flappygame.FlappyListCategoriesActivity"
+            android:name="cz.muni.fi.umimecesky.game.flappy.JumpGameActivity"
+            android:parentActivityName="cz.muni.fi.umimecesky.game.flappy.FlappyListCategoriesActivity"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/AppTheme.NoActionBar.FullScreen"/>
 
         <!-- [START firebase_service] -->
-        <service android:name=".MyFirebaseMessagingService">
+        <service android:name=".service.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>

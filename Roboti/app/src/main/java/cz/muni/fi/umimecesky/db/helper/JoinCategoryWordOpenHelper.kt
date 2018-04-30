@@ -13,9 +13,9 @@ import cz.muni.fi.umimecesky.db.DbContract.JoinColumn.JOIN_CATEGORY_ID
 import cz.muni.fi.umimecesky.db.DbContract.JoinColumn.JOIN_WORD_ID
 import cz.muni.fi.umimecesky.db.DbContract.WORD_TABLE_NAME
 import cz.muni.fi.umimecesky.db.DbContract.WordColumn.GRADE
-import cz.muni.fi.umimecesky.pojo.Category
-import cz.muni.fi.umimecesky.pojo.FillWord
-import cz.muni.fi.umimecesky.pojo.RaceConcept
+import cz.muni.fi.umimecesky.game.practise.Category
+import cz.muni.fi.umimecesky.game.shared.model.FillWord
+import cz.muni.fi.umimecesky.game.shared.model.RaceConcept
 import cz.muni.fi.umimecesky.random
 import org.jetbrains.anko.db.INTEGER
 import org.jetbrains.anko.db.ManagedSQLiteOpenHelper

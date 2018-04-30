@@ -12,7 +12,7 @@ import cz.muni.fi.umimecesky.db.DbContract.WordColumn.MISSING_WORD
 import cz.muni.fi.umimecesky.db.DbContract.WordColumn.VARIANT1
 import cz.muni.fi.umimecesky.db.DbContract.WordColumn.VARIANT2
 import cz.muni.fi.umimecesky.db.DbContract.WordColumn.WORD_ID
-import cz.muni.fi.umimecesky.pojo.FillWord
+import cz.muni.fi.umimecesky.game.shared.model.FillWord
 import org.jetbrains.anko.db.INTEGER
 import org.jetbrains.anko.db.ManagedSQLiteOpenHelper
 import org.jetbrains.anko.db.NOT_NULL

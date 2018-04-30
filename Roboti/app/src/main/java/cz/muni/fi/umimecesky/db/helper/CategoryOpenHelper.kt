@@ -6,7 +6,7 @@ import cz.muni.fi.umimecesky.db.DbContract
 import cz.muni.fi.umimecesky.db.DbContract.CATEGORY_TABLE_NAME
 import cz.muni.fi.umimecesky.db.DbContract.CategoryColumn.CATEGORY_ID
 import cz.muni.fi.umimecesky.db.DbContract.CategoryColumn.CATEGORY_NAME
-import cz.muni.fi.umimecesky.pojo.Category
+import cz.muni.fi.umimecesky.game.practise.Category
 import org.jetbrains.anko.db.INTEGER
 import org.jetbrains.anko.db.ManagedSQLiteOpenHelper
 import org.jetbrains.anko.db.NOT_NULL
