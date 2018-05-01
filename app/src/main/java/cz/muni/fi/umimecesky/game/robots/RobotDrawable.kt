@@ -12,7 +12,7 @@ object RobotDrawable {
                     .map { it.name }
                     .filter { it.startsWith("robot") }
 
-    private val uniqueRandom: UniqueRandom = UniqueRandom(robotNames.size)
+    private val uniqueRandom = UniqueRandom(robotNames.size)
 
     fun getRobotDrawable(context: Context): Drawable {
 

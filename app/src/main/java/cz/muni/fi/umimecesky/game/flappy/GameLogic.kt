@@ -129,9 +129,9 @@ class GameLogic(private val activity: Activity, private val raceConcept: RaceCon
             if (incorrectAnswer) {
                 resetLevel()
             } else {
-                currentWord = wordGenerator.getNextWord()
                 counterSprite.increaseCounter()
                 log(CORRECT)
+                currentWord = wordGenerator.getNextWord()
             }
         }
     }

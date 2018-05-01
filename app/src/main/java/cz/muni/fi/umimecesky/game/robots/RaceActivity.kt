@@ -5,16 +5,16 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import cz.muni.fi.umimecesky.R
-import cz.muni.fi.umimecesky.game.shared.BaseAbstractActivity
 import cz.muni.fi.umimecesky.db.helper.joinCategoryWordOpenHelper
 import cz.muni.fi.umimecesky.game.ball.Dimensions.isTablet
+import cz.muni.fi.umimecesky.game.robots.RobotDrawable.getRobotDrawable
 import cz.muni.fi.umimecesky.game.robots.logic.BotLogicQuick
 import cz.muni.fi.umimecesky.game.robots.logic.BotLogicSlow
 import cz.muni.fi.umimecesky.game.robots.logic.MoveLogic
-import cz.muni.fi.umimecesky.prefs
+import cz.muni.fi.umimecesky.game.shared.BaseAbstractActivity
 import cz.muni.fi.umimecesky.game.shared.util.Constant.RACE_NEW_WORD_DELAY_MS
 import cz.muni.fi.umimecesky.game.shared.util.Constant.RAW_HOPS_TO_WIN
-import cz.muni.fi.umimecesky.game.robots.RobotDrawable.getRobotDrawable
+import cz.muni.fi.umimecesky.prefs
 import kotlinx.android.synthetic.main.activity_race.botView1
 import kotlinx.android.synthetic.main.activity_race.botView2
 import kotlinx.android.synthetic.main.activity_race.botView3
@@ -30,12 +30,8 @@ import org.jetbrains.anko.landscape
 
 class RaceActivity : BaseAbstractActivity() {
 
-    companion object {
-        var robotMovePx: Float? = null
-        fun totalMovesToWin(): Int = RAW_HOPS_TO_WIN + prefs.currentRobotConcept.currentLevel
-    }
-
     private val concept = prefs.currentRobotConcept
+    private val totalMovesToWin = RAW_HOPS_TO_WIN + concept.currentLevel
 
     private val screenWidthDp: Float
         get() = Resources.getSystem().displayMetrics.widthPixels.toFloat().dp
@@ -45,6 +41,7 @@ class RaceActivity : BaseAbstractActivity() {
 
     private lateinit var moveLogic: MoveLogic
     private lateinit var usersAnimator: RobotAnimator
+    private var robotMovePx: Float = 10f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,11 +49,11 @@ class RaceActivity : BaseAbstractActivity() {
         super.initUI(word, firstButton, secondButton)
         if (configuration.landscape && !isTablet()) supportActionBar?.hide()
 
-        robotMovePx = ((screenWidthDp - robotWidthDp) / totalMovesToWin()).px
+        robotMovePx = ((screenWidthDp - robotWidthDp) / totalMovesToWin).px
         finishLine.x = (screenWidthDp - robotWidthDp - 2).px // 2 dp is line thickness
         setupRandomDrawables(arrayOf(botView1, botView2, botView3))
 
-        usersAnimator = RobotAnimator(usersRobotView, Robot())
+        usersAnimator = RobotAnimator(usersRobotView, Robot(), totalMovesToWin, robotMovePx)
         moveLogic = MoveLogic(this, createAnimators())
 
         setNewRandomWord()
@@ -72,9 +69,9 @@ class RaceActivity : BaseAbstractActivity() {
     private fun createAnimators(): Array<RobotAnimator> {
         return arrayOf(
                 usersAnimator,
-                RobotAnimator(botView1, Robot(BotLogicQuick(concept))),
-                RobotAnimator(botView2, Robot(BotLogicSlow(concept))),
-                RobotAnimator(botView3, Robot(BotLogicQuick(concept)))
+                RobotAnimator(botView1, Robot(BotLogicQuick(concept)), totalMovesToWin, robotMovePx),
+                RobotAnimator(botView2, Robot(BotLogicSlow(concept)), totalMovesToWin, robotMovePx),
+                RobotAnimator(botView3, Robot(BotLogicQuick(concept)), totalMovesToWin, robotMovePx)
         )
     }
 

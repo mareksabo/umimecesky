@@ -2,8 +2,6 @@ package cz.muni.fi.umimecesky.game.robots
 
 import android.view.ViewPropertyAnimator
 import android.widget.ImageView
-import cz.muni.fi.umimecesky.game.robots.RaceActivity.Companion.robotMovePx
-import cz.muni.fi.umimecesky.game.robots.RaceActivity.Companion.totalMovesToWin
 import cz.muni.fi.umimecesky.game.shared.util.Constant.ROBOT_MOVE_ANIMATION_MS
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -11,12 +9,11 @@ import java.util.concurrent.atomic.AtomicBoolean
 /**
  * @author Marek Sabo
  */
-class RobotAnimator(view: ImageView, val robot: Robot) {
+class RobotAnimator(view: ImageView, val robot: Robot, private val totalMovesToWin: Int,
+                    private val robotMovePx: Float) {
     var runnableBefore: Runnable? = null
     var runnableAfter: Runnable? = null
     val isAI = robot.isAI
-
-    private val totalMovesToWin = totalMovesToWin()
 
     private var remainingHopsToWin = totalMovesToWin
     private val animator: ViewPropertyAnimator = view.animate()
@@ -61,12 +58,12 @@ class RobotAnimator(view: ImageView, val robot: Robot) {
     }
 
     private fun animateBackward() {
-        animator.translationXBy(-robotMovePx!!)
+        animator.translationXBy(-robotMovePx)
         remainingHopsToWin++
     }
 
     private fun animateForwardWithAction(runnableBefore: Runnable?, runnableAfter: Runnable?) {
-        animator.translationXBy(robotMovePx!! * limitHopsWhenWon())
+        animator.translationXBy(robotMovePx * limitHopsWhenWon())
                 .withStartAction(runnableBefore)
                 .withEndAction(runnableAfter)
     }

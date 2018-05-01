@@ -5,8 +5,7 @@ import cz.muni.fi.umimecesky.random
 /**
  * @author Marek Sabo
  */
-// TODO: replace with WordGenerator
-class UniqueRandom(private val max: Int = 32) {
+class UniqueRandom(private val max: Int) {
 
     private val alreadyUsedSet = LinkedHashSet<Int>()
 
