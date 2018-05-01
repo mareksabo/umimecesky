@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteException
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -38,9 +39,9 @@ import cz.muni.fi.umimecesky.db.helper.wordOpenHelper
 import cz.muni.fi.umimecesky.game.ball.HoleGameActivity
 import cz.muni.fi.umimecesky.game.ball.HoleGameLogger
 import cz.muni.fi.umimecesky.game.flappy.FlappyListCategoriesActivity
+import cz.muni.fi.umimecesky.game.practise.Category
 import cz.muni.fi.umimecesky.game.practise.ListCategoriesActivity
 import cz.muni.fi.umimecesky.game.robots.LevelRaceActivity
-import cz.muni.fi.umimecesky.game.practise.Category
 import cz.muni.fi.umimecesky.game.shared.model.FillWord
 import cz.muni.fi.umimecesky.prefs
 import io.reactivex.Observable
@@ -85,6 +86,7 @@ class MainActivity : AppCompatActivity() {
 
         setupButtons()
         setAllButtonsSameWidth()
+        Log.i("prefs", "${prefs.flappyGradeName.grade}")
 
         if (configuration.landscape) robotIcon.visibility = View.GONE
 
@@ -127,7 +129,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun isDbImported(): Boolean = try {
         val categories = categoryOpenHelper.allCategories()
-        !categories.isEmpty()
+        val word = wordOpenHelper.getRandomWord(1)
+        categories.isNotEmpty() && word.wordMissing.isNotEmpty()
     } catch (e: SQLiteException) {
         false
     }

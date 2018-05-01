@@ -2,6 +2,7 @@ package cz.muni.fi.umimecesky.game.shared.util
 
 import android.content.Context
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
 import cz.muni.fi.umimecesky.enums.Difficulty
 import cz.muni.fi.umimecesky.enums.Gap
@@ -73,6 +74,7 @@ class Prefs(context: Context) {
     var currentRobotConcept: RaceConcept
         get() {
             val json = prefs.getString(CURRENT_ROBOT_CONCEPT, null)
+                    ?: return RaceConcept.initConcepts[0]
             return gson.fromJson<RaceConcept>(json, RaceConcept::class.java)
         }
         set(value) = prefs.edit().putString(CURRENT_ROBOT_CONCEPT, gson.toJson(value)).apply()
@@ -82,7 +84,11 @@ class Prefs(context: Context) {
     var lastRandomWord: FillWord
         get() {
             val json = prefs.getString(LAST_RANDOM_WORD, null) ?: return EMPTY_WORD
-            return gson.fromJson<FillWord>(json, FillWord::class.java)
+            return try {
+                gson.fromJson<FillWord>(json, FillWord::class.java)
+            } catch (e: JsonSyntaxException) {
+                EMPTY_WORD
+            }
         }
         set(value) = prefs.edit().putString(LAST_RANDOM_WORD, gson.toJson(value)).apply()
 

@@ -73,7 +73,7 @@ class GameLogic(private val activity: Activity, private val raceConcept: RaceCon
         currentWord = wordGenerator.getNextWord()
         pipe.answers = SortedAnswers(currentWord)
         movementSimulator.running = true
-        if (!prefs.isFlappyGameIntroduced) introduceGame(holder) else thread.start()
+        if (!prefs.isFlappyGameIntroduced) introduceGame(holder) else startThreadIfNotRunning()
     }
 
     private fun introduceGame(holder: SurfaceHolder) {
@@ -82,7 +82,7 @@ class GameLogic(private val activity: Activity, private val raceConcept: RaceCon
         holder.unlockCanvasAndPost(canvas)
         GameIntroduce(activity, sprites) {
             prefs.isFlappyGameIntroduced = true
-            thread.start()
+            startThreadIfNotRunning()
         }
     }
 
@@ -134,6 +134,10 @@ class GameLogic(private val activity: Activity, private val raceConcept: RaceCon
                 currentWord = wordGenerator.getNextWord()
             }
         }
+    }
+
+    private fun startThreadIfNotRunning() {
+        if (!thread.isAlive) thread.start()
     }
 
     private fun resetLevel(isOutsideScreen: Boolean = false) {
