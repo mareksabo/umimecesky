@@ -40,7 +40,7 @@ class GameLogic(private val activity: Activity, private val raceConcept: RaceCon
 
     private val wordGenerator = WordGenerator(context, raceConcept)
     private var incorrectAnswer = false
-    private val logger = FlappyLogger(activity)
+    private val logger = FlappyLogger(activity, prefs.isFlappyGameIntroduced)
 
     private var currentWord: FillWord = FillWord.EMPTY_WORD
         set(value) {
