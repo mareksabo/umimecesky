@@ -134,7 +134,7 @@ class Prefs(context: Context) {
         set(value) = prefs.edit().putBoolean(FIRST_HOLE_RUN, value).apply()
 
     var userId: Long
-        get() = prefs.getLong(USER_ID, System.currentTimeMillis()) // todo: -1 when everybody has ID
+        get() = prefs.getLong(USER_ID, -1L)
         set(value) = prefs.edit().putLong(USER_ID, value).apply()
 
     /// FLAPPY BIRD GAME ///
@@ -165,7 +165,7 @@ class Prefs(context: Context) {
         set(value) = prefs.edit().putString(FLAPPY_GRADE_NAME, value.name).apply()
 
     var flappyGap: Gap
-        get() = prefs.getInt(FLAPPY_GAP, Gap.Big.size).toGap()
+        get() = prefs.getInt(FLAPPY_GAP, Gap.Medium.size).toGap()
         set(value) = prefs.edit().putInt(FLAPPY_GAP, value.size).apply()
 
     var flappyFps: Int

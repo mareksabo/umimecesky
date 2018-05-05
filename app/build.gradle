@@ -25,8 +25,8 @@ android {
 
         resConfigs "cs", "sk", "en"
 
-        versionCode 20
-        versionName "4.5"
+        versionCode 21
+        versionName "4.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }

@@ -32,4 +32,10 @@ class JumpGameActivity : Activity() {
         val raceConcept = intent.getSerializableExtra(FLAPPY_CHOSEN_CATEGORY) as RaceConcept
         setContentView(GameLogic(this, raceConcept))
     }
+
+    override fun onStop() {
+        super.onStop()
+        this.finish()
+    }
+
 }

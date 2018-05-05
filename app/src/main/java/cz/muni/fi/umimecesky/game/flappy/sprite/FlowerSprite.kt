@@ -19,6 +19,7 @@ package cz.muni.fi.umimecesky.game.flappy.sprite
 import android.app.Activity
 import android.content.res.Resources
 import android.graphics.Canvas
+import android.graphics.Rect
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.game.ball.Dimensions.displayHeight
 import cz.muni.fi.umimecesky.game.ball.Dimensions.displayWidth
@@ -36,21 +37,24 @@ class FlowerSprite(resources: Resources) : Sprite {
         private const val WIDTH = 240
         private const val HEIGHT = 415
         private val beforeScreenX = displayWidth().toFloat()
-        private val startingX = beforeScreenX / 2
+        private val startingX = beforeScreenX / 3
         private val STARTING_Y = displayHeight() - HEIGHT.toFloat()
+        private val DISTANCE_THRESHOLD = displayWidth() / 6
     }
 
     private val image = GraphicsHelper.generateImage(resources, R.drawable.flower, WIDTH, HEIGHT)
+    private var isCloseToPipe = false
 
     private var currX: Float = startingX
         set(value) {
             field = value
-            if (value < -WIDTH) field = beforeScreenX
+            if (value < -WIDTH) {
+                field = beforeScreenX
+                checkPipeDistance()
+            }
         }
 
-    override fun draw(canvas: Canvas) {
-        canvas.drawBitmap(image, currX, STARTING_Y, null)
-    }
+    override fun draw(canvas: Canvas) = canvas.drawBitmap(image, currX, STARTING_Y, null)
 
     override fun move() {
         currX -= defaultMoveX // move closer to left
@@ -60,6 +64,23 @@ class FlowerSprite(resources: Resources) : Sprite {
         currX = startingX
     }
 
-
     override fun intro(activity: Activity): FancyShowCaseView? = null
+
+    private fun checkPipeDistance() {
+        if (isCloseToPipe) {
+            currX += DISTANCE_THRESHOLD + 2 * WIDTH
+            isCloseToPipe = false
+        }
+    }
+
+    fun setFurtherFromPipe() {
+        isCloseToPipe = true
+    }
+
+    fun createRect(): Rect {
+        val x = currX.toInt()
+        val y = STARTING_Y.toInt()
+        val biggerWidth = DISTANCE_THRESHOLD
+        return Rect(x, y, x + WIDTH + biggerWidth, y + HEIGHT)
+    }
 }

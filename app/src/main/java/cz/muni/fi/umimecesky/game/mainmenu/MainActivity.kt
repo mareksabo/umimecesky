@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity() {
         if (configuration.landscape) robotIcon.visibility = View.GONE
 
         if (!isDbImported()) {
-            prefs.userId = System.currentTimeMillis()
+            if (prefs.userId == -1L) prefs.userId = System.currentTimeMillis()
             importDataAsynchronously()
         } else {
             removeEmptyCategory()

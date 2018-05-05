@@ -54,6 +54,7 @@
             android:parentActivityName="cz.muni.fi.umimecesky.game.mainmenu.MainActivity"/>
         <activity
             android:name="cz.muni.fi.umimecesky.game.flappy.FlappyListCategoriesActivity"
+            android:screenOrientation="sensorLandscape"
             android:label="@string/flappy_game"
             android:parentActivityName="cz.muni.fi.umimecesky.game.mainmenu.MainActivity"/>
         <activity

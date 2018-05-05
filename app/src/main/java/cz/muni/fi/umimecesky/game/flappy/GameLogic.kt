@@ -52,6 +52,7 @@ class GameLogic(private val activity: Activity, private val raceConcept: RaceCon
     private lateinit var pipe: PipeSprite
     private lateinit var textSprite: FillWordSprite
     private lateinit var counterSprite: CounterSprite
+    private lateinit var flowerSprite: FlowerSprite
     private lateinit var sprites: List<Sprite>
 
     private val wordGenerator = WordGenerator(context, raceConcept)
@@ -103,7 +104,7 @@ class GameLogic(private val activity: Activity, private val raceConcept: RaceCon
     }
 
     private fun createSprites(): List<Sprite> {
-        val flowerSprite = FlowerSprite(resources)
+        flowerSprite = FlowerSprite(resources)
         pipe = PipeSprite(resources)
         textSprite = FillWordSprite()
         counterSprite = CounterSprite(raceConcept)
@@ -134,6 +135,7 @@ class GameLogic(private val activity: Activity, private val raceConcept: RaceCon
     fun update() {
         if (beeSprite.isOutsideScreen()) resetLevel(true)
         if (isInCollision(beeSprite, pipe)) resetLevel()
+        if (isInCollision(flowerSprite, pipe)) flowerSprite.setFurtherFromPipe()
         if (isInWrongAnswer()) {
             pipe.markIncorrectAnswerRed()
             incorrectAnswer = true
@@ -152,6 +154,7 @@ class GameLogic(private val activity: Activity, private val raceConcept: RaceCon
         }
     }
 
+    // TODO: probably not needed anymore
     private fun startThreadIfNotRunning() {
         if (!thread.isAlive) thread.start()
     }
@@ -169,6 +172,10 @@ class GameLogic(private val activity: Activity, private val raceConcept: RaceCon
         return beeBounds.intersect(pipeSprite.createTopRect()) ||
                 beeBounds.intersect(pipeSprite.createMidRect()) ||
                 beeBounds.intersect(pipeSprite.createBotRect())
+    }
+
+    private fun isInCollision(flowerSprite: FlowerSprite, pipeSprite: PipeSprite): Boolean {
+        return flowerSprite.createRect().intersect(pipeSprite.createBotRect())
     }
 
     private fun isInWrongAnswer() = beeSprite.createRect().intersect(pipe.createWrongAnswerRect())

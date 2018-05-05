@@ -116,7 +116,7 @@ class PipeSprite(resources: Resources) : Sprite {
 
     fun createWrongAnswerRect(): Rect {
         val incorrectAnswerY = (if (!answers.isFirstCorrect) upperGapMid() else lowerGapMid()) - gapHeight / 2
-        val biggerWidth = displayWidth() / 5
+        val biggerWidth = displayWidth() / 10
         return createRect(currX.toInt() - biggerWidth,
                 incorrectAnswerY.toInt(), WIDTH + biggerWidth, gapHeight)
     }

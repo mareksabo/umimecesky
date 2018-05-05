@@ -26,14 +26,15 @@ import cz.muni.fi.umimecesky.enums.Gap.Companion.gaps
  */
 sealed class Gap(val name: String, val size: Int) {
 
-    object Small : Gap("Malá", 276)
-    object Medium : Gap("Střední", 300)
-    object Big : Gap("Velká", 326)
-    object Huge : Gap("Obrovská", 350)
-    object Unknown : Gap(Big.name, Big.size)
+    object Mini : Gap("Mini", 276)
+    object Small : Gap("Malá", 300)
+    object Medium : Gap("Střední", 326)
+    object Big : Gap("Mega", 350)
+    object Huge : Gap("Giga", 400)
+    object Unknown : Gap(Medium.name, Medium.size)
 
     companion object {
-        val gaps by lazy { arrayOf(Huge, Big, Medium, Small) }
+        val gaps by lazy { arrayOf(Huge, Big, Medium, Small, Mini) }
     }
 
     override fun toString(): String = "$size"
