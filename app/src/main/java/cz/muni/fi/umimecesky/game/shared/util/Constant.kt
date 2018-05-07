@@ -28,6 +28,8 @@ object Constant {
     const val RAW_HOPS_TO_WIN = 5
     const val STROKE_WIDTH = 8
 
+    const val UNSET_ID = -1L
+
     const val DEFAULT_COLOR = Color.BLACK
     val CORRECT_COLOR = Color.parseColor("#4C924C")
     const val WRONG_COLOR = Color.RED

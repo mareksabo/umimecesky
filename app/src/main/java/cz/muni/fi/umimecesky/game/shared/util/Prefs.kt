@@ -29,6 +29,7 @@ import cz.muni.fi.umimecesky.game.shared.model.FillWord
 import cz.muni.fi.umimecesky.game.shared.model.FillWord.Companion.EMPTY_WORD
 import cz.muni.fi.umimecesky.game.shared.model.RaceConcept
 import cz.muni.fi.umimecesky.game.shared.model.RaceConcept.Companion.initConcepts
+import cz.muni.fi.umimecesky.game.shared.util.Constant.UNSET_ID
 
 /**
  * @author Marek Sabo
@@ -134,7 +135,7 @@ class Prefs(context: Context) {
         set(value) = prefs.edit().putBoolean(FIRST_HOLE_RUN, value).apply()
 
     var userId: Long
-        get() = prefs.getLong(USER_ID, -1L)
+        get() = prefs.getLong(USER_ID, UNSET_ID)
         set(value) = prefs.edit().putLong(USER_ID, value).apply()
 
     /// FLAPPY BIRD GAME ///

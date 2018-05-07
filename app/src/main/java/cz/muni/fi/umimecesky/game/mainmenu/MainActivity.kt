@@ -59,6 +59,7 @@ import cz.muni.fi.umimecesky.game.practise.Category
 import cz.muni.fi.umimecesky.game.practise.ListCategoriesActivity
 import cz.muni.fi.umimecesky.game.robots.LevelRaceActivity
 import cz.muni.fi.umimecesky.game.shared.model.FillWord
+import cz.muni.fi.umimecesky.game.shared.util.Constant.UNSET_ID
 import cz.muni.fi.umimecesky.prefs
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_main.activity_main
@@ -106,8 +107,9 @@ class MainActivity : AppCompatActivity() {
 
         if (configuration.landscape) robotIcon.visibility = View.GONE
 
+        if (prefs.userId == UNSET_ID) prefs.userId = System.currentTimeMillis()
+
         if (!isDbImported()) {
-            if (prefs.userId == -1L) prefs.userId = System.currentTimeMillis()
             importDataAsynchronously()
         } else {
             removeEmptyCategory()
