@@ -60,6 +60,7 @@ class HoleGameLogger(context: Context) {
     fun startNewWord(currentWord: FillWord) {
         startingTime = System.nanoTime()
         this.wordToFill = currentWord
+        holesFallAmount = 0
     }
 
     // UserId;DeviceDpi;ElapsedSeconds;WordDifficultyGrade;HolesAmount;HolesFallAmount;IsWrongHoleTouched;IsFirstTimeRun;RotationType;BallWeightType;FinishedTime;ScreenInches;WordToFill;
