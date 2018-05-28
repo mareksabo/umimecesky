@@ -173,4 +173,33 @@ class Prefs(context: Context) {
         get() = prefs.getInt(FLAPPY_FPS, 35)
         set(value) = prefs.edit().putInt(FLAPPY_FPS, value).apply()
 
+    // TEMP TODO: remove after some data collection
+
+    val is1Clicked: Boolean
+        get() {
+            val boolean = prefs.getBoolean("is1", false)
+            prefs.edit().putBoolean("is1", true).apply()
+            return boolean
+        }
+
+    val is2Clicked: Boolean
+        get() {
+            val boolean = prefs.getBoolean("is2", false)
+            prefs.edit().putBoolean("is2", true).apply()
+            return boolean
+        }
+
+    val is3Clicked: Boolean
+        get() {
+            val boolean = prefs.getBoolean("is3", false)
+            prefs.edit().putBoolean("is3", true).apply()
+            return boolean
+        }
+    val is4Clicked: Boolean
+        get() {
+            val boolean = prefs.getBoolean("is4", false)
+            prefs.edit().putBoolean("is4", true).apply()
+            return boolean
+        }
+
 }
