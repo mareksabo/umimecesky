@@ -6,5 +6,5 @@ Mobile app based on [www.umimecesky.cz](https://www.umimecesky.cz).
 Four educational games are available:
 * practise words (2 options), 
 * play [robots](http://www.umimecesky.cz/roboti) action game,
-* play ball/hole game - user controls a ball which has to be put into the correct hole (combines dexteriny and knowledge),
-* play Flappy Bird (combines dexteriny and knowledge).
+* play ball/hole game - user controls a ball which has to be put into the correct hole (combines dexterity and knowledge),
+* play Flappy Bird (combines dexterity and knowledge).
