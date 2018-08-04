@@ -32,7 +32,6 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.Button
 import android.widget.LinearLayout
-import com.google.firebase.analytics.FirebaseAnalytics
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.db.DbContract.CATEGORY_TABLE_NAME
 import cz.muni.fi.umimecesky.db.DbContract.CategoryColumn.CATEGORY_ID
@@ -70,10 +69,16 @@ import kotlinx.android.synthetic.main.activity_main.raceButton
 import kotlinx.android.synthetic.main.activity_main.robotIcon
 import kotlinx.android.synthetic.main.activity_main.trainingButton
 import me.toptas.fancyshowcase.FancyShowCaseView
-import org.jetbrains.anko.*
+import org.jetbrains.anko.browse
+import org.jetbrains.anko.configuration
 import org.jetbrains.anko.db.delete
 import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.transaction
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.email
+import org.jetbrains.anko.indeterminateProgressDialog
+import org.jetbrains.anko.landscape
+import org.jetbrains.anko.startActivity
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -91,7 +96,6 @@ class MainActivity : AppCompatActivity() {
 
     private var dialog: ProgressDialog? = null
     private var doAsyncTask: Future<Unit>? = null
-    private val firebaseAnalytics by lazy { FirebaseAnalytics.getInstance(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -115,22 +119,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupButtons() {
-        trainingButton.setOnClickListener {
-            if (!prefs.is1Clicked) firebaseAnalytics.logEvent("app_clicked", bundleOf("params" to "1;${prefs.userId}"))
-            startActivity<ListCategoriesActivity>()
-        }
-        raceButton.setOnClickListener {
-            if (!prefs.is2Clicked) firebaseAnalytics.logEvent("app_clicked", bundleOf("params" to "2;${prefs.userId}"))
-            startActivity<LevelRaceActivity>()
-        }
-        holeButton.setOnClickListener {
-            if (!prefs.is3Clicked) firebaseAnalytics.logEvent("app_clicked", bundleOf("params" to "3;${prefs.userId}"))
-            startActivity<HoleGameActivity>()
-        }
-        jumpButton.setOnClickListener {
-            if (!prefs.is4Clicked) firebaseAnalytics.logEvent("app_clicked", bundleOf("params" to "4;${prefs.userId}"))
-            startActivity<FlappyListCategoriesActivity>()
-        }
+        trainingButton.setOnClickListener { startActivity<ListCategoriesActivity>() }
+        raceButton.setOnClickListener { startActivity<LevelRaceActivity>() }
+        holeButton.setOnClickListener { startActivity<HoleGameActivity>() }
+        jumpButton.setOnClickListener { startActivity<FlappyListCategoriesActivity>() }
     }
 
     private fun setAllButtonsSameWidth() {
