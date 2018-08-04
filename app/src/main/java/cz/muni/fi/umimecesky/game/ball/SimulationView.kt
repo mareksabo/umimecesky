@@ -63,7 +63,6 @@ class SimulationView(context: Context) : FrameLayout(context) {
         private val interpolator = DecelerateInterpolator(1.5f)
     }
 
-    private val logger = HoleGameLogger(context)
     private val sensorListener = BallSensorListener(context)
     private val ball by lazy { Ball(context) }
 
@@ -80,10 +79,7 @@ class SimulationView(context: Context) : FrameLayout(context) {
     private var currentWord: FillWord = prefs.lastRandomWord
 
     fun startSimulation() = sensorListener.startSimulation()
-    fun stopSimulation() {
-        sensorListener.stopSimulation()
-        if (canRoll.get()) logger.logUnfinished() // TODO temporary check if any word is problematic
-    }
+    fun stopSimulation() = sensorListener.stopSimulation()
 
     init {
         setupView()
@@ -141,7 +137,6 @@ class SimulationView(context: Context) : FrameLayout(context) {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
                         canRoll.set(true)
-                        logger.startNewWord(currentWord)
                         invalidate()
                     }
         }
@@ -204,13 +199,11 @@ class SimulationView(context: Context) : FrameLayout(context) {
     private fun incorrectHoleAction() {
         ball.reverseVelocity()
         incorrectHoleView.textViewInside.setTextColor(Color.parseColor("#FF4500")) // #FFA500
-        logger.touchedWrongAnswer()
     }
 
     private fun correctHoleAction() {
         correctHoleView.textViewInside.setTextColor(Color.parseColor("#30d330"))
         canRoll.set(false)
-        logger.logFinished()
         val animator = createAnimation(correctHole)
         animator.withEndAction {
             removeAllViews()
@@ -223,7 +216,6 @@ class SimulationView(context: Context) : FrameLayout(context) {
 
     private fun otherHoleAction(holeWithBall: Hole) {
         canRoll.set(false)
-        logger.incrementHolesFallAmount()
         val animator = createAnimation(holeWithBall)
         animator.withEndAction {
             ball.recreateBall {

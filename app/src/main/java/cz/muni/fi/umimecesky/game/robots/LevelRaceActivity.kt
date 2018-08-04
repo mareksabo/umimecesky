@@ -21,7 +21,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
-import com.google.firebase.analytics.FirebaseAnalytics
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.game.shared.util.GuiUtil.hideNavigationBar
 import cz.muni.fi.umimecesky.prefs
@@ -30,13 +29,11 @@ import org.jetbrains.anko.startActivity
 
 class LevelRaceActivity : AppCompatActivity() {
 
-    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_race_levels)
 
-        firebaseAnalytics = FirebaseAnalytics.getInstance(this)
     }
 
     override fun onStart() {
@@ -48,11 +45,6 @@ class LevelRaceActivity : AppCompatActivity() {
 
         levelListView.adapter =
                 LevelAdapter(prefs.maxRobotsCategories, { raceConcept ->
-
-                    val bundle = Bundle()
-                    bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, raceConcept.name)
-                    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
-
                     prefs.currentRobotConcept = raceConcept
                     startActivity<RaceActivity>()
                 })

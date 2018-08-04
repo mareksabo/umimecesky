@@ -22,21 +22,11 @@ import android.graphics.Canvas
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-import cz.muni.fi.umimecesky.game.flappy.FlappyLogger.Status.CORRECT
-import cz.muni.fi.umimecesky.game.flappy.FlappyLogger.Status.OUTSIDE
-import cz.muni.fi.umimecesky.game.flappy.FlappyLogger.Status.TOUCH
-import cz.muni.fi.umimecesky.game.flappy.FlappyLogger.Status.WRONG
-import cz.muni.fi.umimecesky.game.flappy.sprite.BeeSprite
-import cz.muni.fi.umimecesky.game.flappy.sprite.CounterSprite
-import cz.muni.fi.umimecesky.game.flappy.sprite.FillWordSprite
-import cz.muni.fi.umimecesky.game.flappy.sprite.FlowerSprite
-import cz.muni.fi.umimecesky.game.flappy.sprite.PipeSprite
-import cz.muni.fi.umimecesky.game.flappy.sprite.Sprite
+import cz.muni.fi.umimecesky.game.flappy.sprite.*
 import cz.muni.fi.umimecesky.game.shared.model.FillWord
 import cz.muni.fi.umimecesky.game.shared.model.RaceConcept
 import cz.muni.fi.umimecesky.prefs
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.concurrent.schedule
 
 
@@ -57,7 +47,6 @@ class GameLogic(private val activity: Activity, private val raceConcept: RaceCon
 
     private val wordGenerator = WordGenerator(context, raceConcept)
     private var incorrectAnswer = false
-    private val logger = FlappyLogger(activity, prefs.isFlappyGameIntroduced)
 
     private var currentWord: FillWord = FillWord.EMPTY_WORD
         set(value) {
@@ -133,7 +122,7 @@ class GameLogic(private val activity: Activity, private val raceConcept: RaceCon
     }
 
     fun update() {
-        if (beeSprite.isOutsideScreen()) resetLevel(true)
+        if (beeSprite.isOutsideScreen()) resetLevel()
         if (isInCollision(beeSprite, pipe)) resetLevel()
         if (isInCollision(flowerSprite, pipe)) flowerSprite.setFurtherFromPipe()
         if (isInWrongAnswer()) {
@@ -148,7 +137,6 @@ class GameLogic(private val activity: Activity, private val raceConcept: RaceCon
                 resetLevel()
             } else {
                 counterSprite.increaseCounter()
-                log(CORRECT)
                 currentWord = wordGenerator.getNextWord()
             }
         }
@@ -159,8 +147,7 @@ class GameLogic(private val activity: Activity, private val raceConcept: RaceCon
         if (!thread.isAlive) thread.start()
     }
 
-    private fun resetLevel(isOutsideScreen: Boolean = false) {
-        if (incorrectAnswer) log(WRONG) else if (isOutsideScreen) log(OUTSIDE) else log(TOUCH)
+    private fun resetLevel() {
         Thread.sleep(500L)
         sprites.forEach { it.reset() }
         incorrectAnswer = false
@@ -180,18 +167,4 @@ class GameLogic(private val activity: Activity, private val raceConcept: RaceCon
 
     private fun isInWrongAnswer() = beeSprite.createRect().intersect(pipe.createWrongAnswerRect())
 
-    private fun log(status: FlappyLogger.Status) {
-        if (activity.hasWindowFocus() && timedBoolean()) {
-            logger.logEvent(status, raceConcept, counterSprite.currentCount, textSprite.text)
-            timedBoolean(true)
-        }
-    }
-
-    private var start = 0L
-
-    private fun timedBoolean(startTimer: Boolean = false): Boolean =
-            if (startTimer) {
-                start = System.nanoTime()
-                true
-            } else System.nanoTime() - start > TimeUnit.MILLISECONDS.toNanos(100)
 }

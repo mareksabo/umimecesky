@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-@file:Suppress("DEPRECATION")
-
 package cz.muni.fi.umimecesky.game.mainmenu
 
 import android.app.ProgressDialog
@@ -53,7 +51,6 @@ import cz.muni.fi.umimecesky.db.helper.categoryOpenHelper
 import cz.muni.fi.umimecesky.db.helper.joinCategoryWordOpenHelper
 import cz.muni.fi.umimecesky.db.helper.wordOpenHelper
 import cz.muni.fi.umimecesky.game.ball.HoleGameActivity
-import cz.muni.fi.umimecesky.game.ball.HoleGameLogger
 import cz.muni.fi.umimecesky.game.flappy.FlappyListCategoriesActivity
 import cz.muni.fi.umimecesky.game.practise.Category
 import cz.muni.fi.umimecesky.game.practise.ListCategoriesActivity
@@ -62,23 +59,12 @@ import cz.muni.fi.umimecesky.game.shared.model.FillWord
 import cz.muni.fi.umimecesky.game.shared.util.Constant.UNSET_ID
 import cz.muni.fi.umimecesky.prefs
 import io.reactivex.Observable
-import kotlinx.android.synthetic.main.activity_main.activity_main
-import kotlinx.android.synthetic.main.activity_main.holeButton
-import kotlinx.android.synthetic.main.activity_main.jumpButton
-import kotlinx.android.synthetic.main.activity_main.raceButton
-import kotlinx.android.synthetic.main.activity_main.robotIcon
-import kotlinx.android.synthetic.main.activity_main.trainingButton
+import kotlinx.android.synthetic.main.activity_main.*
 import me.toptas.fancyshowcase.FancyShowCaseView
-import org.jetbrains.anko.browse
-import org.jetbrains.anko.configuration
+import org.jetbrains.anko.*
 import org.jetbrains.anko.db.delete
 import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.transaction
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.email
-import org.jetbrains.anko.indeterminateProgressDialog
-import org.jetbrains.anko.landscape
-import org.jetbrains.anko.startActivity
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -115,7 +101,6 @@ class MainActivity : AppCompatActivity() {
             removeEmptyCategory()
             prefs.holeWordGrade = 1 // todo: to be removed
         }
-        HoleGameLogger(this).userPropertiesSetup()
     }
 
     private fun setupButtons() {

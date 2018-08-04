@@ -124,9 +124,9 @@ class HoleGameActivity : Activity() {
                         textView(difficultyNames[2])
 
                         val hardnessRB = arrayOf(easy, medium, hard)
-                        hardnessRB[prefs.holeWordGrade].isChecked = true
+                        hardnessRB[prefs.holeWordGrade - 1].isChecked = true
                         hardnessRB.forEachIndexed { index, button ->
-                            button.setOnClickListener { prefs.holeWordGrade = index }
+                            button.setOnClickListener { prefs.holeWordGrade = index + 1 }
                         }
                     }
                 }
@@ -143,7 +143,6 @@ class HoleGameActivity : Activity() {
         super.onPause()
         simulationView.stopSimulation()
         dialog?.cancel()
-        HoleGameLogger(this).logGameSettings()
     }
 
 }

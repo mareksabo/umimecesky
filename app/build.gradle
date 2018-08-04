@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'io.fabric'
 
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystoreProperties = new Properties()
@@ -17,7 +16,7 @@ android {
         }
     }
     compileSdkVersion 27
-    buildToolsVersion '26.0.2'
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "cz.muni.fi.umimecesky"
         minSdkVersion 16
@@ -25,8 +24,8 @@ android {
 
         resConfigs "cs", "sk", "en"
 
-        versionCode 23
-        versionName "4.8"
+        versionCode 24
+        versionName "5.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -49,40 +48,31 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile "com.android.support:appcompat-v7:$android_support_version"
-    compile "com.android.support:support-v4:$android_support_version"
-    compile "com.android.support:recyclerview-v7:$android_support_version"
-    compile "com.android.support:design:$android_support_version"
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "com.android.support:appcompat-v7:$android_support_version"
+    implementation "com.android.support:support-v4:$android_support_version"
+    implementation "com.android.support:recyclerview-v7:$android_support_version"
+    implementation "com.android.support:design:$android_support_version"
 
-    compile 'com.akexorcist:RoundCornerProgressBar:2.0.3'
-    compile 'com.google.code.gson:gson:2.8.0'
+    implementation 'com.akexorcist:RoundCornerProgressBar:2.0.3'
+    implementation 'com.google.code.gson:gson:2.8.2'
 
     // for RaceFinishDialog
-    compile 'com.github.andyxialm:ColorDialog:1.0.0'
-    compile 'com.jaredrummler:material-spinner:1.1.0'
-    compile 'com.afollestad.material-dialogs:core:0.9.6.0'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    compile "org.jetbrains.anko:anko:$anko_version"
+    implementation 'com.github.andyxialm:ColorDialog:1.0.0'
+    implementation 'com.jaredrummler:material-spinner:1.1.0'
+    implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.anko:anko:$anko_version"
 
     // https://mvnrepository.com/artifact/io.reactivex/rxkotlin
-    compile 'io.reactivex:rxkotlin:2.0.0-RC1'
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex:rxkotlin:2.0.0-RC1'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     // Because RxAndroid releases are few and far between, it is recommended you also
     // explicitly depend on RxJava's latest version for bug fixes and new features.
-    compile 'io.reactivex.rxjava2:rxjava:2.1.8'
-    compile 'com.github.faruktoptas:FancyShowCaseView:1.0.0'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.8'
+    implementation 'com.github.faruktoptas:FancyShowCaseView:1.0.0'
 
-    // FIREBASE
-    implementation 'com.google.firebase:firebase-core:11.8.0'
-    compile 'com.crashlytics.sdk.android:crashlytics:2.9.1'
-    implementation 'com.google.firebase:firebase-messaging:11.8.0'
 }
 repositories {
     mavenCentral()
 }
-
-apply plugin: 'com.google.gms.google-services'

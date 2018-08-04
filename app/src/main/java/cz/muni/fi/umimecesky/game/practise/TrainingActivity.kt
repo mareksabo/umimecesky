@@ -21,20 +21,14 @@ import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
-import com.google.firebase.analytics.FirebaseAnalytics
 import cz.muni.fi.umimecesky.R
-import cz.muni.fi.umimecesky.game.shared.BaseAbstractActivity
 import cz.muni.fi.umimecesky.db.helper.joinCategoryWordOpenHelper
 import cz.muni.fi.umimecesky.game.ball.Dimensions.isTablet
+import cz.muni.fi.umimecesky.game.shared.BaseAbstractActivity
 import cz.muni.fi.umimecesky.game.shared.model.FillWord
 import cz.muni.fi.umimecesky.game.shared.util.Constant.TICKED_CATEGORIES
 import cz.muni.fi.umimecesky.game.shared.util.Constant.TRAINING_NEW_WORD_DELAY_MS
-import kotlinx.android.synthetic.main.activity_training.categoryText
-import kotlinx.android.synthetic.main.activity_training.explanationText
-import kotlinx.android.synthetic.main.activity_training.firstButton
-import kotlinx.android.synthetic.main.activity_training.secondButton
-import kotlinx.android.synthetic.main.activity_training.seriesProgressBar
-import kotlinx.android.synthetic.main.activity_training.word
+import kotlinx.android.synthetic.main.activity_training.*
 import org.jetbrains.anko.configuration
 import org.jetbrains.anko.landscape
 
@@ -128,15 +122,7 @@ class TrainingActivity : BaseAbstractActivity() {
     }
 
     private fun setNewRandomWord() {
-        try {
-            setWord(joinCategoryWordOpenHelper.getRandomCategoryWord(checkedCategories))
-        } catch (e: IllegalArgumentException) {
-            // TODO: remove later, just for better exception info
-            val bundle = Bundle()
-            bundle.putString("exception_message", e.message)
-            bundle.putString("which_categories", checkedCategories.toString())
-            FirebaseAnalytics.getInstance(this).logEvent("db_problem", bundle)
-        }
+        setWord(joinCategoryWordOpenHelper.getRandomCategoryWord(checkedCategories))
     }
 
     override fun setWord(word: FillWord?) {
