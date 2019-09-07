@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          android:installLocation="auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:installLocation="auto"
           package="cz.muni.fi.umimecesky">
 
     <application
@@ -10,12 +11,8 @@
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-
-        <!-- for huge displays -->
-        <meta-data
-            android:name="android.max_aspect"
-            android:value="2.1"/>
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
 
         <activity
             android:name="cz.muni.fi.umimecesky.game.mainmenu.MainActivity">
