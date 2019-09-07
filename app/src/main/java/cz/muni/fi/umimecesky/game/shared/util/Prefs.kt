@@ -17,6 +17,7 @@
 package cz.muni.fi.umimecesky.game.shared.util
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
@@ -59,17 +60,17 @@ private const val FLAPPY_GAP = "flappyGap"
 class Prefs(context: Context) {
     private val gson = Gson()
 
-    private val prefs =
+    private val prefs: SharedPreferences =
             context.getSharedPreferences(Constant.SHARED_PREFS_FILE, Context.MODE_PRIVATE)
 
     /// TRAINING ///
 
     var seriesAmount: String
-        get() = prefs.getString(LAST_SPINNER_VALUE, Constant.ROUND_POSSIBILITIES[0])
+        get() = prefs.getString(LAST_SPINNER_VALUE, Constant.ROUND_POSSIBILITIES[0])!!
         set(value) = prefs.edit().putString(LAST_SPINNER_VALUE, value).apply()
 
     var checkedStates: BooleanArray
-        get() = prefs.getString(CHECKED_STATES, "")
+        get() = prefs.getString(CHECKED_STATES, "")!!
                 .split(",")
                 .map { it.toBoolean() }
                 .toBooleanArray()
@@ -151,7 +152,7 @@ class Prefs(context: Context) {
 
     private fun bestUserCountArray(): IntArray {
         return prefs.getString(BEST_USER_SCORE,
-                IntArray(RaceConcept.conceptNames.size).joinToString(","))
+                IntArray(RaceConcept.conceptNames.size).joinToString(","))!!
                 .split(",")
                 .map { it.toInt() }
                 .toIntArray()
@@ -162,7 +163,7 @@ class Prefs(context: Context) {
         set(value) = prefs.edit().putBoolean(FLAPPY_INTRODUCE, value).apply()
 
     var flappyGradeName: Difficulty
-        get() = prefs.getString(FLAPPY_GRADE_NAME, Difficulty.Medium.name).toDifficulty()
+        get() = prefs.getString(FLAPPY_GRADE_NAME, Difficulty.Medium.name)!!.toDifficulty()
         set(value) = prefs.edit().putString(FLAPPY_GRADE_NAME, value.name).apply()
 
     var flappyGap: Gap

@@ -18,9 +18,9 @@ package cz.muni.fi.umimecesky.game.robots
 
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
 import cz.muni.fi.umimecesky.R
 import cz.muni.fi.umimecesky.game.shared.util.GuiUtil.hideNavigationBar
 import cz.muni.fi.umimecesky.prefs

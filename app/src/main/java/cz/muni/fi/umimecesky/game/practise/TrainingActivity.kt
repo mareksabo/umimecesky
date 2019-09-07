@@ -77,19 +77,15 @@ class TrainingActivity : BaseAbstractActivity() {
 
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        outState?.putSerializable(LAST_SEEN_WORD, currentWord)
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putSerializable(LAST_SEEN_WORD, currentWord)
         super.onSaveInstanceState(outState)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
 
-        if (savedInstanceState != null) {
-            setWord(savedInstanceState.get(LAST_SEEN_WORD) as FillWord)
-        } else {
-            setNewRandomWord()
-        }
+        setWord(savedInstanceState.get(LAST_SEEN_WORD) as FillWord)
     }
 
     override fun chosenWrong(button: Button) {

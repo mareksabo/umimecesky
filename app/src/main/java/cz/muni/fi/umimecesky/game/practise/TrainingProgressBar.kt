@@ -18,7 +18,7 @@ package cz.muni.fi.umimecesky.game.practise
 
 import android.animation.ObjectAnimator
 import android.app.Activity
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import cn.refactor.lib.colordialog.PromptDialog

@@ -18,7 +18,7 @@ package cz.muni.fi.umimecesky.game.shared.util
 
 import android.app.Activity
 import android.os.Build
-import android.support.annotation.LayoutRes
+import androidx.annotation.LayoutRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

@@ -41,9 +41,8 @@ class CategoryAdapter(private val activity: Activity, context: Context, textView
 
     internal inner class ViewHolder(val categoryName: TextView, val checkBox: CheckBox)
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var returnView = convertView
-
         val holder: ViewHolder
 
         if (returnView == null) {
@@ -67,7 +66,7 @@ class CategoryAdapter(private val activity: Activity, context: Context, textView
         holder.checkBox.isChecked = checkedStates[position]
         holder.checkBox.tag = position
 
-        return returnView
+        return returnView!! // TODO fix in the future, create better code
 
     }
 

@@ -17,7 +17,7 @@
 package cz.muni.fi.umimecesky.game.practise
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import com.jaredrummler.materialspinner.MaterialSpinner

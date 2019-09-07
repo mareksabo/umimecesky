@@ -18,7 +18,7 @@ package cz.muni.fi.umimecesky.game.shared
 
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.widget.Button
 import android.widget.TextView
 import cz.muni.fi.umimecesky.game.practise.Category

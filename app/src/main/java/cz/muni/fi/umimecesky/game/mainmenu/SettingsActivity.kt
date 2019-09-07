@@ -17,7 +17,7 @@
 package cz.muni.fi.umimecesky.game.mainmenu
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import cz.muni.fi.umimecesky.prefs
 import org.jetbrains.anko.setContentView
 
